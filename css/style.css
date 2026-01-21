@@ -567,8 +567,25 @@ body {
     font-size: 12px;
 }
 
+
+/* View Sections for SPA-like switching */
+.view-section {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    flex: 1;
+    /* Ensure it takes full height of content-area */
+}
+
+.view-section.active {
+    display: flex;
+}
+
 /* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
+/* Increased breakpoint to 1024px to cover Pro Max landscape and Tablets */
+@media (max-width: 1024px) {
     body {
         font-size: 14px;
         height: 100dvh;
@@ -597,6 +614,7 @@ body {
         overflow: hidden;
         position: relative;
     }
+
 
     /* Content Area */
     #content-area {
