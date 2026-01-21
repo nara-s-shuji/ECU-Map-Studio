@@ -1,0 +1,568 @@
+:root {
+    --accent: #0078d4;
+    --bg: #1e1e1e;
+    --panel: #252526;
+    --border: #3c3c3c;
+    --text: #cccccc;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#toolbar {
+    background: #2d2d30;
+    padding: 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 0;
+    width: 44px;
+    /* 固定幅に */
+    cursor: pointer;
+    font-size: 18px;
+    height: 100%;
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+    position: relative;
+    display: flex;
+    /* 中央揃えのため */
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-svg {
+    width: 24px;
+    height: 24px;
+}
+
+.toolbar-btn:hover {
+    background: #3e3e42;
+}
+
+.toolbar-btn:active {
+    background: #007acc;
+}
+
+.toolbar-btn.active {
+    background: #007acc;
+}
+
+.toolbar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.toolbar-btn:disabled:hover {
+    background: transparent;
+}
+
+.toolbar-btn.ecu-disconnected {
+    background: #8b0000;
+}
+
+.toolbar-btn.ecu-disconnected:hover {
+    background: #a52a2a;
+}
+
+.toolbar-btn.ecu-connected {
+    background: #006400;
+}
+
+.toolbar-btn.ecu-connected:hover {
+    background: #228b22;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 100%;
+    background: var(--border);
+    margin: 0 4px;
+}
+
+.toolbar-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #1e1e1e;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    border: 1px solid var(--border);
+    z-index: 10000;
+    margin-top: 5px;
+}
+
+.toolbar-btn:hover::after {
+    opacity: 1;
+}
+
+.toolbar-title {
+    padding: 0 16px;
+    font-size: 12px;
+    color: #888;
+    margin-left: auto;
+}
+
+.hamburger-menu {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 20px;
+    height: 100%;
+    border-left: 1px solid var(--border);
+    transition: background 0.2s;
+}
+
+.hamburger-menu:hover {
+    background: #3e3e42;
+}
+
+.hamburger-menu.active {
+    background: #007acc;
+}
+
+#settings-menu {
+    position: fixed;
+    top: 40px;
+    right: 0;
+    width: 300px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: none;
+    padding: 15px;
+}
+
+#settings-menu.active {
+    display: block;
+}
+
+#settings-menu h3 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    display: block;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.setting-item select {
+    width: 100%;
+    background: #3c3c3c;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 5px;
+    font-size: 12px;
+}
+
+#main-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+#explorer {
+    width: 220px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.explorer-header {
+    padding: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.tree-item {
+    padding: 4px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.tree-item:hover {
+    background: #2a2d2e;
+}
+
+.tree-item.active {
+    background: #37373d;
+    color: #fff;
+    border-left: 2px solid var(--accent);
+}
+
+.tree-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+#content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#map-section {
+    flex: 1;
+    overflow: auto;
+    background: #000;
+    position: relative;
+}
+
+#info-section {
+    height: 120px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    padding: 15px;
+    font-size: 12px;
+    overflow-y: auto;
+}
+
+#info-section h3 {
+    margin: 0 0 10px 0;
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+#info-content {
+    color: var(--text);
+}
+
+#graph-overlay {
+    position: fixed;
+    top: 69px;
+    right: 20px;
+    width: 400px;
+    height: 300px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    resize: both;
+    overflow: auto;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+#graph-overlay.active {
+    display: flex;
+}
+
+#graph-header {
+    background: #2d2d30;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    cursor: move;
+    flex-shrink: 0;
+    z-index: 1;
+    position: relative;
+}
+
+#graph-close {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 1;
+}
+
+#graph-close:hover {
+    color: #fff;
+    background: #e81123;
+}
+
+#graph-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 10px;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#chart-container {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    z-index: 0;
+    pointer-events: auto;
+}
+
+#table-wrapper {
+    position: relative;
+    min-height: 100%;
+}
+
+.header-row {
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    display: grid;
+    grid-template-columns: 80px repeat(20, 60px);
+    gap: 1px;
+    background: var(--border);
+    width: max-content;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 80px repeat(20, 60px);
+    gap: 1px;
+    background: var(--border);
+    width: max-content;
+    isolation: isolate;
+}
+
+.cell {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #1a1a1a;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+}
+
+.header-cell {
+    background: #2d2d2d !important;
+    color: #fff;
+    font-size: 10px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+.header-cell.selected-header {
+    background: #4a4a4a !important;
+    color: #fff;
+}
+
+.label-cell {
+    background: #2d2d2d !important;
+    font-size: 10px;
+    position: sticky;
+    left: 0;
+    z-index: 200;
+    border-right: 2px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    width: 80px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+.label-cell.selected-label {
+    background: #4a4a4a !important;
+    color: #fff;
+}
+
+.corner-cell {
+    z-index: 250;
+    position: sticky;
+    left: 0;
+    width: 80px;
+}
+
+.cell input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    text-align: center;
+    background: transparent;
+    font-size: 12px;
+    outline: none;
+    position: relative;
+    z-index: 1;
+}
+
+.cell input::-webkit-outer-spin-button,
+.cell input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.cell input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.cell input {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.cell input.diff-mode {
+    color: #000;
+}
+
+.cell input.heatmap-mode {
+    color: #fff;
+}
+
+.selected-cell {
+    position: relative;
+}
+
+.selected-cell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--accent);
+    pointer-events: none;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.multi-selected-cell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 120, 212, 0.3);
+    border: 1px solid var(--accent);
+    pointer-events: none;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.cross-highlight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 0, 0.15);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* セル編集ポップアップ */
+#cell-popup {
+    position: fixed;
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    z-index: 500;
+    display: none;
+    min-width: 120px;
+    font-size: 12px;
+}
+
+#cell-popup.active {
+    display: block;
+}
+
+.popup-mode-selector {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.popup-mode-btn {
+    flex: 1;
+    background: #3c3c3c;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.popup-mode-btn.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.popup-mode-btn:hover {
+    background: #4c4c4c;
+}
+
+.popup-mode-btn.active:hover {
+    background: #0087e8;
+}
+
+.popup-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.popup-btn {
+    background: #3c3c3c;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 1;
+}
+
+.popup-btn:hover {
+    background: #4c4c4c;
+}
+
+.popup-input {
+    width: 60px;
+    background: #3c3c3c;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 4px;
+    text-align: center;
+    font-size: 12px;
+}

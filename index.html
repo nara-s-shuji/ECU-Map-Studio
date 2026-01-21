@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECU Map Studio 2026</title>
+    <!-- Offline Plotly Library -->
+    <script src="lib/plotly.min.js"></script>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="toolbar">
+        <button class="toolbar-btn" data-tooltip="ファイルを開く (Ctrl+O)" onclick="openFile()">📁</button>
+        <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
+        <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
+
+        <div class="toolbar-separator"></div>
+
+        <button class="toolbar-btn" data-tooltip="元に戻す (Ctrl+Z)" onclick="undo()" id="btn-undo">↶</button>
+        <button class="toolbar-btn" data-tooltip="やり直し (Ctrl+Y)" onclick="redo()" id="btn-redo">↷</button>
+
+        <div class="toolbar-separator"></div>
+
+        <button class="toolbar-btn ecu-disconnected" data-tooltip="ECUに接続" onclick="toggleECUConnection()"
+            id="btn-ecu-connect">
+            <!-- WiFi + ECU Icon -->
+            <svg viewBox="0 0 24 24" class="icon-svg">
+                <!-- WiFi Arcs -->
+                <path
+                    d="M12 3c4.284 0 8.232 1.452 11.416 3.96l-1.632 2.04C19.124 7.02 15.732 5.76 12 5.76c-3.744 0-7.14 1.26-9.784 3.24L0.584 6.96C3.768 4.452 7.716 3 12 3z"
+                    fill="currentColor" />
+                <path
+                    d="M12 7.8c3.084 0 5.928 1.044 8.22 2.844l-1.632 2.04C16.92 11.4 14.568 10.56 12 10.56c-2.58 0-4.932 0.84-6.588 2.124l-1.632-2.04C6.072 8.844 8.916 7.8 12 7.8z"
+                    fill="currentColor" />
+                <!-- ECU Box below -->
+                <path d="M6 14h12v7c0 1.1-0.9 2-2 2H8c-1.1 0-2-0.9-2-2v-7z" fill="currentColor" />
+                <rect x="7" y="16" width="3" height="4" fill="var(--bg)" />
+                <rect x="11" y="16" width="1" height="4" fill="var(--bg)" />
+                <rect x="13" y="16" width="1" height="4" fill="var(--bg)" />
+                <rect x="15" y="16" width="2" height="1" fill="var(--bg)" />
+                <rect x="15" y="18" width="2" height="1" fill="var(--bg)" />
+            </svg>
+        </button>
+        <button class="toolbar-btn" data-tooltip="ECUに書き込み (Ctrl+W)" onclick="writeToECU()" id="btn-write"
+            disabled>📤</button>
+        <button class="toolbar-btn" data-tooltip="ECUから読み取り (Ctrl+R)" onclick="readFromECU()" id="btn-read"
+            disabled>📥</button>
+
+        <div class="toolbar-separator"></div>
+
+        <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
+
+        <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0</span>
+        <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
+    </div>
+
+    <div id="settings-menu">
+        <h3>⚙️ 設定</h3>
+        <div class="setting-item">
+            <label>セル数値の色表示:</label>
+            <select id="cell-color-mode" onchange="updateCellColorMode()">
+                <option value="diff">差分表示（編集: 赤/青）</option>
+                <option value="heatmap">ヒートマップ（青→緑→赤）</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="graph-overlay">
+        <div id="graph-header">
+            <select id="graph-type" onchange="updateGraph()">
+                <option value="3d">3D: Surface</option>
+                <option value="rpm">2D: vs RPM (Fix TPS)</option>
+                <option value="tps">2D: vs TPS (Fix RPM)</option>
+            </select>
+            <button id="graph-close" onclick="toggleGraph()">×</button>
+        </div>
+        <div id="graph-body">
+            <div id="chart-container"></div>
+        </div>
+
+        <div class="resize-handle resize-n"
+            style="position: absolute; top: 0; left: 0; right: 0; height: 15px; cursor: ns-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-s"
+            style="position: absolute; bottom: 0; left: 0; right: 0; height: 15px; cursor: ns-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-e"
+            style="position: absolute; right: 0; top: 0; bottom: 0; width: 15px; cursor: ew-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-w"
+            style="position: absolute; left: 0; top: 0; bottom: 0; width: 15px; cursor: ew-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-ne"
+            style="position: absolute; top: 0; right: 0; width: 25px; height: 25px; cursor: nesw-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-nw"
+            style="position: absolute; top: 0; left: 0; width: 25px; height: 25px; cursor: nwse-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-se"
+            style="position: absolute; bottom: 0; right: 0; width: 25px; height: 25px; cursor: nwse-resize; z-index: 999999;">
+        </div>
+        <div class="resize-handle resize-sw"
+            style="position: absolute; bottom: 0; left: 0; width: 25px; height: 25px; cursor: nesw-resize; z-index: 999999;">
+        </div>
+    </div>
+
+    <input type="file" id="file-input" style="display:none" onchange="importFromCSV(this)">
+    <input type="file" id="base-file-input" style="display:none" onchange="importBaseFromCSV(this)">
+
+    <!-- セル編集ポップアップ -->
+    <div id="cell-popup">
+        <div class="popup-mode-selector">
+            <button class="popup-mode-btn active" id="mode-abs" onclick="switchPopupMode('abs')">絶対値</button>
+            <button class="popup-mode-btn" id="mode-pct" onclick="switchPopupMode('pct')">%</button>
+        </div>
+        <div class="popup-controls">
+            <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">▽</button>
+            <input type="number" class="popup-input" id="popup-delta" value="10" step="1" min="1">
+            <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)" ontouchend="stopAdjusting()">△</button>
+        </div>
+    </div>
+
+    <div id="main-container">
+        <div id="explorer">
+            <div class="explorer-header">EXPLORER: PROJECT</div>
+            <div class="tree-item"><span class="tree-icon">📁</span> src</div>
+            <div class="tree-item active"><span class="tree-icon">📊</span> Main_Fuel_Map.csv</div>
+            <div class="tree-item"><span class="tree-icon">📊</span> Ignition_Map.csv</div>
+            <div class="tree-item"><span class="tree-icon">📊</span> Idling_Correction.csv</div>
+            <div class="tree-item"><span class="tree-icon">⚙️</span> Settings.json</div>
+
+            <div class="explorer-header" style="margin-top:20px;">ACTIONS</div>
+            <div style="padding: 0 10px;">
+                <p style="font-size: 10px; color: #666; margin: 10px 0;">ファイル操作はツールバーから実行してください</p>
+            </div>
+        </div>
+
+        <div id="content-area">
+            <div id="map-section">
+                <div id="table-wrapper">
+                    <div id="headerRow" class="header-row"></div>
+                    <div id="mapGrid" class="grid-container"></div>
+                </div>
+            </div>
+
+            <div id="info-section">
+                <h3>📋 Information</h3>
+                <div id="info-content">
+                    <p style="margin: 5px 0;"><strong>Selected Cell:</strong> <span id="info-cell">-</span></p>
+                    <p style="margin: 5px 0;"><strong>Current Value:</strong> <span id="info-value">-</span> μs</p>
+                    <p style="margin: 5px 0;"><strong>Original Value:</strong> <span id="info-original">-</span> μs</p>
+                    <p style="margin: 5px 0;"><strong>Change:</strong> <span id="info-change">-</span> (<span
+                            id="info-change-percent">-</span>)</p>
+                    <p style="margin: 5px 0;"><strong>Map Range:</strong> <span id="info-range">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/graph.js"></script>
+
+</body>
+
+</html>
