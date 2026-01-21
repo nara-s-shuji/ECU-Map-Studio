@@ -31,18 +31,24 @@ window.switchTab = function (tabName) {
         graphOverlay.classList.add('active');
         // Force 3D mode on mobile graph tab
         document.getElementById('graph-type').value = '3d';
-        updateGraph();
+        // Delay graph render slightly to ensure container is visible
+        setTimeout(() => {
+            updateGraph();
+            // Trigger resize for Plotly to fit new container
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
     } else {
         graphOverlay.classList.remove('active');
     }
 
     if (tabName === 'editor') {
         document.getElementById('editor-view').style.display = 'block';
-        renderTable();
+        // Force redraw after display change to ensure dimensions are correct
+        setTimeout(renderTable, 10);
     } else if (tabName === 'monitor') {
-        document.getElementById('monitor-view').style.display = 'block';
+        document.getElementById('monitor-view').style.display = 'flex';
     } else if (tabName === 'logger') {
-        document.getElementById('logger-view').style.display = 'block';
+        document.getElementById('logger-view').style.display = 'flex';
     }
 };
 
