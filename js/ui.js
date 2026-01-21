@@ -712,8 +712,9 @@ function updatePopupPosition() {
     if (window.innerWidth <= 1024) {
         // Mobile: Always show active (CSS handles docking)
         popup.classList.add('active');
-        popup.style.top = ''; // Clear inline styles
+        popup.style.top = '';
         popup.style.left = '';
+        popup.style.display = ''; // Clear any inline display:none
         return;
     }
 
@@ -724,30 +725,19 @@ function updatePopupPosition() {
     const popupHeight = 80; // ポップアップの高さ（推定）
 
     // 各種境界の計算
+    // ... (existing boundary calcs)
     const headerRow = document.getElementById('headerRow');
-    const headerHeight = headerRow.offsetHeight;
+    const headerHeight = headerRow ? headerRow.offsetHeight : 28;
     const visibleTop = mapRect.top + headerHeight;
     const scrollbarHeight = mapSection.offsetHeight - mapSection.clientHeight;
     const visibleBottom = mapRect.bottom - scrollbarHeight;
-    const labelWidth = 80;
-    const visibleLeft = mapRect.left + labelWidth;
-    const visibleRight = mapRect.right;
 
-    const infoSection = document.getElementById('info-section');
-    const infoRect = infoSection.getBoundingClientRect();
-    const infoTop = infoRect.top;
-
-    // セルが見えていない場合はポップアップを非表示
-    // 上端チェック
-    if (cellRect.bottom < visibleTop) {
+    // Only hide if completely out of view (relaxed check)
+    if (cellRect.bottom < mapRect.top || cellRect.top > mapRect.bottom) {
         popup.classList.remove('active');
         return;
     }
-    // 下端チェック（横スクロールバー考慮）
-    if (cellRect.top > visibleBottom) {
-        popup.classList.remove('active');
-        return;
-    }
+
     // 左端チェック（TPS列ラベル考慮）
     if (cellRect.right < visibleLeft) {
         popup.classList.remove('active');

@@ -507,7 +507,7 @@ body {
 }
 
 #cell-popup.active {
-    display: block;
+    display: block !important;
 }
 
 .popup-mode-selector {
