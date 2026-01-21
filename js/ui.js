@@ -3,11 +3,12 @@ window.toggleSettings = function () {
     // Mobile: Toggle Settings menu
     menu.classList.toggle('active');
 
-    // Also close Explorer if open on mobile
-    if (window.innerWidth <= 768) {
+    // Mobile Explorer Toggle (Can be hooked to a button later or swipe)
+    if (window.innerWidth <= 1024) {
         document.getElementById('explorer').classList.remove('active');
     }
 };
+
 
 window.switchTab = function (tabName) {
     // Nav Items Update
@@ -697,7 +698,7 @@ function updatePopupPosition() {
     }
 
     // --- Mobile Check ---
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
         // Mobile: Always show active (CSS handles docking)
         popup.classList.add('active');
         popup.style.top = ''; // Clear inline styles

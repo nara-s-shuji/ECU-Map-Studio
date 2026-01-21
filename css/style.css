@@ -583,6 +583,11 @@ body {
     display: flex;
 }
 
+/* Global Bottom Nav (Hidden by default, shown in mobile) */
+#bottom-nav {
+    display: none;
+}
+
 /* --- Mobile Responsiveness --- */
 /* Increased breakpoint to 1024px to cover Pro Max landscape and Tablets */
 @media (max-width: 1024px) {
