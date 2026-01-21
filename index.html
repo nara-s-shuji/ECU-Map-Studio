@@ -119,28 +119,30 @@
 
             <!-- 2. モニタービュー -->
             <div id="monitor-view" class="view-section"
-                style="display:none; padding: 20px; text-align: center; color: #888;">
+                style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
                 <h2>📊 Monitor Mode</h2>
-                <p>Coming Soon...</p>
-                <p>Real-time gauges and meters will appear here.</p>
+                <p>未実装 (Coming Soon)</p>
             </div>
 
             <!-- 3. ロガービュー -->
             <div id="logger-view" class="view-section"
-                style="display:none; padding: 20px; text-align: center; color: #888;">
+                style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
                 <h2>💾 Data Logger</h2>
-                <p>Coming Soon...</p>
-                <p>Log recording and playback features will appear here.</p>
+                <p>未実装 (Coming Soon)</p>
             </div>
 
         </div>
     </div>
 
     <!-- Bottom Navigation -->
-    <div id="bottom-nav">
+    <div id="bottom-nav" style="touch-action: none;">
         <button class="nav-item active" onclick="switchTab('editor')">
             <span class="nav-icon">▤</span>
             <span>編集</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('graph')">
+            <span class="nav-icon">📉</span>
+            <span>グラフ</span>
         </button>
         <button class="nav-item" onclick="switchTab('monitor')">
             <span class="nav-icon">📊</span>
@@ -150,12 +152,9 @@
             <span class="nav-icon">📈</span>
             <span>ログ</span>
         </button>
-        <button class="nav-item" onclick="switchTab('graph')">
-            <span class="nav-icon">📉</span>
-            <span>グラフ</span>
-        </button>
         <button class="nav-item" onclick="toggleSettings()">
-            <span class="nav-icon">⚙️</span>
+            <!-- Hamburger Icon -->
+            <span class="nav-icon">≡</span>
             <span>メニュー</span>
         </button>
     </div>
