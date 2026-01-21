@@ -770,6 +770,7 @@ body {
         /* Max z-index */
         justify-content: space-around;
         align-items: center;
+        box-sizing: content-box;
     }
 
     .nav-item {
