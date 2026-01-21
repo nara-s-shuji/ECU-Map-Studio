@@ -566,3 +566,226 @@ body {
     text-align: center;
     font-size: 12px;
 }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        overflow: hidden;
+        /* Prevent body scroll, handle in sections */
+    }
+
+    /* Hide Explorer sidebar initially */
+    #explorer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 60px;
+        /* Leave space for bottom nav */
+        width: 250px;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #explorer.active {
+        transform: translateX(0);
+    }
+
+    #main-container {
+        width: 100%;
+        padding-bottom: 60px;
+        /* Space for bottom nav */
+    }
+
+    /* Scrollable Toolbar */
+    #toolbar {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 10px;
+        flex-wrap: nowrap;
+        /* Prevent wrapping */
+    }
+
+    .toolbar-btn {
+        flex-shrink: 0;
+        /* Prevent squashing */
+        width: 44px;
+        height: 40px;
+    }
+
+    .toolbar-title {
+        display: none;
+        /* Hide title on small screens */
+    }
+
+    .toolbar-separator {
+        flex-shrink: 0;
+    }
+
+    /* Grid Adjustments */
+    .cell {
+        width: 50px;
+        /* Slightly larger targets */
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .header-cell,
+    .label-cell {
+        height: 35px;
+        font-size: 11px;
+    }
+
+    .header-row {
+        grid-template-columns: 60px repeat(20, 50px);
+        /* Adjust for smaller cells if needed */
+    }
+
+    .grid-container {
+        grid-template-columns: 60px repeat(20, 50px);
+    }
+
+    .label-cell {
+        width: 60px;
+    }
+
+    .corner-cell {
+        width: 60px;
+    }
+
+    /* Docked Cell Popup for Mobile */
+    #cell-popup {
+        position: fixed;
+        bottom: 60px;
+        /* Above bottom nav */
+        left: 0;
+        right: 0;
+        top: auto !important;
+        /* Override absolute positioning */
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        border: none;
+        border-top: 1px solid var(--accent);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        display: flex;
+        /* Flex to align items */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        transform: translateY(110%);
+        /* Hidden by default */
+        transition: transform 0.3s ease;
+        z-index: 2000;
+        box-sizing: border-box;
+    }
+
+    #cell-popup.active {
+        transform: translateY(0);
+    }
+
+    /* Checkbox/Radios in Settings/Graph */
+    .setting-item,
+    #graph-header {
+        font-size: 14px;
+    }
+
+    /* Graph Fullscreen */
+    #graph-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        resize: none;
+        z-index: 5000;
+        /* Top most */
+    }
+
+    .resize-handle {
+        display: none;
+    }
+
+    #graph-close {
+        font-size: 24px;
+        padding: 15px;
+    }
+
+    /* Settings Menu */
+    #settings-menu {
+        width: 80%;
+        max-width: 300px;
+        right: 0;
+        left: auto;
+        transform: translateX(100%);
+    }
+
+    #settings-menu.active {
+        transform: translateX(0);
+    }
+
+    /* Hide Info Section on Mobile Editor View (Too cluttered, move to Monitor?) */
+    /* Or make it collapsible? For now, keep it but maybe minimize text */
+    #info-section {
+        height: auto;
+        max-height: 100px;
+        padding: 5px;
+    }
+
+    #info-content p {
+        margin: 2px 0;
+        display: inline-block;
+        margin-right: 10px;
+    }
+}
+
+/* Bottom Navigation */
+#bottom-nav {
+    display: none;
+    /* Hidden on Desktop */
+}
+
+@media (max-width: 768px) {
+    #bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: var(--panel);
+        border-top: 1px solid var(--border);
+        z-index: 3000;
+        justify-content: space-around;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .nav-item {
+        background: none;
+        border: none;
+        color: #888;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 10px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        padding-top: 5px;
+    }
+
+    .nav-item.active {
+        color: var(--accent);
+    }
+
+    .nav-icon {
+        font-size: 20px;
+        margin-bottom: 2px;
+    }
+}
