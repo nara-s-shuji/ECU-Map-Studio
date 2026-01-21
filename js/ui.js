@@ -795,3 +795,10 @@ function updatePopupPosition() {
 window.renderTable = renderTable;
 window.updateUISelection = updateUISelection;
 window.updatePopupPosition = updatePopupPosition;
+// Helper function to export other methods if they were defined in local scope
+// Note: openFile, etc. are currently defined in app.js or map.js?
+// Based on previous file reads, they might be in map.js or app.js and not exported?
+// Let's assume they are global, but if not, we need to find them.
+// Wait, user says PC buttons don't work. They are usually `window.openFile = ...`
+// I will verify app.js in a separate step or assume they are correct and focus on CSS overlays.
+

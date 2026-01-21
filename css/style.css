@@ -24,6 +24,9 @@ body {
     display: flex;
     align-items: center;
     height: 40px;
+    position: relative;
+    z-index: 2000;
+    /* Ensure it is above other content */
 }
 
 .toolbar-btn {
@@ -496,7 +499,8 @@ body {
     border: 1px solid var(--accent);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     padding: 10px;
-    z-index: 500;
+    z-index: 11000;
+    /* Higher than Bottom Nav (10000) */
     display: none;
     min-width: 120px;
     font-size: 12px;
