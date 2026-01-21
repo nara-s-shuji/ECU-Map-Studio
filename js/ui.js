@@ -1,8 +1,43 @@
 window.toggleSettings = function () {
     const menu = document.getElementById('settings-menu');
-    const btn = document.getElementById('btn-settings');
+    // Mobile: Toggle Settings menu
     menu.classList.toggle('active');
-    btn.classList.toggle('active');
+
+    // Also close Explorer if open on mobile
+    if (window.innerWidth <= 768) {
+        document.getElementById('explorer').classList.remove('active');
+    }
+};
+
+window.switchTab = function (tabName) {
+    // Nav Items Update
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    // Find button that calls this tab (simplified matching)
+    const navBtns = document.getElementById('bottom-nav').children;
+    if (tabName === 'editor') navBtns[0].classList.add('active');
+    if (tabName === 'monitor') navBtns[1].classList.add('active');
+    if (tabName === 'logger') navBtns[2].classList.add('active');
+
+    // View Sections Update
+    document.getElementById('editor-view').style.display = 'none';
+    document.getElementById('monitor-view').style.display = 'none';
+    document.getElementById('logger-view').style.display = 'none';
+
+    if (tabName === 'editor') {
+        document.getElementById('editor-view').style.display = 'block';
+        // Resize check in case grid needs to redraw
+        renderTable();
+    } else if (tabName === 'monitor') {
+        document.getElementById('monitor-view').style.display = 'block';
+    } else if (tabName === 'logger') {
+        document.getElementById('logger-view').style.display = 'block';
+    }
+};
+
+// Mobile Explorer Toggle (Can be hooked to a button later or swipe)
+window.toggleExplorer = function () {
+    const exp = document.getElementById('explorer');
+    exp.classList.toggle('active');
 };
 
 window.updateCellColorMode = function () {
@@ -656,6 +691,16 @@ function updatePopupPosition() {
         return;
     }
 
+    // --- Mobile Check ---
+    if (window.innerWidth <= 768) {
+        // Mobile: Always show active (CSS handles docking)
+        popup.classList.add('active');
+        popup.style.top = ''; // Clear inline styles
+        popup.style.left = '';
+        return;
+    }
+
+    // --- Desktop Logic (Original) ---
     const cellRect = selectedCell.getBoundingClientRect();
     const mapRect = mapSection.getBoundingClientRect();
     const popupWidth = 150; // ポップアップの幅（推定）

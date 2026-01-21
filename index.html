@@ -58,6 +58,55 @@
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
+    <!-- メインエディタビュー -->
+    <div id="editor-view" class="view-section active">
+        <div id="info-section">
+            <div class="info-item">
+                <span class="info-label">Selected:</span>
+                <span class="info-value" id="info-cell">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Value:</span>
+                <span class="info-value" id="info-value">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label" style="color: #0078d4;">Original:</span>
+                <span class="info-value" id="info-original">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Change:</span>
+                <span class="info-value" id="info-change">-</span>
+                <span class="info-value" id="info-change-percent" style="font-size: 0.8em; color: #888;"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Range:</span>
+                <span class="info-value" id="info-range">-</span>
+            </div>
+        </div>
+
+        <div id="map-section">
+            <div id="map-container">
+                <div class="header-row" id="headerRow"></div>
+                <!-- Grid will be populated by JS -->
+                <div class="map-grid" id="mapGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モニタービュー（プレースホルダー） -->
+    <div id="monitor-view" class="view-section" style="display:none; padding: 20px; text-align: center; color: #888;">
+        <h2>📊 Monitor Mode</h2>
+        <p>Coming Soon...</p>
+        <p>Real-time gauges and meters will appear here.</p>
+    </div>
+
+    <!-- ロガービュー（プレースホルダー） -->
+    <div id="logger-view" class="view-section" style="display:none; padding: 20px; text-align: center; color: #888;">
+        <h2>💾 Data Logger</h2>
+        <p>Coming Soon...</p>
+        <p>Log recording and playback features will appear here.</p>
+    </div>
+
     <div id="settings-menu">
         <h3>⚙️ 設定</h3>
         <div class="setting-item">
