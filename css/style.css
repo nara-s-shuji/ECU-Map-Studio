@@ -571,108 +571,126 @@ body {
 @media (max-width: 768px) {
     body {
         font-size: 14px;
+        height: 100dvh;
+        /* Use dynamic viewport height */
         overflow: hidden;
-        /* Prevent body scroll, handle in sections */
+        display: flex;
+        flex-direction: column;
     }
 
-    /* Hide Explorer sidebar initially */
-    #explorer {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 60px;
-        /* Leave space for bottom nav */
-        width: 250px;
-        z-index: 1000;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    /* Hide Desktop Elements as requested */
+    #toolbar,
+    #explorer,
+    #info-section,
+    #settings-menu {
+        display: none !important;
     }
 
-    #explorer.active {
-        transform: translateX(0);
-    }
-
+    /* Main Layout */
     #main-container {
         width: 100%;
+        height: 100%;
         padding-bottom: 60px;
         /* Space for bottom nav */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
     }
 
-    /* Scrollable Toolbar */
-    #toolbar {
-        overflow-x: auto;
-        white-space: nowrap;
+    /* Content Area */
+    #content-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Map Section & Scroll */
+    #map-section {
+        flex: 1;
+        /* Ensure scrolling works */
+        overflow: auto;
         -webkit-overflow-scrolling: touch;
-        padding-right: 10px;
-        flex-wrap: nowrap;
-        /* Prevent wrapping */
+        position: relative;
+        width: 100vw;
     }
 
-    .toolbar-btn {
-        flex-shrink: 0;
-        /* Prevent squashing */
-        width: 44px;
-        height: 40px;
+    #table-wrapper {
+        min-height: auto;
+        /* Allow it to shrink/grow */
+        padding-bottom: 100px;
+        /* Extra space at bottom so content isn't hidden by nav */
     }
 
-    .toolbar-title {
-        display: none;
-        /* Hide title on small screens */
-    }
-
-    .toolbar-separator {
-        flex-shrink: 0;
-    }
-
-    /* Grid Adjustments - Force display grid to prevent stacking */
+    /* Grid Adjustments - Force display grid */
     .grid-container,
     .header-row {
         display: grid !important;
         grid-template-columns: 60px repeat(20, 50px) !important;
         width: max-content;
-        /* Ensure it takes full width of columns and doesn't wrap */
     }
 
     .cell {
         width: 50px;
-        height: 35px;
-        font-size: 13px;
-        /* Slightly larger text */
+        height: 40px;
+        /* Taller for touch */
+        font-size: 14px;
     }
 
     .header-cell,
-    .label-cell {
-        height: 35px;
-        font-size: 13px;
+    .label-cell,
+    .corner-cell {
+        height: 40px;
+        font-size: 12px;
+        position: sticky;
+        /* Ensure stickiness works */
     }
 
-    /* Docked Cell Popup for Mobile - Single Line Optimization */
+    .label-cell,
+    .corner-cell {
+        width: 60px;
+        left: 0;
+        z-index: 100;
+    }
+
+    .header-row {
+        top: 0;
+        z-index: 90;
+    }
+
+    /* Fix corner z-index to be above both */
+    .corner-cell {
+        z-index: 110;
+        top: 0;
+        left: 0;
+    }
+
+    /* Docked Cell Popup for Mobile */
     #cell-popup {
         position: fixed;
-        bottom: 60px;
-        /* Above bottom nav */
+        /* Position above the bottom nav (60px) */
         bottom: calc(60px + env(safe-area-inset-bottom));
-        /* Adjust for iPhone home bar */
         left: 0;
         right: 0;
         top: auto !important;
-        width: 100%;
-        height: 50px;
+
+        height: 60px;
         padding: 5px 10px;
-        background: var(--panel);
-        border-top: 1px solid var(--accent);
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        background: #2d2d30;
+        /* Lighter bg to stand out */
+        border-top: 2px solid var(--accent);
+
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        /* Center content */
         align-items: center;
-        gap: 15px;
-        /* Space between groups */
+        justify-content: space-between;
+        /* Spread controls */
+
+        /* Ensure visibility */
+        z-index: 9999;
         transform: translateY(150%);
         transition: transform 0.2s ease-out;
-        z-index: 2000;
         box-sizing: border-box;
     }
 
@@ -680,45 +698,31 @@ body {
         transform: translateY(0);
     }
 
-    /* Hide desktop specific popup parts if needed or restyle */
-    .popup-mode-selector {
-        margin: 0;
-        display: flex;
-        gap: 0;
-    }
-
-    .popup-mode-btn {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
-
-    .popup-controls {
-        margin: 0;
-        gap: 10px;
-    }
-
+    /* Mobile Popup Specifics */
     .popup-input {
-        width: 60px;
-        font-size: 16px;
-        padding: 5px;
+        width: 80px;
+        height: 40px;
+        font-size: 18px;
         background: #000;
+        border: 1px solid #555;
     }
 
     .popup-btn {
-        padding: 0;
-        width: 40px;
-        height: 34px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
+        width: 60px;
+        height: 40px;
+        font-size: 24px;
         background: #444;
     }
 
-    /* Checkbox/Radios in Settings/Graph */
-    .setting-item,
-    #graph-header {
-        font-size: 14px;
+    .popup-mode-selector {
+        display: none;
+    }
+
+    /* Hide mode selector for now to save space */
+    .popup-controls {
+        gap: 15px;
+        width: 100%;
+        justify-content: center;
     }
 
     /* Graph Fullscreen */
@@ -726,99 +730,52 @@ body {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
-        border-radius: 0;
-        resize: none;
-        z-index: 5000;
-        /* Top most */
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
-    .resize-handle {
-        display: none;
-    }
-
-    #graph-close {
-        font-size: 24px;
-        padding: 15px;
-    }
-
-    /* Settings Menu */
-    #settings-menu {
-        width: 80%;
-        max-width: 300px;
-        right: 0;
-        left: auto;
-        transform: translateX(100%);
-    }
-
-    #settings-menu.active {
-        transform: translateX(0);
-    }
-
-    /* Hide Info Section on Mobile Editor View (Too cluttered, move to Monitor?) */
-    /* Or make it collapsible? For now, keep it but maybe minimize text */
-    #info-section {
-        height: auto;
-        max-height: 100px;
-        padding: 5px;
-    }
-
-    #info-content p {
-        margin: 2px 0;
-        display: inline-block;
-        margin-right: 10px;
-    }
-}
-
-/* Bottom Navigation */
-#bottom-nav {
-    display: none;
-    /* Hidden on Desktop */
-}
-
-@media (max-width: 768px) {
+    /* Bottom Navigation */
     #bottom-nav {
-        display: flex;
+        display: flex !important;
+        /* Force show */
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 60px;
         padding-bottom: env(safe-area-inset-bottom);
-        /* iPhone X+ safe area */
-        background-color: #252526;
-        border-top: 1px solid #3c3c3c;
-        z-index: 9999;
-        /* Ensure on top of everything */
+        background-color: #1a1a1a;
+        border-top: 1px solid #444;
+        z-index: 10000;
+        /* Max z-index */
         justify-content: space-around;
         align-items: center;
-        box-sizing: content-box;
-        /* To handle padding addition correctly */
     }
+}
 
-    .nav-item {
-        background: none;
-        border: none;
-        color: #888;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-size: 10px;
-        cursor: pointer;
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        padding-top: 5px;
-    }
+background: none;
+border: none;
+color: #888;
+display: flex;
+flex-direction: column;
+align-items: center;
+font-size: 10px;
+cursor: pointer;
+width: 100%;
+height: 100%;
+justify-content: center;
+padding-top: 5px;
+}
 
-    .nav-item.active {
-        color: var(--accent);
-        background: rgba(255, 255, 255, 0.05);
-    }
+.nav-item.active {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+}
 
-    .nav-icon {
-        font-size: 22px;
-        margin-bottom: 2px;
-    }
+.nav-icon {
+    font-size: 22px;
+    margin-bottom: 2px;
+}
 }
