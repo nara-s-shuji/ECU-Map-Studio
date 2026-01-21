@@ -62,124 +62,9 @@
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
-    <!-- メインエディタビュー -->
-    <div id="editor-view" class="view-section active">
-        <div id="info-section">
-            <div class="info-item">
-                <span class="info-label">Selected:</span>
-                <span class="info-value" id="info-cell">-</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Value:</span>
-                <span class="info-value" id="info-value">-</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label" style="color: #0078d4;">Original:</span>
-                <span class="info-value" id="info-original">-</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Change:</span>
-                <span class="info-value" id="info-change">-</span>
-                <span class="info-value" id="info-change-percent" style="font-size: 0.8em; color: #888;"></span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Range:</span>
-                <span class="info-value" id="info-range">-</span>
-            </div>
-        </div>
-
-        <div id="map-section">
-            <div id="map-container">
-                <div class="header-row" id="headerRow"></div>
-                <!-- Grid will be populated by JS -->
-                <div class="map-grid" id="mapGrid"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- モニタービュー（プレースホルダー） -->
-    <div id="monitor-view" class="view-section" style="display:none; padding: 20px; text-align: center; color: #888;">
-        <h2>📊 Monitor Mode</h2>
-        <p>Coming Soon...</p>
-        <p>Real-time gauges and meters will appear here.</p>
-    </div>
-
-    <!-- ロガービュー（プレースホルダー） -->
-    <div id="logger-view" class="view-section" style="display:none; padding: 20px; text-align: center; color: #888;">
-        <h2>💾 Data Logger</h2>
-        <p>Coming Soon...</p>
-        <p>Log recording and playback features will appear here.</p>
-    </div>
-
-    <div id="settings-menu">
-        <h3>⚙️ 設定</h3>
-        <div class="setting-item">
-            <label>セル数値の色表示:</label>
-            <select id="cell-color-mode" onchange="updateCellColorMode()">
-                <option value="diff">差分表示（編集: 赤/青）</option>
-                <option value="heatmap">ヒートマップ（青→緑→赤）</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="graph-overlay">
-        <div id="graph-header">
-            <select id="graph-type" onchange="updateGraph()">
-                <option value="3d">3D: Surface</option>
-                <option value="rpm">2D: vs RPM (Fix TPS)</option>
-                <option value="tps">2D: vs TPS (Fix RPM)</option>
-            </select>
-            <button id="graph-close" onclick="toggleGraph()">×</button>
-        </div>
-        <div id="graph-body">
-            <div id="chart-container"></div>
-        </div>
-
-        <div class="resize-handle resize-n"
-            style="position: absolute; top: 0; left: 0; right: 0; height: 15px; cursor: ns-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-s"
-            style="position: absolute; bottom: 0; left: 0; right: 0; height: 15px; cursor: ns-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-e"
-            style="position: absolute; right: 0; top: 0; bottom: 0; width: 15px; cursor: ew-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-w"
-            style="position: absolute; left: 0; top: 0; bottom: 0; width: 15px; cursor: ew-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-ne"
-            style="position: absolute; top: 0; right: 0; width: 25px; height: 25px; cursor: nesw-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-nw"
-            style="position: absolute; top: 0; left: 0; width: 25px; height: 25px; cursor: nwse-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-se"
-            style="position: absolute; bottom: 0; right: 0; width: 25px; height: 25px; cursor: nwse-resize; z-index: 999999;">
-        </div>
-        <div class="resize-handle resize-sw"
-            style="position: absolute; bottom: 0; left: 0; width: 25px; height: 25px; cursor: nesw-resize; z-index: 999999;">
-        </div>
-    </div>
-
-    <input type="file" id="file-input" style="display:none" onchange="importFromCSV(this)">
-    <input type="file" id="base-file-input" style="display:none" onchange="importBaseFromCSV(this)">
-
-    <!-- セル編集ポップアップ -->
-    <div id="cell-popup">
-        <div class="popup-mode-selector">
-            <button class="popup-mode-btn active" id="mode-abs" onclick="switchPopupMode('abs')">絶対値</button>
-            <button class="popup-mode-btn" id="mode-pct" onclick="switchPopupMode('pct')">%</button>
-        </div>
-        <div class="popup-controls">
-            <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
-                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">▽</button>
-            <input type="number" class="popup-input" id="popup-delta" value="10" step="1" min="1">
-            <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
-                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)" ontouchend="stopAdjusting()">△</button>
-        </div>
-    </div>
-
+    <!-- メインコンテナ: サイドバーとコンテンツ部分 -->
     <div id="main-container">
+        <!-- サイドバー -->
         <div id="explorer">
             <div class="explorer-header">EXPLORER: PROJECT</div>
             <div class="tree-item"><span class="tree-icon">📁</span> src</div>
@@ -194,25 +79,60 @@
             </div>
         </div>
 
+        <!-- コンテンツエリア -->
         <div id="content-area">
-            <div id="map-section">
-                <div id="table-wrapper">
-                    <div id="headerRow" class="header-row"></div>
-                    <div id="mapGrid" class="grid-container"></div>
+
+            <!-- 1. エディタビュー -->
+            <div id="editor-view" class="view-section active">
+                <div id="info-section">
+                    <div class="info-item">
+                        <span class="info-label">Selected:</span>
+                        <span class="info-value" id="info-cell">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Value:</span>
+                        <span class="info-value" id="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label" style="color: #0078d4;">Original:</span>
+                        <span class="info-value" id="info-original">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Change:</span>
+                        <span class="info-value" id="info-change">-</span>
+                        <span class="info-value" id="info-change-percent" style="font-size: 0.8em; color: #888;"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Range:</span>
+                        <span class="info-value" id="info-range">-</span>
+                    </div>
+                </div>
+
+                <div id="map-section">
+                    <div id="table-wrapper">
+                        <div id="headerRow" class="header-row"></div>
+                        <!-- 正しいクラス名: grid-container -->
+                        <div id="mapGrid" class="grid-container"></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="info-section">
-                <h3>📋 Information</h3>
-                <div id="info-content">
-                    <p style="margin: 5px 0;"><strong>Selected Cell:</strong> <span id="info-cell">-</span></p>
-                    <p style="margin: 5px 0;"><strong>Current Value:</strong> <span id="info-value">-</span> μs</p>
-                    <p style="margin: 5px 0;"><strong>Original Value:</strong> <span id="info-original">-</span> μs</p>
-                    <p style="margin: 5px 0;"><strong>Change:</strong> <span id="info-change">-</span> (<span
-                            id="info-change-percent">-</span>)</p>
-                    <p style="margin: 5px 0;"><strong>Map Range:</strong> <span id="info-range">-</span></p>
-                </div>
+            <!-- 2. モニタービュー -->
+            <div id="monitor-view" class="view-section"
+                style="display:none; padding: 20px; text-align: center; color: #888;">
+                <h2>📊 Monitor Mode</h2>
+                <p>Coming Soon...</p>
+                <p>Real-time gauges and meters will appear here.</p>
             </div>
+
+            <!-- 3. ロガービュー -->
+            <div id="logger-view" class="view-section"
+                style="display:none; padding: 20px; text-align: center; color: #888;">
+                <h2>💾 Data Logger</h2>
+                <p>Coming Soon...</p>
+                <p>Log recording and playback features will appear here.</p>
+            </div>
+
         </div>
     </div>
 
