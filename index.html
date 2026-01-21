@@ -136,6 +136,26 @@
         </div>
     </div>
 
+    <!-- Bottom Navigation -->
+    <div id="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('editor')">
+            <span class="nav-icon">▤</span>
+            <span>Editor</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('monitor')">
+            <span class="nav-icon">📊</span>
+            <span>Monitor</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('logger')">
+            <span class="nav-icon">📈</span>
+            <span>Logger</span>
+        </button>
+        <button class="nav-item" onclick="toggleSettings()">
+            <span class="nav-icon">⚙️</span>
+            <span>Setting</span>
+        </button>
+    </div>
+
     <!-- Scripts -->
     <script src="js/app.js"></script>
     <script src="js/ui.js"></script>

@@ -354,6 +354,11 @@ function renderTable() {
             input.value = fuelMap[t][r];
             input.className = cellColorMode === 'diff' ? 'diff-mode' : 'heatmap-mode';
 
+            // Mobile: Disable direct input (keyboard)
+            if (window.innerWidth <= 1024) {
+                input.readOnly = true;
+            }
+
             // セル選択処理
             cell.addEventListener('mousedown', (e) => {
                 e.preventDefault(); // テキスト選択を防止
