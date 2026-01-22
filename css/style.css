@@ -507,7 +507,7 @@ body {
 }
 
 #cell-popup.active {
-    display: block !important;
+    display: block;
 }
 
 .popup-mode-selector {
@@ -723,6 +723,7 @@ body {
 
     #cell-popup.active {
         transform: translateY(0);
+        display: flex !important;
     }
 
     /* Mobile Popup Specifics */

@@ -16,9 +16,9 @@ window.switchTab = function (tabName) {
     // Find button that calls this tab (simplified matching index)
     const navBtns = document.getElementById('bottom-nav').children;
     if (tabName === 'editor') navBtns[0].classList.add('active');
-    if (tabName === 'monitor') navBtns[1].classList.add('active');
-    if (tabName === 'logger') navBtns[2].classList.add('active');
-    if (tabName === 'graph') navBtns[3].classList.add('active');
+    if (tabName === 'graph') navBtns[1].classList.add('active');
+    if (tabName === 'monitor') navBtns[2].classList.add('active');
+    if (tabName === 'logger') navBtns[3].classList.add('active');
 
     // View Sections Update
     document.getElementById('editor-view').style.display = 'none';
