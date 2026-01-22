@@ -144,6 +144,10 @@
 
     <!-- Bottom Navigation -->
     <div id="bottom-nav" style="touch-action: none;">
+        <button class="nav-item" onclick="toggleSettings()">
+            <span class="nav-icon">≡</span>
+            <span>メニュー</span>
+        </button>
         <button class="nav-item active" onclick="switchTab('editor')">
             <span class="nav-icon">▤</span>
             <span>編集</span>
@@ -160,12 +164,38 @@
             <span class="nav-icon">📈</span>
             <span>ログ</span>
         </button>
-        <button class="nav-item" onclick="toggleSettings()">
-            <!-- Hamburger Icon -->
-            <span class="nav-icon">≡</span>
-            <span>メニュー</span>
-        </button>
     </div>
+
+    <!-- Scripts -->
+    <!-- RESTORED UI COMPONENTS -->
+    <div id="settings-menu" class="settings-menu">
+        <div class="settings-content">
+            <h3>Menu</h3>
+            <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
+            <hr style="border-color: #444; margin: 10px 0;">
+            <div class="menu-item" style="cursor: default; background: transparent;">
+                <label>Color Mode:</label>
+                <select id="cell-color-mode" onchange="updateCellColorMode()"
+                    style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
+                    <option value="diff">Diff</option>
+                    <option value="absolute">Absolute</option>
+                </select>
+            </div>
+            <button class="menu-item" onclick="openFile()">Open File...</button>
+            <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
+        </div>
+    </div>
+
+    <!-- ... (popup and graph overlay omitted for brevity in match, but included in flow if strictly matching range) ... -->
+
+    <!-- I will use multi_replace if I can't match this big block? -->
+    <!-- Actually, I will target the bottom-nav block explicitly first. -->
+    <!-- Then the style block. -->
+
+    <!-- Retrying logic: I will do two separate replaces. -->
+    <!-- This call will fail if I try to do too much. -->
+    <!-- I will split this into two calls or use multi-replace. -->
+    <!-- I'll use multi-replace. -->
 
     <!-- Scripts -->
     <!-- RESTORED UI COMPONENTS -->
@@ -227,12 +257,14 @@
 
     <style>
         /* Emergency Styles for Restored Components */
+        /* Emergency Styles for Restored Components */
         #settings-menu {
             position: fixed;
-            top: 0;
+            top: 40px;
+            /* Below Toolbar */
             right: -250px;
             width: 250px;
-            height: 100%;
+            height: calc(100% - 40px);
             background: #252526;
             border-left: 1px solid #3c3c3c;
             z-index: 10000;
