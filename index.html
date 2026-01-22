@@ -12,7 +12,15 @@
     <!-- Offline Plotly Library -->
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <link rel="stylesheet" href="css/style.css?v=3.1">
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            // Note: In a real app we might not alert, but here we need user feedback
+            // alert("JS Error: " + msg + "\nLine: " + line); 
+            console.error("JS Error:", msg, line, error);
+            return false;
+        };
+    </script>
 </head>
 
 <body>

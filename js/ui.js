@@ -237,8 +237,19 @@ function getColor(val, t, r) {
 }
 
 function renderTable() {
+    // Safety Check
+    if (typeof fuelMap === 'undefined' || fuelMap.length === 0) {
+        if (typeof initData === 'function') {
+            initData();
+        } else {
+            console.error("initData not found");
+            return;
+        }
+    }
     const headerRow = document.getElementById('headerRow');
     const grid = document.getElementById('mapGrid');
+    if (!headerRow || !grid) return;
+
     headerRow.innerHTML = '';
     grid.innerHTML = '';
 
