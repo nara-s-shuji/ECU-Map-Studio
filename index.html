@@ -168,10 +168,206 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/graph.js"></script>
+    <!-- RESTORED UI COMPONENTS -->
+    <div id="settings-menu" class="settings-menu">
+        <div class="settings-content">
+            <h3>Menu</h3>
+            <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
+            <hr style="border-color: #444; margin: 10px 0;">
+            <div class="menu-item" style="cursor: default; background: transparent;">
+                <label>Color Mode:</label>
+                <select id="cell-color-mode" onchange="updateCellColorMode()"
+                    style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
+                    <option value="diff">Diff</option>
+                    <option value="absolute">Absolute</option>
+                </select>
+            </div>
+            <button class="menu-item" onclick="openFile()">Open File...</button>
+            <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
+        </div>
+    </div>
+
+    <div id="cell-popup">
+        <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px;">
+            <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">-</button>
+            <input type="number" id="popup-delta" class="popup-input" value="10">
+            <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)" ontouchend="stopAdjusting()">+</button>
+        </div>
+        <div class="popup-mode-selector" style="display:flex; gap: 5px;">
+            <button id="mode-abs" class="mode-btn active" onclick="switchPopupMode('abs')">ABS</button>
+            <button id="mode-pct" class="mode-btn" onclick="switchPopupMode('pct')">%</button>
+        </div>
+    </div>
+
+    <div id="graph-overlay">
+        <div id="graph-header">
+            <span>Graph View</span>
+            <select id="graph-type" onchange="updateGraph()"
+                style="background: #444; color: white; border: none; margin: 0 10px;">
+                <option value="3d">3D Surface</option>
+                <option value="rpm">RPM Axis</option>
+                <option value="tps">TPS Axis</option>
+            </select>
+            <button id="graph-close" onclick="toggleGraph()"
+                style="background:none; border:none; color:white; font-size:16px;">×</button>
+        </div>
+        <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
+        <!-- Resize Handles -->
+        <div class="resize-handle resize-n"></div>
+        <div class="resize-handle resize-s"></div>
+        <div class="resize-handle resize-e"></div>
+        <div class="resize-handle resize-w"></div>
+    </div>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
+    <input type="file" id="base-file-input" style="display:none;" accept=".csv" onchange="importBaseFromCSV(this)">
+
+    <style>
+        /* Emergency Styles for Restored Components */
+        #settings-menu {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background: #252526;
+            border-left: 1px solid #3c3c3c;
+            z-index: 10000;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #settings-menu.active {
+            right: 0;
+        }
+
+        .settings-content h3 {
+            margin-top: 0;
+            color: #ccc;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            margin-bottom: 5px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .menu-item:hover {
+            background: #444;
+        }
+
+        /* Popup Buttons */
+        .mode-btn {
+            flex: 1;
+            padding: 5px;
+            background: #333;
+            color: #888;
+            border: 1px solid #555;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+
+        /* Resize Handles */
+        .resize-handle {
+            position: absolute;
+            background: transparent;
+            z-index: 100;
+        }
+
+        .resize-n {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
+
+        .resize-s {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
+
+        .resize-e {
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+
+        .resize-w {
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+    </style>
+
+    <script>
+        // --- NUCLEAR DEBUGGER ---
+        window.addEventListener('error', function (msg, url, line, col, error) {
+            const errDiv = document.createElement('div');
+            errDiv.style.position = 'fixed';
+            errDiv.style.top = '0';
+            errDiv.style.left = '0';
+            errDiv.style.width = '100%';
+            errDiv.style.background = 'red';
+            errDiv.style.color = 'white';
+            errDiv.style.zIndex = '1000000';
+            errDiv.style.padding = '10px';
+            errDiv.style.fontSize = '12px';
+            errDiv.innerText = "JS CRASH: " + msg + " (Line " + line + ")";
+            document.body.appendChild(errDiv);
+            return false;
+        });
+
+        // Click Inspector
+        window.addEventListener('click', function (e) {
+            console.log("CLICK DETECTED ON:", e.target);
+
+            // Visual Feedback
+            const dot = document.createElement('div');
+            dot.style.position = 'fixed';
+            dot.style.left = (e.clientX - 5) + 'px';
+            dot.style.top = (e.clientY - 5) + 'px';
+            dot.style.width = '10px';
+            dot.style.height = '10px';
+            dot.style.background = 'rgba(255, 0, 0, 0.8)';
+            dot.style.border = '1px solid white';
+            dot.style.borderRadius = '50%';
+            dot.style.zIndex = '999999';
+            dot.style.pointerEvents = 'none';
+            document.body.appendChild(dot);
+            setTimeout(() => dot.remove(), 2000);
+        }, true); // Capture phase to catch it before anything stops propagation
+    </script>
+    <script src="js/app.js?v=debug_1"></script>
+    <script src="js/ui.js?v=debug_1"></script>
+    <script src="js/map.js?v=debug_1"></script>
+    <script src="js/graph.js?v=debug_1"></script>
 
 </body>
 
