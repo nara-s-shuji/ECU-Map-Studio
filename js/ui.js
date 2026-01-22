@@ -58,6 +58,91 @@ window.toggleExplorer = function () {
     exp.classList.toggle('active');
 };
 
+// --- Mobile Long-Press Selection Logic ---
+let longPressTimer;
+let isLongPressMode = false;
+let selectionStartCell = null; // {t, r} or index for header
+let selectionType = null; // 'cell', 'row', 'col'
+
+function handleTouchStart(e, type, index1, index2) {
+    // Scroll中に誤爆しないように少し待つ
+    longPressTimer = setTimeout(() => {
+        isLongPressMode = true;
+        selectionType = type;
+
+        // バイブレーションなどでフィードバック
+        if (navigator.vibrate) navigator.vibrate(50);
+
+        if (type === 'cell') {
+            const t = parseInt(index1);
+            const r = parseInt(index2);
+            selectionStartCell = { t, r };
+            startSelection(t, r); // app.js function or simulate
+
+            // Visual feedback
+            console.log("Start Cell Select", t, r);
+        } else if (type === 'col') { // TPS Header (Col)
+            const c = parseInt(index1);
+            selectionStartCell = c;
+            selectColumn(c);
+        } else if (type === 'row') { // RPM Header (Row)
+            const r = parseInt(index1);
+            selectionStartCell = r;
+            selectRow(r);
+        }
+    }, 500); // 500ms Long Press
+}
+
+function handleTouchMove(e) {
+    if (!isLongPressMode) {
+        clearTimeout(longPressTimer);
+        return; // Initialize scroll
+    }
+
+    e.preventDefault(); // Stop scroll when selecting
+
+    // Find element under finger
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (!target) return;
+
+    // Detect target type
+    if (selectionType === 'cell') {
+        const cell = target.closest('.cell');
+        if (cell && cell.id && cell.id.startsWith('c-')) {
+            const parts = cell.id.split('-');
+            const t = parseInt(parts[1]);
+            const r = parseInt(parts[2]);
+            updateSelection(t, r);
+        }
+    }
+    // Header drag selection can be implemented here similarly if distinguishing header-cell types.
+}
+
+function handleTouchEnd() {
+    clearTimeout(longPressTimer);
+    isLongPressMode = false;
+    selectionType = null;
+}
+
+document.addEventListener('touchstart', function (e) {
+    const cell = e.target.closest('.cell');
+    // Check ID to ensure it is a data cell
+    if (cell && cell.id && cell.id.startsWith('c-')) {
+        const parts = cell.id.split('-');
+        handleTouchStart(e, 'cell', parts[1], parts[2]);
+    } else if (e.target.dataset.col !== undefined) {
+        handleTouchStart(e, 'col', e.target.dataset.col);
+    } else if (e.target.dataset.row !== undefined) {
+        handleTouchStart(e, 'row', e.target.dataset.row);
+    }
+}, { passive: false });
+
+document.addEventListener('touchmove', handleTouchMove, { passive: false });
+document.addEventListener('touchend', handleTouchEnd);
+
+
 window.updateCellColorMode = function () {
     cellColorMode = document.getElementById('cell-color-mode').value;
     if (originalFuelMap.length === 0) {
@@ -256,8 +341,7 @@ function renderTable() {
     const corner = document.createElement('div');
     corner.className = 'cell header-cell corner-cell';
     corner.innerText = 'TPS\\RPM';
-    // --- 全選択ロジック ---
-    corner.addEventListener('click', () => {
+    corner.onclick = () => {
         selectedCells.clear();
         for (let t = 0; t < 21; t++) {
             for (let r = 0; r < 20; r++) {
@@ -265,381 +349,134 @@ function renderTable() {
             }
         }
         updateUISelection();
-    });
+    };
     headerRow.appendChild(corner);
 
-    RPM_AXIS.forEach((r, idx) => {
+    // HEADERS = TPS Axis (Columns)
+    TPS_AXIS.forEach((tps, c) => {
         const h = document.createElement('div');
         h.className = 'cell header-cell';
-        h.innerText = r;
+        h.innerText = tps + '%';
+        h.dataset.col = c; // Data attribute for touch
 
-        // --- 列（RPM）選択ロジック ---
-        h.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            if (e.shiftKey && selectionStart) {
-                // 範囲選択
-                const startR = Math.min(selectionStart.r, idx);
-                const endR = Math.max(selectionStart.r, idx);
-                selectedCells.clear();
+        // --- Column Selection (TPS) ---
+        h.onclick = () => selectColumn(c); // Mobile tap
+        h.onmousedown = (e) => { // Desktop click
+            if (e.shiftKey) return;
+            selectColumn(c);
+        };
 
-                // 行は全範囲、列はstartRからendRまで
-                for (let ti = 0; ti < 21; ti++) {
-                    for (let ri = startR; ri <= endR; ri++) {
-                        selectedCells.add(`${ti}-${ri}`);
-                    }
-                }
-                selR = idx; selT = 0;
-            } else {
-                // 単一選択（その列すべて）
-                selectedCells.clear();
-                for (let ti = 0; ti < 21; ti++) {
-                    selectedCells.add(`${ti}-${idx}`);
-                }
-                selectionStart = { t: 0, r: idx };
-                selectionStartMode = 'col'; // 列選択モードフラグ
-                isSelecting = true;
-                selR = idx; selT = 0;
-            }
-            updateUISelection();
-        });
-
-        h.addEventListener('mouseenter', (e) => {
-            if (isSelecting && selectionStart && selectionStartMode === 'col') {
-                const minR = Math.min(selectionStart.r, idx);
-                const maxR = Math.max(selectionStart.r, idx);
-
-                selectedCells.clear();
-                for (let ti = 0; ti < 21; ti++) {
-                    for (let ri = minR; ri <= maxR; ri++) {
-                        selectedCells.add(`${ti}-${ri}`);
-                    }
-                }
-                updateUISelection();
-            }
-        });
-
+        if (isColumnSelected(c)) h.classList.add('selected-header');
         headerRow.appendChild(h);
     });
 
-    TPS_AXIS.forEach((tps, t) => {
-        const l = document.createElement('div');
-        l.className = 'cell label-cell';
-        l.innerText = tps + '%';
+    // ROWS = RPM Axis
+    RPM_AXIS.forEach((rpm, r) => {
+        // Label Cell (Row Header)
+        const label = document.createElement('div');
+        label.className = 'cell label-cell';
+        label.innerText = rpm;
+        label.dataset.row = r;
+        label.onclick = () => selectRow(r);
 
-        // --- 行（TPS）選択ロジック ---
-        l.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            if (e.shiftKey && selectionStart) {
-                // 範囲選択
-                const startT = Math.min(selectionStart.t, t);
-                const endT = Math.max(selectionStart.t, t);
-                selectedCells.clear();
+        if (isRowSelected(r)) label.classList.add('selected-label');
+        grid.appendChild(label);
 
-                // 列は全範囲、行はstartTからendTまで
-                for (let ti = startT; ti <= endT; ti++) {
-                    for (let ri = 0; ri < 20; ri++) {
-                        selectedCells.add(`${ti}-${ri}`);
-                    }
-                }
-                selT = t; selR = 0; // フォーカスはとりあえず左端へ
-            } else {
-                // 単一選択（その行すべて）
-                selectedCells.clear();
-                for (let ri = 0; ri < 20; ri++) {
-                    selectedCells.add(`${t}-${ri}`);
-                }
-                selectionStart = { t, r: 0 };
-                selectionStartMode = 'row'; // 行選択モードフラグ
-                isSelecting = true;
-                selT = t; selR = 0;
-            }
-            updateUISelection();
-        });
-
-        l.addEventListener('mouseenter', (e) => {
-            if (isSelecting && selectionStart && selectionStartMode === 'row') {
-                const minT = Math.min(selectionStart.t, t);
-                const maxT = Math.max(selectionStart.t, t);
-
-                selectedCells.clear();
-                for (let ti = minT; ti <= maxT; ti++) {
-                    for (let ri = 0; ri < 20; ri++) {
-                        selectedCells.add(`${ti}-${ri}`);
-                    }
-                }
-                updateUISelection();
-            }
-        });
-
-        grid.appendChild(l);
-
-        RPM_AXIS.forEach((rpm, r) => {
+        // Data Cells (Iterate Columns for this Row)
+        TPS_AXIS.forEach((tps, c) => {
             const cell = document.createElement('div');
             cell.className = 'cell';
-            cell.id = `c-${t}-${r}`;
+            const cellId = `c-${c}-${r}`;
+            cell.id = cellId;
+
+            // Access correct data: fuelMap[TPS_INDEX][RPM_INDEX]
+            const val = (fuelMap[c] && fuelMap[c][r] !== undefined) ? fuelMap[c][r] : 0;
+
+            cell.style.background = getColor(val, c, r);
+            if (selectedCells.has(`${c}-${r}`)) {
+                cell.style.border = '2px solid var(--accent)';
+            }
 
             const input = document.createElement('input');
             input.type = 'number';
-            input.value = fuelMap[t][r];
-            input.className = cellColorMode === 'diff' ? 'diff-mode' : 'heatmap-mode';
+            input.inputMode = 'decimal'; // Mobile keyboard
+            input.value = val;
+            input.dataset.t = c; // Keep usage of 't' for TPS index
+            input.dataset.r = r; // Keep usage of 'r' for RPM index
 
-            // Mobile: Disable direct input (keyboard)
-            if (window.innerWidth <= 1024) {
-                input.readOnly = true;
-            }
-
-            // セル選択処理
-            cell.addEventListener('mousedown', (e) => {
-                e.preventDefault(); // テキスト選択を防止
-
-                if (e.ctrlKey || e.metaKey) {
-                    // Ctrl+クリック: 個別選択/解除
-                    e.preventDefault();
-                    const key = `${t}-${r}`;
-                    if (selectedCells.has(key)) {
-                        selectedCells.delete(key);
-                    } else {
-                        selectedCells.add(key);
-                    }
-                    selT = t; selR = r;
-                    updateUISelection();
-                } else if (e.shiftKey) {
-                    // Shift+クリック: 範囲選択
-                    e.preventDefault();
-                    if (selectionStart) {
-                        const minT = Math.min(selectionStart.t, t);
-                        const maxT = Math.max(selectionStart.t, t);
-                        const minR = Math.min(selectionStart.r, r);
-                        const maxR = Math.max(selectionStart.r, r);
-
-                        selectedCells.clear();
-                        for (let ti = minT; ti <= maxT; ti++) {
-                            for (let ri = minR; ri <= maxR; ri++) {
-                                selectedCells.add(`${ti}-${ri}`);
-                            }
-                        }
-                    }
-                    selT = t; selR = r;
-                    updateUISelection();
-                } else {
-                    // 通常クリック: 単一選択
-                    selectedCells.clear();
-                    selectedCells.add(`${t}-${r}`);
-                    selectionStart = { t, r };
-                    selectionStartMode = 'cell'; // セル選択モード
-                    isSelecting = true;
-                }
-            });
-
-            // ドラッグ選択
-            cell.addEventListener('mouseenter', (e) => {
-                if (isSelecting && selectionStart) {
-                    const minT = Math.min(selectionStart.t, t);
-                    const maxT = Math.max(selectionStart.t, t);
-                    const minR = Math.min(selectionStart.r, r);
-                    const maxR = Math.max(selectionStart.r, r);
-
-                    selectedCells.clear();
-                    for (let ti = minT; ti <= maxT; ti++) {
-                        for (let ri = minR; ri <= maxR; ri++) {
-                            selectedCells.add(`${ti}-${ri}`);
-                        }
-                    }
-                    selT = t; selR = r;
-                    updateUISelection();
-                }
-            });
+            if (window.innerWidth <= 1024) input.readOnly = true;
 
             input.onfocus = () => {
-                selT = t; selR = r;
-                updateUISelection();
-                input.select();
-                if (document.getElementById('graph-overlay').classList.contains('active')) {
-                    updateGraph();
-                }
+                handleCellSelect(c, r);
+            };
+            input.onchange = (e) => updateData(c, r, e.target.value);
+
+            if (cellColorMode === 'diff') input.classList.add('diff-mode');
+            else input.classList.add('heatmap-mode');
+
+            // Mouse Actions
+            cell.onmousedown = (e) => {
+                if (window.innerWidth > 1024) handleCellMouseDown(e, c, r);
+            };
+            cell.onmouseenter = (e) => {
+                if (window.innerWidth > 1024) handleCellMouseEnter(e, c, r);
             };
 
-            input.onclick = () => {
-                input.select();
-            };
-
-            input.oninput = (e) => {
-                fuelMap[t][r] = parseInt(e.target.value) || 0;
-                cell.style.background = getColor(fuelMap[t][r], t, r);
-                updateUISelection();
-                if (document.getElementById('graph-overlay').classList.contains('active')) {
-                    updateGraph();
-                }
-            };
-
-            input.onchange = () => {
-                saveHistory();
-            };
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    let nt = t, nr = r;
-
-                    if (e.shiftKey) {
-                        // Shift+Enter: 上に移動
-                        nt--;
-                    } else {
-                        // Enter: 下に移動
-                        nt++;
-                    }
-
-                    if (nt >= 0 && nt < 21) {
-                        const target = document.querySelector(`#c-${nt}-${nr} input`);
-                        target.focus({ preventScroll: true });
-                        target.select();
-
-                        // スクロール処理
-                        const container = document.getElementById('map-section');
-                        const targetCell = document.getElementById(`c-${nt}-${nr}`);
-
-                        requestAnimationFrame(() => {
-                            const cellRect = targetCell.getBoundingClientRect();
-                            const containerRect = container.getBoundingClientRect();
-                            const headerRow = document.getElementById('headerRow');
-                            const headerHeight = headerRow.offsetHeight;
-                            const scrollbarHeight = container.offsetHeight - container.clientHeight;
-
-                            if (e.shiftKey) {
-                                // 上移動
-                                const visibleTop = containerRect.top + headerHeight;
-                                if (cellRect.top < visibleTop) {
-                                    const scrollAmount = visibleTop - cellRect.top;
-                                    container.scrollTop -= scrollAmount;
-                                }
-                            } else {
-                                // 下移動
-                                const visibleBottom = containerRect.bottom - scrollbarHeight;
-                                if (cellRect.bottom > visibleBottom) {
-                                    const scrollAmount = cellRect.bottom - visibleBottom;
-                                    container.scrollTop += scrollAmount;
-                                }
-                            }
-                        });
-                    }
-                }
-                else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                    e.preventDefault();
-
-                    // Shift+矢印キーで範囲選択
-                    if (e.shiftKey) {
-                        if (!isShiftSelecting) {
-                            isShiftSelecting = true;
-                            selectionStart = { t, r };
-                            selectedCells.clear();
-                            selectedCells.add(`${t}-${r}`);
-                        }
-
-                        let nt = selT, nr = selR;
-
-                        if (e.key === "ArrowUp") nt--;
-                        else if (e.key === "ArrowDown") nt++;
-                        else if (e.key === "ArrowLeft") nr--;
-                        else if (e.key === "ArrowRight") nr++;
-
-                        if (nt >= 0 && nt < 21 && nr >= 0 && nr < 20) {
-                            selT = nt; selR = nr;
-
-                            // 範囲選択を更新
-                            const minT = Math.min(selectionStart.t, nt);
-                            const maxT = Math.max(selectionStart.t, nt);
-                            const minR = Math.min(selectionStart.r, nr);
-                            const maxR = Math.max(selectionStart.r, nr);
-
-                            selectedCells.clear();
-                            for (let ti = minT; ti <= maxT; ti++) {
-                                for (let ri = minR; ri <= maxR; ri++) {
-                                    selectedCells.add(`${ti}-${ri}`);
-                                }
-                            }
-
-                            updateUISelection();
-
-                            const target = document.querySelector(`#c-${nt}-${nr} input`);
-                            target.focus({ preventScroll: true });
-                        }
-                    } else {
-                        // 通常の矢印キー移動
-                        isShiftSelecting = false;
-                        selectedCells.clear();
-                        selectedCells.add(`${t}-${r}`);
-
-                        let nt = t, nr = r;
-                        if (e.key === "ArrowUp") nt--;
-                        else if (e.key === "ArrowDown") nt++;
-                        else if (e.key === "ArrowLeft") nr--;
-                        else if (e.key === "ArrowRight") nr++;
-
-                        if (nt >= 0 && nt < 21 && nr >= 0 && nr < 20) {
-                            const container = document.getElementById('map-section');
-                            const target = document.querySelector(`#c-${nt}-${nr} input`);
-
-                            // フォーカスを移動（スクロールなし）
-                            target.focus({ preventScroll: true });
-                            target.select();
-
-                            // スクロール処理
-                            const targetCell = document.getElementById(`c-${nt}-${nr}`);
-                            const headerRow = document.getElementById('headerRow');
-
-                            requestAnimationFrame(() => {
-                                const cellRect = targetCell.getBoundingClientRect();
-                                const containerRect = container.getBoundingClientRect();
-                                const headerHeight = headerRow.offsetHeight;
-                                const labelWidth = 80;
-
-                                // スクロールバーの高さを取得
-                                const scrollbarHeight = container.offsetHeight - container.clientHeight;
-
-                                // 上矢印：ヘッダーの直下に表示
-                                if (e.key === "ArrowUp") {
-                                    const visibleTop = containerRect.top + headerHeight;
-                                    if (cellRect.top < visibleTop) {
-                                        const scrollAmount = visibleTop - cellRect.top;
-                                        container.scrollTop -= scrollAmount;
-                                    }
-                                }
-                                // 下矢印：コンテナの底部に表示（スクロールバーを考慮）
-                                else if (e.key === "ArrowDown") {
-                                    const visibleBottom = containerRect.bottom - scrollbarHeight;
-                                    if (cellRect.bottom > visibleBottom) {
-                                        const scrollAmount = cellRect.bottom - visibleBottom;
-                                        container.scrollTop += scrollAmount;
-                                    }
-                                }
-                                // 左矢印：ラベル列の右側に表示
-                                else if (e.key === "ArrowLeft") {
-                                    const visibleLeft = containerRect.left + labelWidth;
-                                    if (cellRect.left < visibleLeft) {
-                                        const scrollAmount = visibleLeft - cellRect.left;
-                                        container.scrollLeft -= scrollAmount;
-                                    }
-                                }
-                                // 右矢印：コンテナの右端に表示
-                                else if (e.key === "ArrowRight") {
-                                    const visibleRight = containerRect.right;
-                                    if (cellRect.right > visibleRight) {
-                                        const scrollAmount = cellRect.right - visibleRight;
-                                        container.scrollLeft += scrollAmount;
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-
-            cell.style.background = getColor(fuelMap[t][r], t, r);
             cell.appendChild(input);
             grid.appendChild(cell);
         });
     });
-    updateUISelection();
+}
+
+function handleCellMouseDown(e, t, r) {
+    if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const key = `${t}-${r}`;
+        if (selectedCells.has(key)) selectedCells.delete(key);
+        else selectedCells.add(key);
+        selT = t; selR = r;
+        updateUISelection();
+    } else if (e.shiftKey) {
+        e.preventDefault();
+        if (selectionStart) {
+            const minT = Math.min(selectionStart.t, t);
+            const maxT = Math.max(selectionStart.t, t);
+            const minR = Math.min(selectionStart.r, r);
+            const maxR = Math.max(selectionStart.r, r);
+            selectedCells.clear();
+            for (let ti = minT; ti <= maxT; ti++) {
+                for (let ri = minR; ri <= maxR; ri++) {
+                    selectedCells.add(`${ti}-${ri}`);
+                }
+            }
+        }
+        selT = t; selR = r;
+        updateUISelection();
+    } else {
+        selectedCells.clear();
+        selectedCells.add(`${t}-${r}`);
+        selectionStart = { t, r };
+        isSelecting = true;
+        selT = t; selR = r;
+        updateUISelection();
+    }
+}
+
+function handleCellMouseEnter(e, t, r) {
+    if (isSelecting && selectionStart) {
+        const minT = Math.min(selectionStart.t, t);
+        const maxT = Math.max(selectionStart.t, t);
+        const minR = Math.min(selectionStart.r, r);
+        const maxR = Math.max(selectionStart.r, r);
+        selectedCells.clear();
+        for (let ti = minT; ti <= maxT; ti++) {
+            for (let ri = minR; ri <= maxR; ri++) {
+                selectedCells.add(`${ti}-${ri}`);
+            }
+        }
+        selT = t; selR = r;
+        updateUISelection();
+    }
 }
 
 function updateUISelection() {
@@ -669,17 +506,20 @@ function updateUISelection() {
         }
     }
 
-    // 選択されたRPMヘッダーを明るくする
+    // Highlighting Logic - NEEDS TO BE UPDATED FOR NEW LAYOUT
+    // selT is TPS index (Column), selR is RPM index (Row)
+
+    // Highlight Header (TPS/Column)
     const headerCells = document.getElementById('headerRow').children;
-    if (headerCells[selR + 1]) {
-        headerCells[selR + 1].classList.add('selected-header');
+    // index + 1 because corner cell is 0
+    if (headerCells[selT + 1]) {
+        headerCells[selT + 1].classList.add('selected-header');
     }
 
-    // 選択されたTPSラベルを明るくする
-    const gridCells = document.getElementById('mapGrid').children;
-    const labelIndex = selT * 21; // 各行は21個のセル（1個のラベル + 20個のデータセル）
-    if (gridCells[labelIndex]) {
-        gridCells[labelIndex].classList.add('selected-label');
+    // Highlight Label (RPM/Row)
+    const labels = document.querySelectorAll('.label-cell');
+    if (labels[selR]) {
+        labels[selR].classList.add('selected-label');
     }
 
     // 情報パネルの更新
@@ -690,9 +530,9 @@ function updateUISelection() {
 
     const cellCount = selectedCells.size;
     if (cellCount > 1) {
-        document.getElementById('info-cell').innerText = `${cellCount} cells selected (Main: RPM ${RPM_AXIS[selR]}, TPS ${TPS_AXIS[selT]}%)`;
+        document.getElementById('info-cell').innerText = `${cellCount} cells selected (Main: TPS ${TPS_AXIS[selT]}%, RPM ${RPM_AXIS[selR]})`;
     } else {
-        document.getElementById('info-cell').innerText = `RPM: ${RPM_AXIS[selR]}, TPS: ${TPS_AXIS[selT]}%`;
+        document.getElementById('info-cell').innerText = `TPS: ${TPS_AXIS[selT]}%, RPM: ${RPM_AXIS[selR]}`;
     }
 
     document.getElementById('info-value').innerText = currentValue;
@@ -747,7 +587,10 @@ function updatePopupPosition() {
     const headerHeight = headerRow ? headerRow.offsetHeight : 28;
     const visibleTop = mapRect.top + headerHeight;
     const scrollbarHeight = mapSection.offsetHeight - mapSection.clientHeight;
-    const visibleBottom = mapRect.bottom - scrollbarHeight;
+    // const visibleBottom = mapRect.bottom - scrollbarHeight; // Unused
+    const visibleRight = mapRect.right;
+    const visibleLeft = mapRect.left + 80; // Label width
+    const infoTop = document.getElementById('info-section').getBoundingClientRect().top;
 
     // Only hide if completely out of view (relaxed check)
     if (cellRect.bottom < mapRect.top || cellRect.top > mapRect.bottom) {
@@ -783,6 +626,9 @@ function updatePopupPosition() {
 
     // 下側に表示スペースがない場合は上に調整
     // INFORMATIONペインと重ならないように
+    // Offset bottom
+    const visibleBottom = mapRect.bottom - scrollbarHeight;
+
     const maxBottom = Math.min(visibleBottom, infoTop);
     if (top + popupHeight > maxBottom) {
         top = maxBottom - popupHeight - 5;
@@ -803,4 +649,78 @@ window.renderTable = renderTable;
 window.updateUISelection = updateUISelection;
 window.updatePopupPosition = updatePopupPosition;
 
+// --- Helper Functions for Selection (New) ---
 
+window.selectColumn = function (c) {
+    selectedCells.clear();
+    // TPS Axis c (Column) -> Select all Rows for this TPS
+    // Data is fuelMap[c][r]
+    for (let r = 0; r < 20; r++) {
+        selectedCells.add(`${c}-${r}`);
+    }
+    selT = c; selR = 0;
+    selectionStart = { t: c, r: 0 };
+    updateUISelection();
+};
+
+window.selectRow = function (r) {
+    selectedCells.clear();
+    // RPM Axis r (Row) -> Select all Cols for this RPM
+    for (let c = 0; c < 21; c++) {
+        selectedCells.add(`${c}-${r}`);
+    }
+    selT = 0; selR = r;
+    selectionStart = { t: 0, r: r };
+    updateUISelection();
+};
+
+window.startSelection = function (t, r) {
+    selectedCells.clear();
+    selectedCells.add(`${t}-${r}`);
+    selT = t; selR = r;
+    updateUISelection();
+};
+
+window.updateSelection = function (t, r) {
+    if (!selectionStartCell) return;
+
+    selectedCells.clear();
+    const startT = Math.min(selectionStartCell.t, t);
+    const endT = Math.max(selectionStartCell.t, t);
+    const startR = Math.min(selectionStartCell.r, r);
+    const endR = Math.max(selectionStartCell.r, r);
+
+    for (let ci = startT; ci <= endT; ci++) {
+        for (let ri = startR; ri <= endR; ri++) {
+            selectedCells.add(`${ci}-${ri}`);
+        }
+    }
+    selT = t; selR = r; // Focus follows finger
+    updateUISelection();
+};
+
+window.isColumnSelected = function (c) {
+    // Check if all cells in col c are selected
+    if (selectedCells.size < 20) return false;
+    for (let r = 0; r < 20; r++) {
+        if (!selectedCells.has(`${c}-${r}`)) return false;
+    }
+    return true;
+};
+
+window.isRowSelected = function (r) {
+    // Check if all cells in row r are selected
+    if (selectedCells.size < 21) return false;
+    for (let c = 0; c < 21; c++) {
+        if (!selectedCells.has(`${c}-${r}`)) return false;
+    }
+    return true;
+};
+
+window.handleCellSelect = function (t, r) {
+    // Mobile focus handler or click handler substitute
+    selectedCells.clear();
+    selectedCells.add(`${t}-${r}`);
+    selT = t; selR = r;
+    updateUISelection();
+};

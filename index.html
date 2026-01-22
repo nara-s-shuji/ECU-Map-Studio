@@ -327,42 +327,62 @@
     </style>
 
     <script>
-        // --- NUCLEAR DEBUGGER ---
-        window.addEventListener('error', function (msg, url, line, col, error) {
+        // --- IMPROVED DEBUGGER ---
+        // Capture resource loading errors (which use addEventListener) and runtime errors
+        window.addEventListener('error', function (event) {
+            let msg = '';
+            let line = '';
+
+            if (event instanceof ErrorEvent) {
+                msg = event.message;
+                line = event.lineno;
+            } else if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                msg = "Resource Not Found: " + (event.target.src || event.target.href);
+                line = 'N/A';
+            } else {
+                msg = event.toString();
+            }
+
+            console.error("Global Error Caught:", event);
+
             const errDiv = document.createElement('div');
             errDiv.style.position = 'fixed';
-            errDiv.style.top = '0';
-            errDiv.style.left = '0';
-            errDiv.style.width = '100%';
-            errDiv.style.background = 'red';
+            errDiv.style.bottom = '10px';
+            errDiv.style.right = '10px';
+            errDiv.style.maxWidth = '300px';
+            errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
             errDiv.style.color = 'white';
             errDiv.style.zIndex = '1000000';
             errDiv.style.padding = '10px';
             errDiv.style.fontSize = '12px';
-            errDiv.innerText = "JS CRASH: " + msg + " (Line " + line + ")";
+            errDiv.style.borderRadius = '5px';
+            errDiv.style.fontFamily = 'monospace';
+            errDiv.style.pointerEvents = 'none'; // Click-through
+            errDiv.innerText = "JS: " + msg + " (L" + line + ")";
+
+            // Auto hide for minor errors, stay for crashes
             document.body.appendChild(errDiv);
-            return false;
-        });
+            setTimeout(() => errDiv.remove(), 5000);
 
-        // Click Inspector
+            return false; // Let default handler run if needed
+        }, true); // Capture phase
+
+        // Click Inspector (Modified to be less intrusive)
         window.addEventListener('click', function (e) {
-            console.log("CLICK DETECTED ON:", e.target);
-
-            // Visual Feedback
+            // Visual Feedback - Small fading dot
             const dot = document.createElement('div');
             dot.style.position = 'fixed';
-            dot.style.left = (e.clientX - 5) + 'px';
-            dot.style.top = (e.clientY - 5) + 'px';
-            dot.style.width = '10px';
-            dot.style.height = '10px';
-            dot.style.background = 'rgba(255, 0, 0, 0.8)';
-            dot.style.border = '1px solid white';
+            dot.style.left = (e.clientX - 2) + 'px';
+            dot.style.top = (e.clientY - 2) + 'px';
+            dot.style.width = '4px';
+            dot.style.height = '4px';
+            dot.style.background = 'red';
             dot.style.borderRadius = '50%';
             dot.style.zIndex = '999999';
             dot.style.pointerEvents = 'none';
             document.body.appendChild(dot);
-            setTimeout(() => dot.remove(), 2000);
-        }, true); // Capture phase to catch it before anything stops propagation
+            setTimeout(() => dot.remove(), 500);
+        }, true);
     </script>
     <script src="js/app.js?v=debug_1"></script>
     <script src="js/ui.js?v=debug_1"></script>
