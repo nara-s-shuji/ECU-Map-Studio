@@ -259,8 +259,7 @@ window.adjustDelta = function (direction) {
 };
 
 // --- New Spinner Logic ---
-let spinnerInterval;
-let spinnerTimeout;
+
 
 // --- Global Event Logic (Debounced) ---
 let applyInterval, applyTimeout;
