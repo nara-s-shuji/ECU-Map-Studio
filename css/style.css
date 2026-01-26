@@ -716,24 +716,25 @@ body {
     #cell-popup {
         position: fixed;
         /* Position above the bottom nav (60px) */
-        bottom: calc(60px + env(safe-area-inset-bottom));
+        bottom: calc(65px + env(safe-area-inset-bottom));
         left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        /* Responsive width */
-        max-width: 300px;
+        transform: translateX(-50%) !important;
+        /* Ensure centering */
+        width: 96%;
+        /* Wider in Portrait */
+        max-width: 380px;
         top: auto !important;
 
-        height: 50px;
-        /* Reduced Height */
-        padding: 5px;
+        height: 60px;
+        /* Slightly taller for spinner */
+        padding: 5px 10px;
         background: #2d2d30;
         border: 2px solid var(--accent);
         /* Full Border */
 
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
 
         z-index: 9999;
         box-sizing: border-box;
@@ -743,8 +744,63 @@ body {
 
     /* Portrait Transition (Override default transform) */
     #cell-popup[style*="display: none"] {
-        opacity: 0;
-        pointer-events: none;
+        display: none !important;
+    }
+
+    /* Spinner Styles */
+    .delta-spinner {
+        display: flex;
+        align-items: center;
+        background: #000;
+        border: 1px solid #555;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .delta-spinner .popup-input {
+        width: 50px;
+        height: 40px;
+        border: none;
+        text-align: center;
+        background: transparent;
+        color: white;
+        font-size: 16px;
+        -moz-appearance: textfield;
+        /* Hide default spinner */
+    }
+
+    .delta-spinner .popup-input::-webkit-outer-spin-button,
+    .delta-spinner .popup-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .spinner-btns {
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid #555;
+    }
+
+    .spin-btn {
+        width: 30px;
+        height: 20px;
+        background: #333;
+        color: #ddd;
+        border: none;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .spin-btn:active {
+        background: var(--accent);
+        color: white;
+    }
+
+    .spin-btn:first-child {
+        border-bottom: 1px solid #555;
     }
 
     #cell-popup.active {
@@ -945,6 +1001,13 @@ body {
             order: 3;
             margin: 5px 0;
         }
+
+        .delta-spinner {
+            order: 3;
+            margin: 5px 0;
+        }
+
+        /* Wrapper replaces input */
 
         #cell-popup .popup-controls button:nth-of-type(2) {
             order: 4;
