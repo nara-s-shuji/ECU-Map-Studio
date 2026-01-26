@@ -532,6 +532,9 @@ function renderTable() {
             grid.appendChild(cell);
         });
     });
+
+    // Restore highlights for selected cells after re-rendering
+    updateUISelection();
 }
 
 function handleCellMouseDown(e, t, r) {
