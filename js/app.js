@@ -78,6 +78,10 @@ window.onload = () => {
     // ensure popup visibility if default is editor
     if (document.getElementById('nav-editor').classList.contains('active')) {
         document.body.classList.add('mode-editor');
+        // Force select first cell to show popup
+        setTimeout(() => {
+            if (window.handleCellMouseDown) handleCellMouseDown({}, 0, 0);
+        }, 100);
     }
 };
 

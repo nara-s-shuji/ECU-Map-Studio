@@ -804,7 +804,6 @@ body {
     }
 
     #cell-popup.active {
-        transform: translateY(0);
         display: flex !important;
     }
 

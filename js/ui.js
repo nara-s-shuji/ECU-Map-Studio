@@ -537,15 +537,15 @@ function renderTable() {
 }
 
 function handleCellMouseDown(e, t, r) {
-    if (e.ctrlKey || e.metaKey) {
+    if (e && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         const key = `${t}-${r}`;
         if (selectedCells.has(key)) selectedCells.delete(key);
         else selectedCells.add(key);
         selT = t; selR = r;
         updateUISelection();
-    } else if (e.shiftKey) {
-        e.preventDefault();
+    } else if (e && e.shiftKey) {
+        if (e.preventDefault) e.preventDefault();
         if (selectionStart) {
             const minT = Math.min(selectionStart.t, t);
             const maxT = Math.max(selectionStart.t, t);
