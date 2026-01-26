@@ -188,33 +188,37 @@
 
     <div id="cell-popup" style="user-select: none; -webkit-user-select: none;">
         <div class="popup-controls"
-            style="display:flex; gap: 4px; width: 100%; align-items: center; justify-content: center;">
+            style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
             <!-- 1. Reset Button -->
             <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
-                style="font-size: 14px; padding: 0; width: 36px; height: 36px; flex-shrink: 0;">↺</button>
+                style="width: 36px; height: 100%; font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center;">↺</button>
 
-            <!-- 2. Apply Minus (Large Action) -->
-            <button class="popup-btn" id="btn-apply-minus"
-                style="flex: 1; min-width: 44px; height: 36px; font-size: 24px; font-weight: bold;">-</button>
+            <!-- 2. Apply Minus -->
+            <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1)" onmouseup="stopApply()"
+                onmouseleave="stopApply()" ontouchstart="startApply(-1)" ontouchend="stopApply()"
+                style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">-</button>
 
-            <!-- 3. Spinner Group (Compact) -->
+            <!-- 3. Spinner Group -->
             <div class="delta-spinner-group"
-                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 36px; margin: 0 4px; flex-shrink: 0;">
-                <button class="spinner-adjust-btn" data-dir="-1"
-                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
+                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 100%; margin: 0 4px; flex-shrink: 0;">
+                <button class="spinner-adjust-btn" onclick="adjustDelta(-1)"
+                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">▽</button>
+
                 <input type="number" id="popup-delta" class="popup-input" value="10" readonly
-                    style="width: 40px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 12px; padding: 0;">
-                <button class="spinner-adjust-btn" data-dir="1"
-                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
+                    style="width: 45px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0;">
+
+                <button class="spinner-adjust-btn" onclick="adjustDelta(1)"
+                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">△</button>
             </div>
 
-            <!-- 4. Apply Plus (Large Action) -->
-            <button class="popup-btn" id="btn-apply-plus"
-                style="flex: 1; min-width: 44px; height: 36px; font-size: 24px; font-weight: bold;">+</button>
+            <!-- 4. Apply Plus -->
+            <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1)" onmouseup="stopApply()"
+                onmouseleave="stopApply()" ontouchstart="startApply(1)" ontouchend="stopApply()"
+                style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">+</button>
 
-            <!-- 5. Mode Toggle (Compact) -->
+            <!-- 5. Mode Toggle -->
             <button id="btn-mode-toggle" class="mode-btn" onclick="togglePopupMode()"
-                style="width: 40px; height: 36px; font-size: 11px; padding: 0; flex-shrink: 0; font-weight: bold; color: var(--accent);">ABS</button>
+                style="width: 40px; height: 100%; font-size: 11px; padding: 0; flex-shrink: 0; font-weight: bold; color: var(--accent); display: flex; align-items: center; justify-content: center;">ABS</button>
         </div>
     </div>
 

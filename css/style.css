@@ -766,9 +766,8 @@ body {
         align-items: center;
         justify-content: center;
         text-align: center;
-        line-height: normal;
-        /* Reset line-height */
         padding: 0;
+        margin: 0;
     }
 
     .spinner-adjust-btn {
@@ -780,6 +779,8 @@ body {
         cursor: pointer;
         z-index: 10;
         /* Ensure strictly above */
+        padding: 0;
+        margin: 0;
     }
 
     .mode-btn {

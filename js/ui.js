@@ -196,7 +196,11 @@ window.switchPopupMode = function (mode) {
 
     popupMode = mode;
     popupMode = mode;
-    // Removed legacy button class toggles (elements deleted)
+    // Defensive check to avoid TypeError if old elements are cached or ghosted
+    const oldAbs = document.getElementById('mode-abs');
+    const oldPct = document.getElementById('mode-pct');
+    if (oldAbs) oldAbs.classList.toggle('active', mode === 'abs');
+    if (oldPct) oldPct.classList.toggle('active', mode === 'pct');
 
     const toggleBtn = document.getElementById('btn-mode-toggle');
     if (toggleBtn) {
@@ -258,76 +262,27 @@ window.adjustDelta = function (direction) {
 let spinnerInterval;
 let spinnerTimeout;
 
-function setupSpinnerEvents() {
-    document.querySelectorAll('.spinner-adjust-btn').forEach(btn => {
-        const dir = parseInt(btn.dataset.dir);
-
-        const startHandler = (e) => {
-            e.preventDefault(); // Prevent double firing (touch + mouse)
-            adjustDelta(dir); // Initial change
-            spinnerTimeout = setTimeout(() => {
-                spinnerInterval = setInterval(() => adjustDelta(dir), 100);
-            }, 500); // 500ms delay before rapid change
-        };
-
-        const stopHandler = (e) => {
-            e.preventDefault();
-            clearTimeout(spinnerTimeout);
-            clearInterval(spinnerInterval);
-        };
-
-        // Remove old listeners if any (simple way is to clone node, but here we just overwrite onclick for safety or use addEventListener with cleanup? 
-        // Simply using 'on...' props to be robust against multiple adds
-        btn.onmousedown = startHandler;
-        btn.onmouseup = stopHandler;
-        btn.onmouseleave = stopHandler;
-
-        btn.ontouchend = stopHandler;
-    });
-}
-
-// --- New Apply Button Logic (Long Press for map editing) ---
+// --- Global Apply Logic (Inline Events) ---
 let applyInterval;
 let applyTimeout;
 
-function setupApplyEvents() {
-    const btnMinus = document.getElementById('btn-apply-minus');
-    const btnPlus = document.getElementById('btn-apply-plus');
+window.startApply = function (direction) {
+    // console.log("Start Apply", direction);
+    adjustCellValue(direction); // Initial
+    applyTimeout = setTimeout(() => {
+        applyInterval = setInterval(() => adjustCellValue(direction), 100);
+    }, 500);
+};
 
-    [{ btn: btnMinus, dir: -1 }, { btn: btnPlus, dir: 1 }].forEach(item => {
-        if (!item.btn) return;
+window.stopApply = function () {
+    clearTimeout(applyTimeout);
+    clearInterval(applyInterval);
+};
 
-        const startHandler = (e) => {
-            e.preventDefault();
-            adjustCellValue(item.dir); // Initial Apply
-            applyTimeout = setTimeout(() => {
-                applyInterval = setInterval(() => adjustCellValue(item.dir), 100);
-            }, 500);
-        };
-
-        const stopHandler = (e) => {
-            e.preventDefault();
-            clearTimeout(applyTimeout);
-            clearInterval(applyInterval);
-        };
-
-        item.btn.onmousedown = startHandler;
-        item.btn.onmouseup = stopHandler;
-        item.btn.onmouseleave = stopHandler;
-        item.btn.ontouchstart = startHandler;
-        item.btn.ontouchend = stopHandler;
-    });
-}
-
-// Call setup on load
+// Removed setupSpinnerEvents and setupApplyEvents as we moved to inline HTML handlers for robustness
 document.addEventListener('DOMContentLoaded', () => {
-    setupSpinnerEvents();
-    setupApplyEvents();
+    // No-op for events now
 });
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setupSpinnerEvents();
-    setupApplyEvents();
-}
 
 
 // Removed old startAdjusting/stopAdjusting global functions to clear clutter
