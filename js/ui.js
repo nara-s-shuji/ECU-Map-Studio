@@ -210,15 +210,11 @@ window.switchPopupMode = function (mode) {
 
 window.adjustDelta = function (direction) {
     const input = document.getElementById('popup-delta');
+    if (!input) return;
     let current = parseFloat(input.value);
 
     if (popupMode === 'abs') {
-        // Steps: 1, 5, 10, 20, 50, 100
-        const steps = [1, 5, 10, 20, 50, 100];
         if (direction > 0) {
-            // Find next larger step or increment
-            // Simple increment for now as per user "like PC change number"
-            // Actually PC is just input. Let's do +1
             current += 1;
         } else {
             current = Math.max(1, current - 1);
@@ -226,7 +222,6 @@ window.adjustDelta = function (direction) {
         popupDeltaAbs = current;
         input.value = current;
     } else {
-        // Percentage: 0.1 steps
         current = parseFloat((current + (direction * 0.1)).toFixed(1));
         if (current <= 0) current = 0.1;
         popupDeltaPct = current;
@@ -238,7 +233,7 @@ let adjustInterval;
 let adjustDelayTimeout;
 
 window.startAdjusting = function (direction) {
-    if (event && event.type === 'touchstart') event.preventDefault();
+    // Removed implicit event usage to avoid potential reference errors
     adjustCellValue(direction);
 
     adjustDelayTimeout = setTimeout(() => {
