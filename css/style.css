@@ -720,7 +720,7 @@ body {
     #cell-popup {
         position: fixed;
         /* Position above the bottom nav (60px) - Tight gap */
-        bottom: 55px !important;
+        bottom: 50px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: unset !important;
@@ -729,10 +729,9 @@ body {
         width: 100%;
         max-width: 600px;
 
-        height: 50px;
-        /* Fixed height for alignment */
+        height: 60px;
+        /* Increased height as requested */
         padding: 0 4px;
-        /* Minimal padding */
         background: #2d2d30;
         border: 2px solid var(--accent);
 

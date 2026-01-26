@@ -194,26 +194,32 @@
                 style="width: 36px; height: 100%; font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center;">↺</button>
 
             <!-- 2. Apply Minus -->
-            <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1)" onmouseup="stopApply()"
-                onmouseleave="stopApply()" ontouchstart="startApply(-1)" ontouchend="stopApply()"
+            <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
+                ontouchend="stopApply(event)"
                 style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">-</button>
 
             <!-- 3. Spinner Group -->
             <div class="delta-spinner-group"
                 style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 100%; margin: 0 4px; flex-shrink: 0;">
-                <button class="spinner-adjust-btn" onclick="adjustDelta(-1)"
+                <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)" onmouseup="stopSpinner(event)"
+                    onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(-1, event)"
+                    ontouchend="stopSpinner(event)"
                     style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">▽</button>
 
                 <input type="number" id="popup-delta" class="popup-input" value="10" readonly
                     style="width: 45px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0;">
 
-                <button class="spinner-adjust-btn" onclick="adjustDelta(1)"
+                <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)" onmouseup="stopSpinner(event)"
+                    onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(1, event)"
+                    ontouchend="stopSpinner(event)"
                     style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">△</button>
             </div>
 
             <!-- 4. Apply Plus -->
-            <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1)" onmouseup="stopApply()"
-                onmouseleave="stopApply()" ontouchstart="startApply(1)" ontouchend="stopApply()"
+            <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
+                ontouchend="stopApply(event)"
                 style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">+</button>
 
             <!-- 5. Mode Toggle -->
