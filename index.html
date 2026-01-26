@@ -166,7 +166,8 @@
     </div>
 
     <!-- Scripts -->
-    <!-- RESTORED UI COMPONENTS -->
+    <!-- Scripts -->
+
     <div id="settings-menu" class="settings-menu">
         <div class="settings-content">
             <h3>Menu</h3>
@@ -185,243 +186,212 @@
         </div>
     </div>
 
-    <!-- ... (popup and graph overlay omitted for brevity in match, but included in flow if strictly matching range) ... -->
+    <div id="cell-popup">
+        <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px;">
+            <!-- Reset Button -->
+            <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
+                style="font-size: 14px; padding: 0;">↺</button>
+            <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">-</button>
 
-    <!-- I will use multi_replace if I can't match this big block? -->
-    <!-- Actually, I will target the bottom-nav block explicitly first. -->
-    <!-- Then the style block. -->
-
-    <!-- Retrying logic: I will do two separate replaces. -->
-    <!-- This call will fail if I try to do too much. -->
-    <!-- I will split this into two calls or use multi-replace. -->
-    <!-- I'll use multi-replace. -->
-
-    <!-- Scripts -->
-    <!-- RESTORED UI COMPONENTS -->
-    <div id="settings-menu" class="settings-menu">
-        <div class="settings-content">
-            <h3>Menu</h3>
-            <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
-            <hr style="border-color: #444; margin: 10px 0;">
-            <div class="menu-item" style="cursor: default; background: transparent;">
-                <label>Color Mode:</label>
-                <select id="cell-color-mode" onchange="updateCellColorMode()"
-                    style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
-                    <option value="diff">Diff</option>
-                    <option value="absolute">Absolute</option>
-                </select>
-            </div>
-            <button class="menu-item" onclick="openFile()">Open File...</button>
-            <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
-            <div id="cell-popup">
-                <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px;">
-                    <!-- Reset Button -->
-                    <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
-                        style="font-size: 14px; padding: 0;">↺</button>
-                    <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
-                        onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)"
-                        ontouchend="stopAdjusting()">-</button>
-
-                    <!-- Delta Spinner -->
-                    <div class="delta-spinner">
-                        <input type="number" id="popup-delta" class="popup-input" value="10" readonly>
-                        <div class="spinner-btns">
-                            <button class="spin-btn" onclick="adjustDelta(1)">▲</button>
-                            <button class="spin-btn" onclick="adjustDelta(-1)">▼</button>
-                        </div>
-                    </div>
-
-                    <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
-                        onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)"
-                        ontouchend="stopAdjusting()">+</button>
-                </div>
-                <div class="popup-mode-selector" style="display:flex; gap: 5px;">
-                    <button id="mode-abs" class="mode-btn active" onclick="switchPopupMode('abs')">ABS</button>
-                    <button id="mode-pct" class="mode-btn" onclick="switchPopupMode('pct')">%</button>
+            <!-- Delta Spinner -->
+            <div class="delta-spinner">
+                <input type="number" id="popup-delta" class="popup-input" value="10" readonly>
+                <div class="spinner-btns">
+                    <button class="spin-btn" onclick="adjustDelta(1)">▲</button>
+                    <button class="spin-btn" onclick="adjustDelta(-1)">▼</button>
                 </div>
             </div>
 
-            <div id="graph-overlay">
-                <div id="graph-header">
-                    <span>Graph View</span>
-                    <select id="graph-type" onchange="updateGraph()"
-                        style="background: #444; color: white; border: none; margin: 0 10px;">
-                        <option value="3d">3D Surface</option>
-                        <option value="rpm">RPM Axis</option>
-                        <option value="tps">TPS Axis</option>
-                    </select>
-                    <button id="graph-close" onclick="toggleGraph()"
-                        style="background:none; border:none; color:white; font-size:16px;">×</button>
-                </div>
-                <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
-                <!-- Resize Handles -->
-                <div class="resize-handle resize-n"></div>
-                <div class="resize-handle resize-s"></div>
-                <div class="resize-handle resize-e"></div>
-                <div class="resize-handle resize-w"></div>
-            </div>
+            <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
+                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)" ontouchend="stopAdjusting()">+</button>
+        </div>
+        <div class="popup-mode-selector" style="display:flex; gap: 5px;">
+            <button id="mode-abs" class="mode-btn active" onclick="switchPopupMode('abs')">ABS</button>
+            <button id="mode-pct" class="mode-btn" onclick="switchPopupMode('pct')">%</button>
+        </div>
+    </div>
 
-            <!-- Hidden File Inputs -->
-            <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
-            <input type="file" id="base-file-input" style="display:none;" accept=".csv"
-                onchange="importBaseFromCSV(this)">
+    <div id="graph-overlay">
+        <div id="graph-header">
+            <span>Graph View</span>
+            <select id="graph-type" onchange="updateGraph()"
+                style="background: #444; color: white; border: none; margin: 0 10px;">
+                <option value="3d">3D Surface</option>
+                <option value="rpm">RPM Axis</option>
+                <option value="tps">TPS Axis</option>
+            </select>
+            <button id="graph-close" onclick="toggleGraph()"
+                style="background:none; border:none; color:white; font-size:16px;">×</button>
+        </div>
+        <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
+        <!-- Resize Handles -->
+        <div class="resize-handle resize-n"></div>
+        <div class="resize-handle resize-s"></div>
+        <div class="resize-handle resize-e"></div>
+        <div class="resize-handle resize-w"></div>
+    </div>
 
-            <style>
-                /* Emergency Styles for Restored Components */
-                /* Emergency Styles for Restored Components */
-                #settings-menu {
-                    position: fixed;
-                    top: 40px;
-                    /* Below Toolbar */
-                    right: -250px;
-                    width: 250px;
-                    height: calc(100% - 40px);
-                    background: #252526;
-                    border-left: 1px solid #3c3c3c;
-                    z-index: 10000;
-                    transition: right 0.3s ease;
-                    padding: 20px;
-                    box-sizing: border-box;
-                    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-                }
+    <!-- Hidden File Inputs -->
+    <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
+    <input type="file" id="base-file-input" style="display:none;" accept=".csv" onchange="importBaseFromCSV(this)">
 
-                #settings-menu.active {
-                    right: 0;
-                }
+    <style>
+        /* Emergency Styles for Restored Components */
+        /* Emergency Styles for Restored Components */
+        #settings-menu {
+            position: fixed;
+            top: 40px;
+            /* Below Toolbar */
+            right: -250px;
+            width: 250px;
+            height: calc(100% - 40px);
+            background: #252526;
+            border-left: 1px solid #3c3c3c;
+            z-index: 10000;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        }
 
-                .settings-content h3 {
-                    margin-top: 0;
-                    color: #ccc;
-                    border-bottom: 1px solid #444;
-                    padding-bottom: 10px;
-                }
+        #settings-menu.active {
+            right: 0;
+        }
 
-                .menu-item {
-                    display: block;
-                    width: 100%;
-                    padding: 10px;
-                    background: #333;
-                    color: white;
-                    border: none;
-                    margin-bottom: 5px;
-                    text-align: left;
-                    cursor: pointer;
-                    border-radius: 4px;
-                }
+        .settings-content h3 {
+            margin-top: 0;
+            color: #ccc;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
 
-                .menu-item:hover {
-                    background: #444;
-                }
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            margin-bottom: 5px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+        }
 
-                /* Popup Buttons */
-                .mode-btn {
-                    flex: 1;
-                    padding: 5px;
-                    background: #333;
-                    color: #888;
-                    border: 1px solid #555;
-                    cursor: pointer;
-                }
+        .menu-item:hover {
+            background: #444;
+        }
 
-                .mode-btn.active {
-                    background: #0078d4;
-                    color: white;
-                    border-color: #0078d4;
-                }
+        /* Popup Buttons */
+        .mode-btn {
+            flex: 1;
+            padding: 5px;
+            background: #333;
+            color: #888;
+            border: 1px solid #555;
+            cursor: pointer;
+        }
 
-                /* Resize Handles */
-                .resize-handle {
-                    position: absolute;
-                    background: transparent;
-                    z-index: 100;
-                }
+        .mode-btn.active {
+            background: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
 
-                .resize-n {
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 5px;
-                    cursor: ns-resize;
-                }
+        /* Resize Handles */
+        .resize-handle {
+            position: absolute;
+            background: transparent;
+            z-index: 100;
+        }
 
-                .resize-s {
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 5px;
-                    cursor: ns-resize;
-                }
+        .resize-n {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
 
-                .resize-e {
-                    top: 0;
-                    right: 0;
-                    width: 5px;
-                    height: 100%;
-                    cursor: ew-resize;
-                }
+        .resize-s {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
 
-                .resize-w {
-                    top: 0;
-                    left: 0;
-                    width: 5px;
-                    height: 100%;
-                    cursor: ew-resize;
-                }
-            </style>
+        .resize-e {
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
 
-            <script>
-                // --- IMPROVED DEBUGGER ---
-                // Capture resource loading errors (which use addEventListener) and runtime errors
-                window.addEventListener('error', function (event) {
-                    let msg = '';
-                    let line = '';
+        .resize-w {
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+    </style>
 
-                    if (event instanceof ErrorEvent) {
-                        msg = event.message;
-                        line = event.lineno;
-                    } else if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
-                        msg = "Resource Not Found: " + (event.target.src || event.target.href);
-                        line = 'N/A';
-                    } else {
-                        msg = event.toString();
-                    }
+    <script>
+        // --- IMPROVED DEBUGGER ---
+        // Capture resource loading errors (which use addEventListener) and runtime errors
+        window.addEventListener('error', function (event) {
+            let msg = '';
+            let line = '';
 
-                    console.error("Global Error Caught:", event);
+            if (event instanceof ErrorEvent) {
+                msg = event.message;
+                line = event.lineno;
+            } else if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                msg = "Resource Not Found: " + (event.target.src || event.target.href);
+                line = 'N/A';
+            } else {
+                msg = event.toString();
+            }
 
-                    const errDiv = document.createElement('div');
-                    errDiv.style.position = 'fixed';
-                    errDiv.style.bottom = '10px';
-                    errDiv.style.right = '10px';
-                    errDiv.style.maxWidth = '300px';
-                    errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
-                    errDiv.style.color = 'white';
-                    errDiv.style.zIndex = '1000000';
-                    // Alert for visibility
-                    alert("JS Error: " + msg + " (L" + line + ")");
-                    return false; // Let default handler run if needed
-                }, true); // Capture phase
+            console.error("Global Error Caught:", event);
 
-                // Click Inspector (Modified to be less intrusive)
-                window.addEventListener('click', function (e) {
-                    // Visual Feedback - Small fading dot
-                    const dot = document.createElement('div');
-                    dot.style.position = 'fixed';
-                    dot.style.left = (e.clientX - 2) + 'px';
-                    dot.style.top = (e.clientY - 2) + 'px';
-                    dot.style.width = '4px';
-                    dot.style.height = '4px';
-                    dot.style.background = 'red';
-                    dot.style.borderRadius = '50%';
-                    dot.style.zIndex = '999999';
-                    dot.style.pointerEvents = 'none';
-                    document.body.appendChild(dot);
-                    setTimeout(() => dot.remove(), 500);
-                }, true);
-            </script>
-            <script src="js/app.js?v=debug_1"></script>
-            <script src="js/ui.js?v=debug_1"></script>
-            <script src="js/map.js?v=debug_1"></script>
-            <script src="js/graph.js?v=debug_1"></script>
+            const errDiv = document.createElement('div');
+            errDiv.style.position = 'fixed';
+            errDiv.style.bottom = '10px';
+            errDiv.style.right = '10px';
+            errDiv.style.maxWidth = '300px';
+            errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
+            errDiv.style.color = 'white';
+            errDiv.style.zIndex = '1000000';
+            // Alert for visibility
+            alert("JS Error: " + msg + " (L" + line + ")");
+            return false; // Let default handler run if needed
+        }, true); // Capture phase
+
+        // Click Inspector (Modified to be less intrusive)
+        window.addEventListener('click', function (e) {
+            // Visual Feedback - Small fading dot
+            const dot = document.createElement('div');
+            dot.style.position = 'fixed';
+            dot.style.left = (e.clientX - 2) + 'px';
+            dot.style.top = (e.clientY - 2) + 'px';
+            dot.style.width = '4px';
+            dot.style.height = '4px';
+            dot.style.background = 'red';
+            dot.style.borderRadius = '50%';
+            dot.style.zIndex = '999999';
+            dot.style.pointerEvents = 'none';
+            document.body.appendChild(dot);
+            setTimeout(() => dot.remove(), 500);
+        }, true);
+    </script>
+    <script src="js/app.js?v=debug_1"></script>
+    <script src="js/ui.js?v=debug_1"></script>
+    <script src="js/map.js?v=debug_1"></script>
+    <script src="js/graph.js?v=debug_1"></script>
 
 </body>
 
