@@ -715,30 +715,49 @@ body {
     /* Docked Cell Popup for Mobile */
     #cell-popup {
         position: fixed;
-        /* Force Center on Mobile */
-        top: 50% !important;
+        /* Position above the bottom nav (60px) */
+        bottom: calc(65px + env(safe-area-inset-bottom)) !important;
         left: 50% !important;
-        bottom: auto !important;
-        transform: translate(-50%, -50%) !important;
+        transform: translateX(-50%) !important;
+        top: auto !important;
+        /* Override previous center force */
 
-        width: 96%;
-        max-width: 380px;
+        width: 98%;
+        max-width: 600px;
 
-        height: 60px;
-        /* Slightly taller for spinner */
-        padding: 5px 10px;
+        height: auto;
+        padding: 8px;
         background: #2d2d30;
         border: 2px solid var(--accent);
-        /* Full Border */
 
         display: flex;
+        flex-direction: column;
+        /* Stack controls and buttons */
         align-items: center;
-        justify-content: space-around;
+        justify-content: center;
 
         z-index: 20000;
         box-sizing: border-box;
         border-radius: 8px;
-        /* Rounded corners for floating feel */
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .popup-controls {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .popup-mode-selector {
+        display: flex;
+        width: 100%;
+    }
+
+    .mode-btn {
+        flex: 1;
+        /* Equal width */
     }
 
     #chart-container {

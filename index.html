@@ -186,27 +186,26 @@
         </div>
     </div>
 
-    <div id="cell-popup">
-        <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px;">
+    <div id="cell-popup" style="user-select: none; -webkit-user-select: none;">
+        <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px; width: 100%;">
             <!-- Reset Button -->
             <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
-                style="font-size: 14px; padding: 0;">↺</button>
-            <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
-                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">-</button>
+                style="font-size: 14px; padding: 0; width: 40px;">↺</button>
 
-            <!-- Delta Spinner -->
-            <div class="delta-spinner">
-                <input type="number" id="popup-delta" class="popup-input" value="10" readonly>
-                <div class="spinner-btns">
-                    <button class="spin-btn" onclick="adjustDelta(1)">▲</button>
-                    <button class="spin-btn" onclick="adjustDelta(-1)">▼</button>
-                </div>
+            <!-- Value Decrement -->
+            <button class="popup-btn spinner-adjust-btn" data-dir="-1" style="font-size: 20px;">▽</button>
+
+            <!-- Delta Spinner Value Display -->
+            <div class="delta-spinner" style="flex: 1; justify-content: center;">
+                <input type="number" id="popup-delta" class="popup-input" value="10" readonly
+                    style="width: 100%; text-align: center;">
             </div>
 
-            <button class="popup-btn" onmousedown="startAdjusting(1)" onmouseup="stopAdjusting()"
-                onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(1)" ontouchend="stopAdjusting()">+</button>
+            <!-- Value Increment -->
+            <button class="popup-btn spinner-adjust-btn" data-dir="1" style="font-size: 20px;">△</button>
         </div>
-        <div class="popup-mode-selector" style="display:flex; gap: 5px;">
+
+        <div class="popup-mode-selector" style="display:flex; gap: 5px; width: 100%;">
             <button id="mode-abs" class="mode-btn active" onclick="switchPopupMode('abs')">ABS</button>
             <button id="mode-pct" class="mode-btn" onclick="switchPopupMode('pct')">%</button>
         </div>

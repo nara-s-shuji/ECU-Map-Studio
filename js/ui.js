@@ -230,22 +230,71 @@ window.adjustDelta = function (direction) {
     }
 };
 
-let adjustInterval;
-let adjustDelayTimeout;
+// --- New Spinner Logic ---
+let spinnerInterval;
+let spinnerTimeout;
 
-window.startAdjusting = function (direction) {
-    adjustCellValue(direction);
-    adjustDelayTimeout = setTimeout(() => {
-        adjustInterval = setInterval(() => {
-            adjustCellValue(direction);
-        }, 100);
-    }, 400);
+function setupSpinnerEvents() {
+    document.querySelectorAll('.spinner-adjust-btn').forEach(btn => {
+        const dir = parseInt(btn.dataset.dir);
+
+        const startHandler = (e) => {
+            e.preventDefault(); // Prevent double firing (touch + mouse)
+            adjustDelta(dir); // Initial change
+            spinnerTimeout = setTimeout(() => {
+                spinnerInterval = setInterval(() => adjustDelta(dir), 100);
+            }, 500); // 500ms delay before rapid change
+        };
+
+        const stopHandler = (e) => {
+            e.preventDefault();
+            clearTimeout(spinnerTimeout);
+            clearInterval(spinnerInterval);
+        };
+
+        // Remove old listeners if any (simple way is to clone node, but here we just overwrite onclick for safety or use addEventListener with cleanup? 
+        // Simply using 'on...' props to be robust against multiple adds
+        btn.onmousedown = startHandler;
+        btn.onmouseup = stopHandler;
+        btn.onmouseleave = stopHandler;
+
+        btn.ontouchstart = startHandler;
+        btn.ontouchend = stopHandler;
+    });
+}
+// Call setup on load
+document.addEventListener('DOMContentLoaded', setupSpinnerEvents);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupSpinnerEvents();
+}
+
+
+window.adjustDelta = function (direction) {
+    const input = document.getElementById('popup-delta');
+    if (!input) return;
+    let current = parseFloat(input.value);
+
+    // Safety check
+    if (isNaN(current)) current = (popupMode === 'abs') ? 10 : 1.0;
+
+    if (popupMode === 'abs') {
+        if (direction > 0) {
+            current += 1;
+        } else {
+            current = Math.max(1, current - 1);
+        }
+        popupDeltaAbs = current;
+        input.value = current;
+    } else {
+        current = parseFloat((current + (direction * 0.1)).toFixed(1));
+        if (current <= 0) current = 0.1;
+        popupDeltaPct = current;
+        input.value = current.toFixed(1);
+    }
 };
 
-window.stopAdjusting = function () {
-    clearTimeout(adjustDelayTimeout);
-    clearInterval(adjustInterval);
-};
+// Removed old startAdjusting/stopAdjusting global functions to clear clutter
+
 
 window.adjustCellValue = function (direction) {
     const deltaInput = document.getElementById('popup-delta');
@@ -716,12 +765,30 @@ window.updateData = function (t, r, val) {
 };
 
 window.resetCellToOriginal = function () {
-    if (selectionStart) {
-        const { t, r } = selectionStart;
-        if (originalFuelMap[t] && typeof originalFuelMap[t][r] !== 'undefined') {
-            updateData(t, r, originalFuelMap[t][r]);
-            handleCellMouseEnter(null, t, r); // Update Info panel
+    // Determine target cells: either multi-selection or single focused cell
+    let targets = [];
+    if (selectedCells.size > 0) {
+        selectedCells.forEach(key => {
+            const [t, r] = key.split('-').map(Number);
+            targets.push({ t, r });
+        });
+    } else {
+        targets.push({ t: selT, r: selR });
+    }
+
+    targets.forEach(pos => {
+        if (originalFuelMap[pos.t] && typeof originalFuelMap[pos.t][pos.r] !== 'undefined') {
+            fuelMap[pos.t][pos.r] = originalFuelMap[pos.t][pos.r];
         }
+    });
+
+    saveHistory();
+    renderTable();
+    updateUISelection(); // Restore highlights
+
+    const graphOverlay = document.getElementById('graph-overlay');
+    if (graphOverlay && graphOverlay.classList.contains('active')) {
+        if (typeof updateGraph === 'function') updateGraph();
     }
 };
 
