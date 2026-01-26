@@ -10,13 +10,12 @@
     <link rel="manifest" href="manifest.json">
     <title>ECU Map Studio 2026</title>
     <!-- Offline Plotly Library -->
-    <script src="lib/plotly.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/style.css?v=3.1">
     <script>
         window.onerror = function (msg, url, line, col, error) {
-            // Note: In a real app we might not alert, but here we need user feedback
-            // alert("JS Error: " + msg + "\nLine: " + line); 
+            alert("JS Error: " + msg + "\nLine: " + line);
             console.error("JS Error:", msg, line, error);
             return false;
         };

@@ -11,6 +11,7 @@ window.toggleSettings = function () {
 
 
 window.switchTab = function (tabName) {
+    alert('Trace: switchTab ' + tabName);
     console.log('switchTab called:', tabName);
     // Nav Items Update
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
@@ -696,8 +697,6 @@ function updatePopupPosition() {
         top = visibleTop + 5;
     }
 
-    popup.style.top = top + 'px';
-    popup.style.left = left + 'px';
     popup.classList.add('active');
 }
 
