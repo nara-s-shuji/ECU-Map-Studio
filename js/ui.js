@@ -42,14 +42,21 @@ window.switchTab = function (tabName) {
         graphOverlay.classList.remove('active');
     }
 
+    const editorView = document.getElementById('editor-view');
+
     if (tabName === 'editor') {
-        document.getElementById('editor-view').style.display = 'block';
+        editorView.style.display = 'block';
+        document.body.classList.add('mode-editor'); // Show Popup
         // Force redraw after display change to ensure dimensions are correct
         setTimeout(renderTable, 10);
-    } else if (tabName === 'monitor') {
-        document.getElementById('monitor-view').style.display = 'flex';
-    } else if (tabName === 'logger') {
-        document.getElementById('logger-view').style.display = 'flex';
+    } else {
+        document.body.classList.remove('mode-editor'); // Hide Popup
+
+        if (tabName === 'monitor') {
+            document.getElementById('monitor-view').style.display = 'flex';
+        } else if (tabName === 'logger') {
+            document.getElementById('logger-view').style.display = 'flex';
+        }
     }
 };
 
@@ -67,6 +74,13 @@ let selectionType = null; // 'cell', 'row', 'col'
 // PC Range Selection State
 let lastSelectedCol = -1;
 let lastSelectedRow = -1;
+let isHeaderDragging = false;
+let headerDragStart = -1; // Index
+let headerDragType = null; // 'col' or 'row'
+
+document.addEventListener('mouseup', () => {
+    isHeaderDragging = false;
+});
 
 function handleTouchStart(e, type, index1, index2) {
     longPressTimer = setTimeout(() => {
@@ -339,9 +353,14 @@ function renderTable() {
         h.innerText = rpm;
         h.dataset.col = c;
 
-        h.onclick = (e) => {
+        h.onmousedown = (e) => {
+            if (window.innerWidth <= 1024) return; // Skip on mobile
+            isHeaderDragging = true;
+            headerDragType = 'col';
+            headerDragStart = c;
+
             if (e.shiftKey && lastSelectedCol !== -1) {
-                // Range Select
+                // Shift+Click Range
                 const start = Math.min(lastSelectedCol, c);
                 const end = Math.max(lastSelectedCol, c);
                 selectedCells.clear();
@@ -352,7 +371,23 @@ function renderTable() {
                 }
                 updateUISelection();
             } else {
+                // Click / Start Drag
                 selectColumn(c);
+                lastSelectedCol = c;
+            }
+        };
+
+        h.onmouseenter = (e) => {
+            if (isHeaderDragging && headerDragType === 'col') {
+                const start = Math.min(headerDragStart, c);
+                const end = Math.max(headerDragStart, c);
+                selectedCells.clear();
+                for (let i = start; i <= end; i++) {
+                    for (let t = 0; t < 21; t++) {
+                        selectedCells.add(`${t}-${i}`);
+                    }
+                }
+                updateUISelection();
                 lastSelectedCol = c;
             }
         };
@@ -367,10 +402,15 @@ function renderTable() {
         label.className = 'cell label-cell';
         label.innerText = tps + '%';
         label.dataset.row = t;
-        label.dataset.row = t;
-        label.onclick = (e) => {
+
+        label.onmousedown = (e) => {
+            if (window.innerWidth <= 1024) return;
+            isHeaderDragging = true;
+            headerDragType = 'row';
+            headerDragStart = t;
+
             if (e.shiftKey && lastSelectedRow !== -1) {
-                // Range Select
+                // Shift+Click Range
                 const start = Math.min(lastSelectedRow, t);
                 const end = Math.max(lastSelectedRow, t);
                 selectedCells.clear();
@@ -382,6 +422,21 @@ function renderTable() {
                 updateUISelection();
             } else {
                 selectRow(t);
+                lastSelectedRow = t;
+            }
+        };
+
+        label.onmouseenter = (e) => {
+            if (isHeaderDragging && headerDragType === 'row') {
+                const start = Math.min(headerDragStart, t);
+                const end = Math.max(headerDragStart, t);
+                selectedCells.clear();
+                for (let i = start; i <= end; i++) {
+                    for (let r = 0; r < 20; r++) {
+                        selectedCells.add(`${i}-${r}`);
+                    }
+                }
+                updateUISelection();
                 lastSelectedRow = t;
             }
         };
