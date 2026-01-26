@@ -657,6 +657,7 @@ function updatePopupPosition() {
     // Logic updated to respect CSS classes primarily, but needs position info?
     // In CSS we set fixed positions for mobile/landscape.
     if (window.innerWidth <= 1024) {
+        alert('Trace: Mobile Popup Active');
         popup.classList.add('active');
         popup.style.top = '';
         popup.style.left = '';
