@@ -11,6 +11,7 @@ window.toggleSettings = function () {
 
 
 window.switchTab = function (tabName) {
+    console.log('switchTab called:', tabName);
     // Nav Items Update
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     // Find button that calls this tab (simplified matching index)

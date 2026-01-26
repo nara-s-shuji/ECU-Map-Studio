@@ -397,17 +397,8 @@
                     errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
                     errDiv.style.color = 'white';
                     errDiv.style.zIndex = '1000000';
-                    errDiv.style.padding = '10px';
-                    errDiv.style.fontSize = '12px';
-                    errDiv.style.borderRadius = '5px';
-                    errDiv.style.fontFamily = 'monospace';
-                    errDiv.style.pointerEvents = 'none'; // Click-through
-                    errDiv.innerText = "JS: " + msg + " (L" + line + ")";
-
-                    // Auto hide for minor errors, stay for crashes
-                    document.body.appendChild(errDiv);
-                    setTimeout(() => errDiv.remove(), 5000);
-
+                    // Alert for visibility
+                    alert("JS Error: " + msg + " (L" + line + ")");
                     return false; // Let default handler run if needed
                 }, true); // Capture phase
 
