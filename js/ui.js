@@ -194,6 +194,7 @@ let adjustInterval;
 let adjustDelayTimeout;
 
 window.startAdjusting = function (direction) {
+    if (event && event.type === 'touchstart') event.preventDefault();
     adjustCellValue(direction);
 
     adjustDelayTimeout = setTimeout(() => {
@@ -381,7 +382,29 @@ function renderTable() {
             if (window.innerWidth <= 1024) input.readOnly = true;
 
             input.onfocus = () => handleCellSelect(t, r);
-            input.onchange = (e) => updateData(t, r, e.target.value);
+
+            // Fix UpdateData interaction & Add Keydowns
+            input.onchange = function (e) {
+                updateData(t, r, parseInt(e.target.value));
+            };
+            input.onclick = function () { console.log('click'); this.select(); };
+            input.onkeydown = function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.blur();
+                    if (e.shiftKey) {
+                        // Up
+                        const nextT = Math.max(0, t - 1);
+                        const nextInput = document.querySelector(`#c-${nextT}-${r} input`);
+                        if (nextInput) { nextInput.focus(); handleCellMouseDown({ ctrlKey: false, preventDefault: () => { } }, nextT, r); }
+                    } else {
+                        // Down
+                        const nextT = Math.min(20, t + 1);
+                        const nextInput = document.querySelector(`#c-${nextT}-${r} input`);
+                        if (nextInput) { nextInput.focus(); handleCellMouseDown({ ctrlKey: false, preventDefault: () => { } }, nextT, r); }
+                    }
+                }
+            };
 
             if (cellColorMode === 'diff') input.classList.add('diff-mode');
             else input.classList.add('heatmap-mode');
@@ -566,6 +589,28 @@ function updatePopupPosition() {
 window.renderTable = renderTable;
 window.updateUISelection = updateUISelection;
 window.updatePopupPosition = updatePopupPosition;
+
+// New Functions
+window.updateData = function (t, r, val) {
+    if (fuelMap[t] && typeof fuelMap[t][r] !== 'undefined') {
+        fuelMap[t][r] = val;
+        saveHistory();
+        renderTable(); // Re-render to update colors/diffs
+        if (document.getElementById('graph-overlay') && document.getElementById('graph-overlay').classList.contains('active')) {
+            if (typeof updateGraph === 'function') updateGraph();
+        }
+    }
+};
+
+window.resetCellToOriginal = function () {
+    if (selectionStart) {
+        const { t, r } = selectionStart;
+        if (originalFuelMap[t] && typeof originalFuelMap[t][r] !== 'undefined') {
+            updateData(t, r, originalFuelMap[t][r]);
+            handleCellMouseEnter(null, t, r); // Update Info panel
+        }
+    }
+};
 
 window.selectColumn = function (c) {
     selectedCells.clear();

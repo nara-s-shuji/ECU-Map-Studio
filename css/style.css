@@ -65,6 +65,7 @@ body {
     background: #3e3e42;
 }
 
+.toolbar-btn.active,
 .toolbar-btn:active {
     background: #007acc;
 }
@@ -294,7 +295,9 @@ body {
     min-width: 300px;
     min-height: 200px;
     z-index: 5000;
-    /* Corrected to be reachable */
+    /* Resizing for PC */
+    resize: both;
+    overflow: hidden;
 }
 
 #graph-overlay.active {
@@ -618,7 +621,8 @@ body {
     #toolbar,
     #explorer,
     #info-section,
-    #settings-menu {
+    #settings-menu,
+    #graph-close {
         display: none !important;
     }
 
@@ -718,6 +722,9 @@ body {
         background: #2d2d30;
         /* Lighter bg to stand out */
         border-top: 2px solid var(--accent);
+        border-left: 2px solid var(--accent);
+        border-right: 2px solid var(--accent);
+        /* 2px Solid Accent on all sides */
 
         display: flex;
         align-items: center;
@@ -802,7 +809,32 @@ body {
         justify-content: space-around;
         align-items: center;
         box-sizing: content-box;
-        /* To include padding in height calculation if needed, but fixed height is 60px */
+    }
+
+    /* Portrait Menu Order: Edit, Graph, Monitor, Log, Menu */
+    #nav-editor {
+        order: 1;
+    }
+
+    #nav-graph {
+        order: 2;
+    }
+
+    #nav-monitor {
+        order: 3;
+    }
+
+    #nav-log {
+        order: 4;
+    }
+
+    #nav-menu {
+        order: 5;
+    }
+
+    /* Hide cell popup if not in editor mode (JS will toggle .hidden, but also basic display control) */
+    body:not(.mode-editor) #cell-popup {
+        display: none !important;
     }
 
     /* Landscape Mode: Nav on Right, Popup on Left of Nav */
@@ -811,7 +843,9 @@ body {
             top: 0;
             left: auto;
             right: 0;
-            width: 60px;
+            right: 0;
+            width: 50px;
+            height: 100%;
             height: 100%;
             padding-bottom: 0;
             padding-right: env(safe-area-inset-right);
@@ -826,8 +860,10 @@ body {
 
         #cell-popup {
             bottom: auto !important;
-            top: 50% !important;
-            /* Center vertically conceptually or fixed */
+            top: 0 !important;
+            padding-top: env(safe-area-inset-top);
+            height: 100vh !important;
+            /* Full Height */
             top: env(safe-area-inset-top) !important;
             /* Align top? */
             /* User said "Attach to left edge of menu" */
@@ -836,70 +872,107 @@ body {
             right: calc(60px + env(safe-area-inset-right)) !important;
             /* Left of Nav */
             left: auto !important;
-            width: 80px !important;
-            /* Vertical strip width */
-            height: auto !important;
-            min-height: 300px;
+            width: 50px !important;
+            /* Narrower Vertical strip */
+            height: 100vh !important;
             flex-direction: column !important;
             justify-content: flex-start !important;
             gap: 10px;
             padding: 10px 0;
             border-top: none;
             border-right: 2px solid var(--accent);
-            border-left: 1px solid #444;
-            /* Optional visual separation */
+            border-bottom: 2px solid var(--accent);
+            /* Full border */
+            border-left: 2px solid var(--accent);
+            border-radius: 0;
+            right: calc(60px + env(safe-area-inset-right)) !important;
+            /* Adjacent to menu */
+            bottom: 0 !important;
         }
+
+        /* 
+           Landscape Order: 
+           Reset (Top of +) -> We can put Reset at order 1, + at 2, Input 3, - 4 
+           Original Request: "Reset above +" 
+        */
 
         #cell-popup .popup-controls {
             flex-direction: column !important;
             width: 100%;
-            gap: 10px;
-        }
-
-        #cell-popup .popup-mode-selector {
-            flex-direction: column !important;
-            width: 100%;
             gap: 5px;
+            margin: 0 !important;
+            justify-content: center;
+            flex: 1;
+            /* Take space */
         }
 
-        #cell-popup .popup-btn {
-            width: 60px;
-            height: 50px;
-        }
+        /* Reorder Logic: Reset(1), +(2), Value(3), -(4)  Wait, Request: Reset above + */
+        /* Buttons: [Reset, -, Input, +] HTML */
+        /* Visual Vertical: Reset, +, Input, - */
 
-        #cell-popup .popup-input {
-            width: 60px;
-        }
-
-        /* Layout Order: Input, +, -, ABS/% (User request: +, Value, -, ABS, %) */
-        /* Flex order manipulation */
-        /* Default HTML order: -, Input, +. ABS/%. */
-        /* We need: +, Input, -, ABS/%. */
-        #cell-popup .popup-controls button:nth-child(3) {
+        #btn-reset {
             order: 1;
+            margin-bottom: 10px;
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        #cell-popup .popup-controls button:nth-of-type(3) {
+            order: 2;
         }
 
         /* + */
-        #cell-popup .popup-controls input:nth-child(2) {
-            order: 2;
+        #popup-delta {
+            order: 3;
             margin: 5px 0;
         }
 
-        /* Value */
-        #cell-popup .popup-controls button:nth-child(1) {
-            order: 3;
+        #cell-popup .popup-controls button:nth-of-type(2) {
+            order: 4;
         }
 
         /* - */
 
         #cell-popup .popup-mode-selector {
-            order: 4;
-            /* Below controls */
+            flex-direction: column !important;
+            width: 100%;
+            gap: 5px;
+            order: 10;
+            margin-bottom: 20px;
         }
 
-        /* Horizontal ABS/Mode string? "Increase/Decrease and ABS string horizontal" */
-        /* Maybe he implies the buttons are vertical but text is horizontal? */
-        /* Current implementation splits controls and mode selector. */
+        #cell-popup .popup-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        #cell-popup .popup-input {
+            width: 40px;
+            font-size: 14px;
+        }
+
+        /* Landscape Nav Order: Default (Menu first) */
+        #nav-menu {
+            order: 0 !important;
+        }
+
+        #nav-editor {
+            order: 1 !important;
+        }
+
+        #nav-graph {
+            order: 2 !important;
+        }
+
+        #nav-monitor {
+            order: 3 !important;
+        }
+
+        #nav-log {
+            order: 4 !important;
+        }
     }
 
     .nav-item {

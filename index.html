@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
@@ -144,23 +144,23 @@
 
     <!-- Bottom Navigation -->
     <div id="bottom-nav" style="touch-action: none;">
-        <button class="nav-item" onclick="toggleSettings()">
+        <button class="nav-item" onclick="toggleSettings()" id="nav-menu">
             <span class="nav-icon">≡</span>
             <span>メニュー</span>
         </button>
-        <button class="nav-item active" onclick="switchTab('editor')">
+        <button class="nav-item active" onclick="switchTab('editor')" id="nav-editor">
             <span class="nav-icon">▤</span>
             <span>編集</span>
         </button>
-        <button class="nav-item" onclick="switchTab('graph')">
+        <button class="nav-item" onclick="switchTab('graph')" id="nav-graph">
             <span class="nav-icon">📉</span>
             <span>グラフ</span>
         </button>
-        <button class="nav-item" onclick="switchTab('monitor')">
+        <button class="nav-item" onclick="switchTab('monitor')" id="nav-monitor">
             <span class="nav-icon">📊</span>
             <span>モニター</span>
         </button>
-        <button class="nav-item" onclick="switchTab('logger')">
+        <button class="nav-item" onclick="switchTab('logger')" id="nav-log">
             <span class="nav-icon">📈</span>
             <span>ログ</span>
         </button>
@@ -219,6 +219,9 @@
 
     <div id="cell-popup">
         <div class="popup-controls" style="display:flex; gap: 5px; margin-bottom: 5px;">
+            <!-- Reset Button -->
+            <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
+                style="font-size: 14px; padding: 0;">↺</button>
             <button class="popup-btn" onmousedown="startAdjusting(-1)" onmouseup="stopAdjusting()"
                 onmouseleave="stopAdjusting()" ontouchstart="startAdjusting(-1)" ontouchend="stopAdjusting()">-</button>
             <input type="number" id="popup-delta" class="popup-input" value="10">
