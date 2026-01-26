@@ -198,6 +198,12 @@ window.switchPopupMode = function (mode) {
     document.getElementById('mode-abs').classList.toggle('active', mode === 'abs');
     document.getElementById('mode-pct').classList.toggle('active', mode === 'pct');
 
+    const toggleBtn = document.getElementById('btn-mode-toggle');
+    if (toggleBtn) {
+        toggleBtn.innerText = (mode === 'abs') ? 'ABS' : '%';
+        toggleBtn.style.color = (mode === 'abs') ? 'var(--accent)' : '#ff9900';
+    }
+
     if (mode === 'abs') {
         deltaInput.value = Math.round(popupDeltaAbs);
         deltaInput.step = '1';
@@ -207,6 +213,11 @@ window.switchPopupMode = function (mode) {
         deltaInput.step = '0.1';
         deltaInput.min = '0.1';
     }
+};
+
+window.togglePopupMode = function () {
+    const newMode = (popupMode === 'abs') ? 'pct' : 'abs';
+    switchPopupMode(newMode);
 };
 
 window.adjustDelta = function (direction) {
@@ -310,14 +321,25 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 
 
 window.adjustCellValue = function (direction) {
+    // console.log("adjustCellValue called", direction); // Debug
     const deltaInput = document.getElementById('popup-delta');
     if (!deltaInput) return;
     let deltaValue = parseFloat(deltaInput.value);
 
-    if (isNaN(deltaValue) || deltaValue === 0) return;
+    // Ensure valid delta
+    if (isNaN(deltaValue) || deltaValue <= 0) {
+        deltaValue = (popupMode === 'abs') ? 10 : 1.0;
+    }
+
+    // In Percent mode, direction applies to the percentage? usually map * (1 + delta/100) or map + delta%?
+    // Current logic uses add/sub based on mode logic in `updateData`?
+    // Let's check how we apply it. 
+    // Wait, updateData takes (t, r, val). We need to calculate new val.
 
     if (popupMode === 'pct') {
+        // ... (existing logic likely handles this)
         popupDeltaPct = deltaValue;
+
         deltaInput.value = deltaValue.toFixed(1);
     } else {
         popupDeltaAbs = deltaValue;

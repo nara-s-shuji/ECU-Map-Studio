@@ -193,34 +193,29 @@
             <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
                 style="font-size: 14px; padding: 0; width: 36px; height: 36px; flex-shrink: 0;">↺</button>
 
-            <!-- 2. Apply Minus (Decrease Value) -->
+            <!-- 2. Apply Minus (Large Action) -->
             <button class="popup-btn" id="btn-apply-minus"
-                style="width: 44px; height: 36px; font-size: 20px; font-weight: bold; flex-shrink: 0;">-</button>
+                style="flex: 1; min-width: 44px; height: 36px; font-size: 24px; font-weight: bold;">-</button>
 
-            <!-- 3. Spinner Group (▽ Value △) -->
+            <!-- 3. Spinner Group (Compact) -->
             <div class="delta-spinner-group"
-                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 36px; margin: 0 2px;">
+                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 36px; margin: 0 4px; flex-shrink: 0;">
                 <button class="spinner-adjust-btn" data-dir="-1"
-                    style="width: 30px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
+                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
                 <input type="number" id="popup-delta" class="popup-input" value="10" readonly
-                    style="width: 40px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 14px; padding: 0;">
+                    style="width: 40px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 12px; padding: 0;">
                 <button class="spinner-adjust-btn" data-dir="1"
-                    style="width: 30px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
+                    style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
             </div>
 
-            <!-- 4. Apply Plus (Increase Value) -->
+            <!-- 4. Apply Plus (Large Action) -->
             <button class="popup-btn" id="btn-apply-plus"
-                style="width: 44px; height: 36px; font-size: 20px; font-weight: bold; flex-shrink: 0;">+</button>
+                style="flex: 1; min-width: 44px; height: 36px; font-size: 24px; font-weight: bold;">+</button>
 
-            <!-- 5. Mode ABS -->
-            <button id="mode-abs" class="mode-btn active" onclick="switchPopupMode('abs')"
-                style="width: 36px; height: 36px; font-size: 10px; padding: 0; flex-shrink: 0;">ABS</button>
-
-            <!-- 6. Mode % -->
-            <button id="mode-pct" class="mode-btn" onclick="switchPopupMode('pct')"
-                style="width: 36px; height: 36px; font-size: 10px; padding: 0; flex-shrink: 0;">%</button>
+            <!-- 5. Mode Toggle (Compact) -->
+            <button id="btn-mode-toggle" class="mode-btn" onclick="togglePopupMode()"
+                style="width: 40px; height: 36px; font-size: 11px; padding: 0; flex-shrink: 0; font-weight: bold; color: var(--accent);">ABS</button>
         </div>
-        <!-- Removed separate popup-mode-selector div as buttons are now inline -->
     </div>
 
     <div id="graph-overlay">
