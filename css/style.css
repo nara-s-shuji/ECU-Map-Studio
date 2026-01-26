@@ -715,8 +715,8 @@ body {
     /* Docked Cell Popup for Mobile */
     #cell-popup {
         position: fixed;
-        /* Position above the bottom nav (60px) */
-        bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+        /* Position above the bottom nav (60px) + Gap */
+        bottom: 80px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: auto !important;
@@ -726,7 +726,7 @@ body {
         max-width: 600px;
 
         height: auto;
-        padding: 8px;
+        padding: 5px;
         background: #2d2d30;
         border: 2px solid var(--accent);
 
@@ -840,32 +840,56 @@ body {
         border: 1px solid #555;
     }
 
-    .popup-btn {
-        width: 60px;
-        height: 40px;
-        font-size: 24px;
-        background: #444;
-    }
-
-    .popup-mode-selector {
-        display: none;
-    }
-
-    /* Hide mode selector for now to save space */
     .popup-controls {
-        gap: 15px;
+        display: flex;
         width: 100%;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        /* Center Vertically */
+        gap: 5px;
     }
 
-    /* Center ABS/% buttons */
+    .popup-btn {
+        background: #444;
+        color: white;
+        border: 1px solid #555;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    /* Small Adjust Buttons */
+    .spinner-adjust-btn {
+        width: 40px;
+        height: 32px;
+        font-size: 16px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Reset Button */
+    #btn-reset {
+        width: 40px;
+        height: 32px;
+    }
+
     .popup-mode-selector {
         display: flex;
-        /* Restore display */
-        justify-content: center;
+        width: 100%;
         margin-top: 5px;
+        gap: 5px;
+    }
+
+    .mode-btn {
+        flex: 1;
+        /* Force equal width */
+        text-align: center;
+        padding: 5px 0;
+        background: #333;
+        color: #ddd;
+        border: 1px solid #555;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
     /* Graph Fullscreen */
