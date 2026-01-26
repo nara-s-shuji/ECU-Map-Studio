@@ -720,7 +720,7 @@ body {
     /* Docked Cell Popup for Mobile */
     #cell-popup {
         /* Position above the bottom nav (60px) - Tight gap */
-        bottom: 60px !important;
+        bottom: 65px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: unset !important;
