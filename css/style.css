@@ -719,9 +719,9 @@ body {
 
     /* Docked Cell Popup for Mobile */
     #cell-popup {
-        position: fixed;
         /* Position above the bottom nav (60px) - Tight gap */
-        bottom: 70px !important;
+        bottom: 55px !important;
+        left: 50% !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: unset !important;
@@ -759,8 +759,8 @@ body {
         /* Vertical Center */
         justify-content: center;
         gap: 4px;
-        padding-bottom: 2px;
-        /* Visual Shift Up */
+        padding-bottom: 10px;
+        /* Visual Shift Up (Aggressive) */
     }
 
     .popup-btn {
