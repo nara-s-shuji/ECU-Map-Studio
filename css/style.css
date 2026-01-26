@@ -729,8 +729,8 @@ body {
         width: 100%;
         max-width: 600px;
 
-        height: 60px;
-        /* Increased height as requested */
+        height: 70px;
+        /* Further increased height to prevent overlap */
         padding: 0 4px;
         background: #2d2d30;
         border: 2px solid var(--accent);
@@ -767,6 +767,8 @@ body {
         text-align: center;
         padding: 0;
         margin: 0;
+        touch-action: manipulation;
+        /* Prevent Double-Tap Zoom */
     }
 
     .spinner-adjust-btn {
@@ -780,6 +782,13 @@ body {
         /* Ensure strictly above */
         padding: 0;
         margin: 0;
+        touch-action: manipulation;
+        /* Prevent Double-Tap Zoom */
+    }
+
+    .mode-btn {
+        touch-action: manipulation;
+        /* Prevent Double-Tap Zoom */
     }
 
     .mode-btn {
