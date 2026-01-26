@@ -195,8 +195,8 @@ window.switchPopupMode = function (mode) {
     }
 
     popupMode = mode;
-    document.getElementById('mode-abs').classList.toggle('active', mode === 'abs');
-    document.getElementById('mode-pct').classList.toggle('active', mode === 'pct');
+    popupMode = mode;
+    // Removed legacy button class toggles (elements deleted)
 
     const toggleBtn = document.getElementById('btn-mode-toggle');
     if (toggleBtn) {
