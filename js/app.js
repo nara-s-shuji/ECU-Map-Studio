@@ -76,7 +76,6 @@ window.onload = () => {
     initData();
     renderTable();
     // ensure popup visibility if default is editor
-    // ensure popup visibility if default is editor
     if (document.getElementById('nav-editor').classList.contains('active')) {
         document.body.classList.add('mode-editor');
         // Force select first cell to show popup

@@ -233,9 +233,7 @@ let adjustInterval;
 let adjustDelayTimeout;
 
 window.startAdjusting = function (direction) {
-    // Removed implicit event usage to avoid potential reference errors
     adjustCellValue(direction);
-
     adjustDelayTimeout = setTimeout(() => {
         adjustInterval = setInterval(() => {
             adjustCellValue(direction);
@@ -250,6 +248,7 @@ window.stopAdjusting = function () {
 
 window.adjustCellValue = function (direction) {
     const deltaInput = document.getElementById('popup-delta');
+    if (!deltaInput) return;
     let deltaValue = parseFloat(deltaInput.value);
 
     if (isNaN(deltaValue) || deltaValue === 0) return;
@@ -265,6 +264,8 @@ window.adjustCellValue = function (direction) {
 
     cellsToUpdate.forEach(key => {
         const [t, r] = key.split('-').map(Number);
+        if (!fuelMap[t] || typeof fuelMap[t][r] === 'undefined') return;
+
         const currentValue = fuelMap[t][r];
         const originalValue = originalFuelMap[t][r];
         let newValue;
@@ -282,15 +283,16 @@ window.adjustCellValue = function (direction) {
         if (input) {
             input.value = fuelMap[t][r];
             const cell = document.getElementById(`c-${t}-${r}`);
-            cell.style.background = getColor(fuelMap[t][r], t, r);
+            if (cell) cell.style.background = getColor(fuelMap[t][r], t, r);
         }
     });
 
     updateUISelection();
     saveHistory();
 
-    if (document.getElementById('graph-overlay').classList.contains('active')) {
-        updateGraph();
+    const graphOverlay = document.getElementById('graph-overlay');
+    if (graphOverlay && graphOverlay.classList.contains('active')) {
+        if (typeof updateGraph === 'function') updateGraph();
     }
 };
 
