@@ -189,7 +189,7 @@ function selectColumnRange(start, end) {
     // So selectColumnRange means picking ALL rows for cols min..max.
 
     for (let c = min; c <= max; c++) {
-        for (let r = 0; r < tpsBreaks.length; r++) {
+        for (let r = 0; r < TPS_AXIS.length; r++) {
             selectedCells.add(`${r}-${c}`);
         }
     }
@@ -203,7 +203,7 @@ function selectRowRange(start, end) {
     const max = Math.max(start, end);
 
     for (let r = min; r <= max; r++) {
-        for (let c = 0; c < rpmBreaks.length; c++) {
+        for (let c = 0; c < RPM_AXIS.length; c++) {
             selectedCells.add(`${r}-${c}`);
         }
     }
