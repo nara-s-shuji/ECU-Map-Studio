@@ -225,20 +225,33 @@ window.adjustDelta = function (direction) {
     if (!input) return;
     let current = parseFloat(input.value);
 
+    // Safety check
+    if (isNaN(current)) current = (popupMode === 'abs') ? 10 : 1.0;
+
     if (popupMode === 'abs') {
         if (direction > 0) {
             current += 1;
         } else {
             current = Math.max(1, current - 1);
         }
+        // ABS Limit: 1000
+        current = Math.min(1000, current);
+
         popupDeltaAbs = current;
         input.value = current;
     } else {
         current = parseFloat((current + (direction * 0.1)).toFixed(1));
         if (current <= 0) current = 0.1;
+
+        // Pct Limit: 50
+        current = Math.min(50, current);
+
         popupDeltaPct = current;
         input.value = current.toFixed(1);
     }
+
+    // Debug
+    // console.log("AdjustDelta:", direction, current);
 };
 
 // --- New Spinner Logic ---

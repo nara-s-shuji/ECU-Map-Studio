@@ -464,6 +464,8 @@ body {
 
 .selected-cell {
     position: relative;
+    z-index: 500;
+    /* Ensure above neighbors */
 }
 
 .selected-cell::after {
@@ -475,8 +477,10 @@ body {
     bottom: 0;
     border: 2px solid var(--accent);
     pointer-events: none;
-    z-index: 2;
+    z-index: 600;
+    /* Above cell content */
     box-sizing: border-box;
+    display: block !important;
 }
 
 .multi-selected-cell::after {
@@ -715,8 +719,8 @@ body {
     /* Docked Cell Popup for Mobile */
     #cell-popup {
         position: fixed;
-        /* Position above the bottom nav (60px) + Gap (5px) -> 65px */
-        bottom: 65px !important;
+        /* Position above the bottom nav (60px) - Tight gap */
+        bottom: 55px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: unset !important;
@@ -725,32 +729,28 @@ body {
         width: 100%;
         max-width: 600px;
 
-        height: auto;
-        padding: 4px;
+        height: 50px;
+        /* Fixed height for alignment */
+        padding: 0 4px;
+        /* Minimal padding */
         background: #2d2d30;
         border: 2px solid var(--accent);
 
         display: flex;
         flex-direction: row;
-        /* Horizontal Layout */
         align-items: center;
+        /* Vertical Center */
         justify-content: center;
 
         z-index: 20000;
         box-sizing: border-box;
         border-radius: 8px;
+
         user-select: none;
         -webkit-user-select: none;
     }
 
     .popup-controls {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .popup-mode-selector {
         display: flex;
         width: 100%;
     }
