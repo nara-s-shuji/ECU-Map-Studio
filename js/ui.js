@@ -64,6 +64,10 @@ let isLongPressMode = false;
 let selectionStartCell = null; // {t, r} or index for header
 let selectionType = null; // 'cell', 'row', 'col'
 
+// PC Range Selection State
+let lastSelectedCol = -1;
+let lastSelectedRow = -1;
+
 function handleTouchStart(e, type, index1, index2) {
     longPressTimer = setTimeout(() => {
         isLongPressMode = true;
@@ -335,10 +339,22 @@ function renderTable() {
         h.innerText = rpm;
         h.dataset.col = c;
 
-        h.onclick = () => selectColumn(c);
-        h.onmousedown = (e) => {
-            if (e.shiftKey) return;
-            selectColumn(c);
+        h.onclick = (e) => {
+            if (e.shiftKey && lastSelectedCol !== -1) {
+                // Range Select
+                const start = Math.min(lastSelectedCol, c);
+                const end = Math.max(lastSelectedCol, c);
+                selectedCells.clear();
+                for (let i = start; i <= end; i++) {
+                    for (let t = 0; t < 21; t++) {
+                        selectedCells.add(`${t}-${i}`);
+                    }
+                }
+                updateUISelection();
+            } else {
+                selectColumn(c);
+                lastSelectedCol = c;
+            }
         };
 
         if (isColumnSelected(c)) h.classList.add('selected-header');
@@ -351,7 +367,24 @@ function renderTable() {
         label.className = 'cell label-cell';
         label.innerText = tps + '%';
         label.dataset.row = t;
-        label.onclick = () => selectRow(t);
+        label.dataset.row = t;
+        label.onclick = (e) => {
+            if (e.shiftKey && lastSelectedRow !== -1) {
+                // Range Select
+                const start = Math.min(lastSelectedRow, t);
+                const end = Math.max(lastSelectedRow, t);
+                selectedCells.clear();
+                for (let i = start; i <= end; i++) {
+                    for (let r = 0; r < 20; r++) {
+                        selectedCells.add(`${i}-${r}`);
+                    }
+                }
+                updateUISelection();
+            } else {
+                selectRow(t);
+                lastSelectedRow = t;
+            }
+        };
 
         if (isRowSelected(t)) label.classList.add('selected-label');
         grid.appendChild(label);

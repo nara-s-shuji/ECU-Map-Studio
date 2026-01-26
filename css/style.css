@@ -630,8 +630,9 @@ body {
     #main-container {
         width: 100%;
         height: 100%;
-        padding-bottom: 60px;
-        /* Space for bottom nav */
+        height: 100%;
+        /* Reduced from padding-bottom: 60px to 0 for better fit, using flex */
+        padding-bottom: 0;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -655,7 +656,10 @@ body {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         position: relative;
+        position: relative;
         width: 100vw;
+        padding-bottom: 80px;
+        /* Ensure content is reachable but not excessive */
     }
 
     #table-wrapper {
@@ -713,29 +717,34 @@ body {
         position: fixed;
         /* Position above the bottom nav (60px) */
         bottom: calc(60px + env(safe-area-inset-bottom));
-        left: 0;
-        right: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        /* Responsive width */
+        max-width: 300px;
         top: auto !important;
 
-        height: 60px;
-        padding: 5px 10px;
+        height: 50px;
+        /* Reduced Height */
+        padding: 5px;
         background: #2d2d30;
-        /* Lighter bg to stand out */
-        border-top: 2px solid var(--accent);
-        border-left: 2px solid var(--accent);
-        border-right: 2px solid var(--accent);
-        /* 2px Solid Accent on all sides */
+        border: 2px solid var(--accent);
+        /* Full Border */
 
         display: flex;
         align-items: center;
         justify-content: space-between;
-        /* Spread controls */
 
-        /* Ensure visibility */
         z-index: 9999;
-        transform: translateY(150%);
-        transition: transform 0.2s ease-out;
         box-sizing: border-box;
+        border-radius: 8px;
+        /* Rounded corners for floating feel */
+    }
+
+    /* Portrait Transition (Override default transform) */
+    #cell-popup[style*="display: none"] {
+        opacity: 0;
+        pointer-events: none;
     }
 
     #cell-popup.active {
@@ -855,7 +864,15 @@ body {
             border-left: 1px solid #444;
             justify-content: flex-start;
             /* Stack from top */
+            /* Stack from top */
             padding-top: env(safe-area-inset-top);
+        }
+
+        /* Fix Overlap: Allow scrolling past the fixed right menu */
+        #map-section {
+            padding-right: 60px !important;
+            /* Space for Right Menu */
+            padding-bottom: 20px !important;
         }
 
         #cell-popup {
@@ -888,12 +905,14 @@ body {
             right: calc(60px + env(safe-area-inset-right)) !important;
             /* Adjacent to menu */
             bottom: 0 !important;
+
+            border: 2px solid var(--accent);
+            /* Full Border */
         }
 
         /* 
            Landscape Order: 
            Reset (Top of +) -> We can put Reset at order 1, + at 2, Input 3, - 4 
-           Original Request: "Reset above +" 
         */
 
         #cell-popup .popup-controls {
