@@ -722,17 +722,17 @@ body {
         top: unset !important;
         /* STRICT RESET */
 
-        width: 98%;
+        width: 100%;
         max-width: 600px;
 
         height: auto;
-        padding: 5px;
+        padding: 4px;
         background: #2d2d30;
         border: 2px solid var(--accent);
 
         display: flex;
-        flex-direction: column;
-        /* Stack controls and buttons */
+        flex-direction: row;
+        /* Horizontal Layout */
         align-items: center;
         justify-content: center;
 

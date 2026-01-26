@@ -258,40 +258,53 @@ function setupSpinnerEvents() {
         btn.onmouseup = stopHandler;
         btn.onmouseleave = stopHandler;
 
-        btn.ontouchstart = startHandler;
         btn.ontouchend = stopHandler;
     });
 }
-// Call setup on load
-document.addEventListener('DOMContentLoaded', setupSpinnerEvents);
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setupSpinnerEvents();
+
+// --- New Apply Button Logic (Long Press for map editing) ---
+let applyInterval;
+let applyTimeout;
+
+function setupApplyEvents() {
+    const btnMinus = document.getElementById('btn-apply-minus');
+    const btnPlus = document.getElementById('btn-apply-plus');
+
+    [{ btn: btnMinus, dir: -1 }, { btn: btnPlus, dir: 1 }].forEach(item => {
+        if (!item.btn) return;
+
+        const startHandler = (e) => {
+            e.preventDefault();
+            adjustCellValue(item.dir); // Initial Apply
+            applyTimeout = setTimeout(() => {
+                applyInterval = setInterval(() => adjustCellValue(item.dir), 100);
+            }, 500);
+        };
+
+        const stopHandler = (e) => {
+            e.preventDefault();
+            clearTimeout(applyTimeout);
+            clearInterval(applyInterval);
+        };
+
+        item.btn.onmousedown = startHandler;
+        item.btn.onmouseup = stopHandler;
+        item.btn.onmouseleave = stopHandler;
+        item.btn.ontouchstart = startHandler;
+        item.btn.ontouchend = stopHandler;
+    });
 }
 
+// Call setup on load
+document.addEventListener('DOMContentLoaded', () => {
+    setupSpinnerEvents();
+    setupApplyEvents();
+});
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupSpinnerEvents();
+    setupApplyEvents();
+}
 
-window.adjustDelta = function (direction) {
-    const input = document.getElementById('popup-delta');
-    if (!input) return;
-    let current = parseFloat(input.value);
-
-    // Safety check
-    if (isNaN(current)) current = (popupMode === 'abs') ? 10 : 1.0;
-
-    if (popupMode === 'abs') {
-        if (direction > 0) {
-            current += 1;
-        } else {
-            current = Math.max(1, current - 1);
-        }
-        popupDeltaAbs = current;
-        input.value = current;
-    } else {
-        current = parseFloat((current + (direction * 0.1)).toFixed(1));
-        if (current <= 0) current = 0.1;
-        popupDeltaPct = current;
-        input.value = current.toFixed(1);
-    }
-};
 
 // Removed old startAdjusting/stopAdjusting global functions to clear clutter
 
