@@ -262,21 +262,55 @@ window.adjustDelta = function (direction) {
 let spinnerInterval;
 let spinnerTimeout;
 
-// --- Global Apply Logic (Inline Events) ---
-let applyInterval;
-let applyTimeout;
+// --- Global Event Logic (Debounced) ---
+let applyInterval, applyTimeout;
+let spinnerInterval, spinnerTimeout;
+let lastTouchTime = 0;
 
-window.startApply = function (direction) {
-    // console.log("Start Apply", direction);
+function handleTouchDebounce(e) {
+    if (e.type === 'touchstart') {
+        lastTouchTime = Date.now();
+        return true; // Allow touch
+    }
+    if (e.type === 'mousedown') {
+        if (Date.now() - lastTouchTime < 1000) {
+            e.preventDefault();
+            return false; // Block ghost mouse
+        }
+    }
+    return true;
+}
+
+window.startApply = function (direction, e) {
+    if (e && !handleTouchDebounce(e)) return;
+
     adjustCellValue(direction); // Initial
     applyTimeout = setTimeout(() => {
         applyInterval = setInterval(() => adjustCellValue(direction), 100);
     }, 500);
 };
 
-window.stopApply = function () {
+window.stopApply = function (e) {
+    if (e) {
+        // e.preventDefault(); // Optional, but might interfere with click? Left out for safety unless needed
+    }
     clearTimeout(applyTimeout);
     clearInterval(applyInterval);
+};
+
+window.startSpinner = function (direction, e) {
+    if (e && !handleTouchDebounce(e)) return;
+
+    adjustDelta(direction);
+
+    spinnerTimeout = setTimeout(() => {
+        spinnerInterval = setInterval(() => adjustDelta(direction), 100);
+    }, 500);
+};
+
+window.stopSpinner = function (e) {
+    clearTimeout(spinnerTimeout);
+    clearInterval(spinnerInterval);
 };
 
 // Removed setupSpinnerEvents and setupApplyEvents as we moved to inline HTML handlers for robustness
