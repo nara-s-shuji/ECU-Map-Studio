@@ -67,16 +67,49 @@ body {
 
 .toolbar-btn.active,
 .toolbar-btn:active {
-    background: #007acc;
+    background: #3e3e42;
 }
 
-.toolbar-btn.active {
-    background: #007acc;
-}
 
 .toolbar-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.resize-ne {
+    top: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nesw-resize;
+    z-index: 101;
+}
+
+.resize-nw {
+    top: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    z-index: 101;
+}
+
+.resize-se {
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    z-index: 101;
+}
+
+.resize-sw {
+    bottom: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nesw-resize;
+    z-index: 101;
 }
 
 .toolbar-btn:disabled:hover {
@@ -411,6 +444,10 @@ body {
     width: 80px;
     height: 28px;
     box-sizing: border-box;
+    z-index: 700 !important;
+    /* Above selected-cells */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .label-cell.selected-label {
@@ -419,10 +456,12 @@ body {
 }
 
 .corner-cell {
-    z-index: 250;
+    z-index: 750 !important;
     position: sticky;
     left: 0;
     width: 80px;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .cell input {
@@ -1055,8 +1094,10 @@ body {
             bottom: 0 !important;
 
             border: 2px solid var(--accent);
-            /* Full Border */
+            box-sizing: border-box;
+            /* Fix missing border */
         }
+
 
         /* 
            Landscape Order: 
@@ -1172,5 +1213,15 @@ body {
     .nav-icon {
         font-size: 22px;
         margin-bottom: 2px;
+    }
+
+    /* Mobile Graph Fixes */
+    #graph-overlay {
+        top: 0 !important;
+        padding-top: env(safe-area-inset-top) !important;
+    }
+
+    #graph-close {
+        display: none !important;
     }
 }

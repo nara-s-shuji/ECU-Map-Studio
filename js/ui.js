@@ -84,6 +84,26 @@ document.addEventListener('mouseup', () => {
 });
 
 function handleTouchStart(e, type, index1, index2) {
+    // For Headers (Col/Row), select immediately and enable drag
+    if (type === 'col' || type === 'row') {
+        isLongPressMode = true; // Enable drag immediately
+        selectionType = type;
+        if (navigator.vibrate) navigator.vibrate(50); // Immediate feedback
+
+        if (type === 'col') {
+            const c = parseInt(index1);
+            selectionStartCell = c;
+            selectColumn(c);
+        } else if (type === 'row') {
+            const r = parseInt(index1);
+            selectionStartCell = r;
+            selectRow(r);
+        }
+        return; // Skip timer
+    }
+
+    // For Cells, keep long press timer (or user didn't specify? User only mentioned headers).
+    // Assuming keep cells as is for now.
     longPressTimer = setTimeout(() => {
         isLongPressMode = true;
         selectionType = type;
@@ -95,14 +115,6 @@ function handleTouchStart(e, type, index1, index2) {
             const r = parseInt(index2);
             selectionStartCell = { t, r };
             startSelection(t, r);
-        } else if (type === 'col') { // RPM Header (Col)
-            const c = parseInt(index1);
-            selectionStartCell = c;
-            selectColumn(c);
-        } else if (type === 'row') { // TPS Label (Row)
-            const r = parseInt(index1);
-            selectionStartCell = r;
-            selectRow(r);
         }
     }, 500);
 }
@@ -348,6 +360,7 @@ function handleTouchDebounce(e) {
 }
 
 window.startApply = function (direction, e) {
+    if (e && e.type === 'touchstart') e.preventDefault();
     if (e && !handleTouchDebounce(e)) return;
 
     adjustCellValue(direction); // Initial
@@ -381,8 +394,64 @@ window.stopSpinner = function (e) {
 
 // Removed setupSpinnerEvents and setupApplyEvents as we moved to inline HTML handlers for robustness
 document.addEventListener('DOMContentLoaded', () => {
-    // No-op for events now
+    setupTablePinchZoom();
 });
+
+function setupTablePinchZoom() {
+    // Target the wrapper or grid
+    const target = document.getElementById('mapGrid');
+    const container = document.getElementById('map-section'); // Scroll container
+
+    if (!target || !container) return;
+
+    let initialScale = 1;
+    let currentScale = 1;
+    let initialDist = 0;
+
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            // e.preventDefault(); // Might block scroll? Only if we are zooming.
+            // If we don't preventDefault, browser zoom might kick in.
+            // User rules say user-scalable=no, so browser zoom is disabled.
+            // But we should preventDefault to be safe and stop scroll interference during pinch.
+            e.preventDefault();
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            initialDist = Math.hypot(dx, dy);
+            initialScale = currentScale;
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialDist > 0) {
+            e.preventDefault();
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.hypot(dx, dy);
+
+            const scaleFactor = dist / initialDist;
+            let newScale = initialScale * scaleFactor;
+
+            // Clamping
+            newScale = Math.max(0.5, Math.min(newScale, 2.5));
+            currentScale = newScale;
+
+            // Apply Zoom
+            target.style.zoom = newScale;
+            // Also scale headers?
+            const headerRow = document.getElementById('headerRow');
+            if (headerRow) headerRow.style.zoom = newScale;
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+            initialDist = 0;
+        }
+    });
+}
 
 
 // Removed old startAdjusting/stopAdjusting global functions to clear clutter
@@ -965,4 +1034,47 @@ window.handleCellSelect = function (t, r) {
     selectedCells.add(`${t}-${r}`);
     selT = t; selR = r;
     updateUISelection();
+};
+
+window.resetCellToOriginal = function () {
+    let targets = [];
+    if (selectedCells.size > 0) {
+        selectedCells.forEach(key => {
+            const [t, r] = key.split('-').map(Number);
+            targets.push({ t, r });
+        });
+    } else {
+        targets.push({ t: selT, r: selR });
+    }
+
+    let changed = false;
+    targets.forEach(({ t, r }) => {
+        if (fuelMap[t] && originalFuelMap[t] && typeof fuelMap[t][r] !== 'undefined') {
+            const currentVal = fuelMap[t][r];
+            const originalVal = originalFuelMap[t][r];
+            if (currentVal !== originalVal) {
+                fuelMap[t][r] = originalVal;
+                changed = true;
+
+                // Direct DOM update for responsiveness
+                const input = document.querySelector(`#c-${t}-${r} input`);
+                if (input) {
+                    input.value = originalVal;
+                    // Update color simplified
+                    const cell = document.getElementById(`c-${t}-${r}`);
+                    if (cell) cell.style.background = getColor(originalVal, t, r);
+                }
+            }
+        }
+    });
+
+    if (changed) {
+        saveHistory();
+        renderTable(); // Ensure everything is consistent
+        updateUISelection();
+        const graphOverlay = document.getElementById('graph-overlay');
+        if (graphOverlay && graphOverlay.classList.contains('active')) {
+            if (typeof updateGraph === 'function') updateGraph();
+        }
+    }
 };
