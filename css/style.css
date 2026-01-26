@@ -715,15 +715,14 @@ body {
     /* Docked Cell Popup for Mobile */
     #cell-popup {
         position: fixed;
-        /* Position above the bottom nav (60px) */
-        bottom: calc(65px + env(safe-area-inset-bottom));
-        left: 50%;
-        transform: translateX(-50%) !important;
-        /* Ensure centering */
+        /* Force Center on Mobile */
+        top: 50% !important;
+        left: 50% !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important;
+
         width: 96%;
-        /* Wider in Portrait */
         max-width: 380px;
-        top: auto !important;
 
         height: 60px;
         /* Slightly taller for spinner */

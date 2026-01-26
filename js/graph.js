@@ -65,7 +65,6 @@ window.updateGraph = function () {
         layout.yaxis.title = "Fuel (μs)";
     }
 
-    alert('Trace: updateGraph Traces=' + traces.length);
     Plotly.newPlot('chart-container', traces, layout, { responsive: true, displayModeBar: false });
 }
 
