@@ -1,29 +1,30 @@
-const RPM_AXIS = Array.from({ length: 20 }, (_, i) => 500 + i * 500);
-const TPS_AXIS = Array.from({ length: 21 }, (_, i) => i * 5);
-let fuelMap = [];
-let originalFuelMap = [];
-let selT = 0, selR = 0;
-let cellColorMode = 'diff';
+window.RPM_AXIS = Array.from({ length: 20 }, (_, i) => 500 + i * 500);
+window.TPS_AXIS = Array.from({ length: 21 }, (_, i) => i * 5);
+window.fuelMap = [];
+window.originalFuelMap = [];
+window.selT = 0;
+window.selR = 0;
+window.cellColorMode = 'diff';
 
 // 複数セル選択
-let selectedCells = new Set(); // "t-r"形式で保存
-let selectionStart = null; // {t, r}
-let selectionStartMode = null; // 'cell', 'row', 'col'
-let isSelecting = false;
-let isShiftSelecting = false; // Shift+矢印キーでの範囲選択
+window.selectedCells = new Set(); // "t-r"形式で保存
+window.selectionStart = null; // {t, r}
+window.selectionStartMode = null; // 'cell', 'row', 'col'
+window.isSelecting = false;
+window.isShiftSelecting = false; // Shift+矢印キーでの範囲選択
 
 // 履歴管理
-let history = [];
-let historyIndex = -1;
-const MAX_HISTORY = 50;
+window.historyStack = [];
+window.historyIndex = -1;
+const MAX_HISTORY = 50; // Const is fine
 
 // ポップアップモード
-let popupMode = 'abs'; // 'abs' or 'pct'
-let popupDeltaAbs = 10; // 絶対値モードの値を保存
-let popupDeltaPct = 1.0; // %モードの値を保存
+window.popupMode = 'abs'; // 'abs' or 'pct'
+window.popupDeltaAbs = 10; // 絶対値モードの値を保存
+window.popupDeltaPct = 1.0; // %モードの値を保存
 
 // ECU接続状態
-let ecuConnected = false;
+window.ecuConnected = false;
 
 // Global Event Listeners setup
 document.addEventListener('DOMContentLoaded', function () {

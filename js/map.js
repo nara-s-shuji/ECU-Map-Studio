@@ -68,7 +68,7 @@ window.saveFile = function () {
 window.undo = function () {
     if (historyIndex > 0) {
         historyIndex--;
-        fuelMap = JSON.parse(JSON.stringify(history[historyIndex]));
+        fuelMap = JSON.parse(JSON.stringify(historyStack[historyIndex]));
         renderTable();
         if (document.getElementById('graph-overlay').classList.contains('active')) {
             updateGraph();
@@ -77,9 +77,9 @@ window.undo = function () {
 };
 
 window.redo = function () {
-    if (historyIndex < history.length - 1) {
+    if (historyIndex < historyStack.length - 1) {
         historyIndex++;
-        fuelMap = JSON.parse(JSON.stringify(history[historyIndex]));
+        fuelMap = JSON.parse(JSON.stringify(historyStack[historyIndex]));
         renderTable();
         if (document.getElementById('graph-overlay').classList.contains('active')) {
             updateGraph();
@@ -89,14 +89,14 @@ window.redo = function () {
 
 function saveHistory() {
     // 現在の位置より後の履歴を削除
-    history = history.slice(0, historyIndex + 1);
+    historyStack = historyStack.slice(0, historyIndex + 1);
 
     // 新しい状態を追加
-    history.push(JSON.parse(JSON.stringify(fuelMap)));
+    historyStack.push(JSON.parse(JSON.stringify(fuelMap)));
 
     // 履歴の上限を超えたら古いものを削除
-    if (history.length > MAX_HISTORY) {
-        history.shift();
+    if (historyStack.length > MAX_HISTORY) {
+        historyStack.shift();
     } else {
         historyIndex++;
     }

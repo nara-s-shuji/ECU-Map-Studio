@@ -1,18 +1,23 @@
 window.toggleGraph = function () {
-    const overlay = document.getElementById('graph-overlay');
-    const btn = document.getElementById('btn-graph');
-    overlay.classList.toggle('active');
-    btn.classList.toggle('active');
-    // Mobile Nav Update
-    const navBtn = document.getElementById('nav-graph');
-    if (navBtn) navBtn.classList.toggle('active', overlay.classList.contains('active'));
+    try {
+        const overlay = document.getElementById('graph-overlay');
+        const btn = document.getElementById('btn-graph');
+        overlay.classList.toggle('active');
+        btn.classList.toggle('active');
+        // Mobile Nav Update
+        const navBtn = document.getElementById('nav-graph');
+        if (navBtn) navBtn.classList.toggle('active', overlay.classList.contains('active'));
 
-    if (overlay.classList.contains('active')) {
-        updateGraph();
-        // グラフ表示時にリサイズハンドルを初期化
-        setTimeout(() => {
-            initGraphResizeHandles();
-        }, 100);
+        if (overlay.classList.contains('active')) {
+            updateGraph();
+            // グラフ表示時にリサイズハンドルを初期化
+            setTimeout(() => {
+                initGraphResizeHandles();
+            }, 100);
+        }
+    } catch (e) {
+        alert('Graph Toggle Error: ' + e.message);
+        console.error(e);
     }
 };
 
