@@ -729,12 +729,9 @@ body {
         width: 100%;
         max-width: 600px;
 
-        width: 100%;
-        max-width: 600px;
-
-        height: 80px;
-        /* Increased to 80px for absolute clearance */
-        padding: 4px;
+        height: 70px;
+        /* Exact 70px as requested */
+        padding: 0 4px;
         background: #2d2d30;
         border: 2px solid var(--accent);
 

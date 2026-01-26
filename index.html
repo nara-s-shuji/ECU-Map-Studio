@@ -13,7 +13,7 @@
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=3.2">
+    <link rel="stylesheet" href="css/style.css?v=3.3">
     <script>
         window.onerror = function (msg, url, line, col, error) {
             alert("JS Error: " + msg + "\nLine: " + line);
@@ -192,17 +192,17 @@
             style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
             <!-- 1. Reset Button -->
             <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
-                style="width: 36px; height: 100%; font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center;">↺</button>
+                style="width: 36px; height: 65px; font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center;">↺</button>
 
             <!-- 2. Apply Minus -->
             <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
                 onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
                 ontouchend="stopApply(event)"
-                style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">-</button>
+                style="flex: 1; min-width: 44px; height: 65px; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">-</button>
 
             <!-- 3. Spinner Group -->
             <div class="delta-spinner-group"
-                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 100%; margin: 0 4px; flex-shrink: 0;">
+                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 65px; margin: 0 4px; flex-shrink: 0;">
                 <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)" onmouseup="stopSpinner(event)"
                     onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(-1, event)"
                     ontouchend="stopSpinner(event)"
@@ -221,11 +221,11 @@
             <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
                 onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
                 ontouchend="stopApply(event)"
-                style="flex: 1; min-width: 44px; height: 100%; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">+</button>
+                style="flex: 1; min-width: 44px; height: 65px; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 4px;">+</button>
 
             <!-- 5. Mode Toggle -->
             <button id="btn-mode-toggle" class="mode-btn" onclick="togglePopupMode()"
-                style="width: 40px; height: 100%; font-size: 11px; padding: 0; flex-shrink: 0; font-weight: bold; color: var(--accent); display: flex; align-items: center; justify-content: center;">ABS</button>
+                style="width: 40px; height: 65px; font-size: 11px; padding: 0; flex-shrink: 0; font-weight: bold; color: var(--accent); display: flex; align-items: center; justify-content: center;">ABS</button>
         </div>
     </div>
 
