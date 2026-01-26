@@ -516,13 +516,17 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 2px solid var(--accent);
+    border: 2px solid #ffd700;
+    /* Gold/Yellow Border */
+    background: rgba(255, 215, 0, 0.2);
+    /* Slight yellow tint */
     pointer-events: none;
     z-index: 600;
     /* Above cell content */
     box-sizing: border-box;
     display: block !important;
 }
+
 
 .multi-selected-cell::after {
     content: '';
@@ -531,24 +535,19 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 120, 212, 0.3);
-    border: 1px solid var(--accent);
+    background: rgba(255, 215, 0, 0.4);
+    /* Stronger yellow tint */
+    border: 1px solid #ffd700;
     pointer-events: none;
     z-index: 2;
     box-sizing: border-box;
 }
 
+/* Cross Highlight Removed */
 .cross-highlight::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 0, 0.15);
-    pointer-events: none;
-    z-index: 1;
+    display: none;
 }
+
 
 /* セル編集ポップアップ */
 #cell-popup {

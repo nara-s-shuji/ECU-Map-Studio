@@ -701,9 +701,8 @@ function renderTable() {
             const val = (fuelMap[t] && fuelMap[t][r] !== undefined) ? fuelMap[t][r] : 0;
 
             cell.style.background = getColor(val, t, r);
-            if (selectedCells.has(`${t}-${r}`)) {
-                cell.style.border = '2px solid var(--accent)';
-            }
+            // Removed inline border to rely on updateUISelection classes
+
 
             const input = document.createElement('input');
             input.type = 'number';
@@ -825,14 +824,7 @@ function updateUISelection() {
     const selectedCell = document.getElementById(`c-${selT}-${selR}`);
     if (selectedCell) {
         selectedCell.classList.add('selected-cell');
-        for (let r = 0; r < 20; r++) {
-            const cell = document.getElementById(`c-${selT}-${r}`);
-            if (cell) cell.classList.add('cross-highlight');
-        }
-        for (let t = 0; t < 21; t++) {
-            const cell = document.getElementById(`c-${t}-${selR}`);
-            if (cell) cell.classList.add('cross-highlight');
-        }
+        // Removed cross-highlight logic as requested
     }
 
     // Highlight Header (RPM/Column) - selR is Column Index now
