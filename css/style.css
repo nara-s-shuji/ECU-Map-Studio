@@ -662,15 +662,16 @@ body {
         position: relative;
         position: relative;
         width: 100vw;
-        padding-bottom: 80px;
+        padding-bottom: 70px;
+        /* Reduced to stop right above popup */
         /* Ensure content is reachable but not excessive */
     }
 
     #table-wrapper {
         min-height: auto;
         /* Allow it to shrink/grow */
-        padding-bottom: 100px;
-        /* Extra space at bottom so content isn't hidden by nav */
+        padding-bottom: 75px;
+        /* Match Popup Height + small margin */
     }
 
     /* Grid Adjustments - Force display grid */
@@ -720,7 +721,7 @@ body {
     #cell-popup {
         position: fixed;
         /* Position above the bottom nav (60px) - Tight gap */
-        bottom: 75px !important;
+        bottom: 70px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         top: unset !important;
@@ -758,6 +759,8 @@ body {
         /* Vertical Center */
         justify-content: center;
         gap: 4px;
+        padding-bottom: 2px;
+        /* Visual Shift Up */
     }
 
     .popup-btn {

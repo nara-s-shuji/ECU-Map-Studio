@@ -128,7 +128,74 @@ function handleTouchMove(e) {
             const r = parseInt(parts[2]);
             updateSelection(t, r);
         }
+    } else if (selectionType === 'col') {
+        const header = target.closest('.header-cell');
+        // Fallback: if user drags onto cells below the header, map cell to Col
+        let c = -1;
+        if (header && header.dataset.col !== undefined) {
+            c = parseInt(header.dataset.col);
+        } else {
+            const cell = target.closest('.cell');
+            if (cell && cell.id && cell.id.startsWith('c-')) {
+                c = parseInt(cell.id.split('-')[2]);
+            }
+        }
+
+        if (c !== -1 && selectionStartCell !== null) {
+            // Range select from start to c
+            selectColumnRange(selectionStartCell, c);
+        }
+
+    } else if (selectionType === 'row') {
+        const label = target.closest('.label-cell');
+        // Fallback: if user drags onto cells to the right, map cell to Row
+        let r = -1;
+        if (label && label.dataset.row !== undefined) {
+            r = parseInt(label.dataset.row);
+        } else {
+            const cell = target.closest('.cell');
+            if (cell && cell.id && cell.id.startsWith('c-')) {
+                r = parseInt(cell.id.split('-')[1]);
+            }
+        }
+
+        if (r !== -1 && selectionStartCell !== null) {
+            selectRowRange(selectionStartCell, r);
+        }
     }
+}
+
+// Helper to select range of columns
+function selectColumnRange(start, end) {
+    selectedCells.clear();
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
+
+    // Assuming tpsBreaks is rows (0..N) and rpmBreaks is cols (0..M)
+    // Actually fuelMap is [row][col]. So `t` is Row Index (TPS), `r` is Col Index (RPM)?
+    // Let's verify: c-{t}-{r}. In `startSelection(t, r)`, t is row-index, r is col-index.
+    // So selectColumnRange means picking ALL rows for cols min..max.
+
+    for (let c = min; c <= max; c++) {
+        for (let r = 0; r < tpsBreaks.length; r++) {
+            selectedCells.add(`${r}-${c}`);
+        }
+    }
+    updateUISelection();
+}
+
+// Helper to select range of rows
+function selectRowRange(start, end) {
+    selectedCells.clear();
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
+
+    for (let r = min; r <= max; r++) {
+        for (let c = 0; c < rpmBreaks.length; c++) {
+            selectedCells.add(`${r}-${c}`);
+        }
+    }
+    updateUISelection();
 }
 
 function handleTouchEnd() {
