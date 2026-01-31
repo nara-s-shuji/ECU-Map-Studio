@@ -126,10 +126,99 @@
             </div>
 
             <!-- 2. モニタービュー -->
-            <div id="monitor-view" class="view-section"
-                style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
-                <h2>📊 Monitor Mode</h2>
-                <p>未実装 (Coming Soon)</p>
+            <div id="monitor-view" class="view-section" style="display:none; flex-direction: column; height: 100%;">
+                <div class="monitor-header"
+                    style="padding: 10px; background: #2d2d30; border-bottom: 1px solid #3c3c3c; display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="ws-url" value="ws://192.168.4.1/ws"
+                        style="flex: 1; background: #3c3c3c; color: white; border: 1px solid #555; padding: 5px; border-radius: 4px;">
+                    <button onclick="monitor.toggleConnection()" id="btn-monitor-connect"
+                        style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">接続</button>
+                    <div id="connection-status"
+                        style="width: 12px; height: 12px; border-radius: 50%; background: #666; margin-left: 5px;">
+                    </div>
+                </div>
+
+                <div class="monitor-content" style="flex: 1; padding: 10px; overflow-y: auto;">
+                    <div class="monitor-grid">
+                        <div class="monitor-card">
+                            <div class="monitor-label">RPM</div>
+                            <div class="monitor-value" id="val-rpm">---</div>
+                            <div class="monitor-unit">rev/min</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">TPS</div>
+                            <div class="monitor-value" id="val-tp">---</div>
+                            <div class="monitor-unit">%</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">MAP 0</div>
+                            <div class="monitor-value" id="val-map0">---</div>
+                            <div class="monitor-unit">kPa</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">MAP 1</div>
+                            <div class="monitor-value" id="val-map1">---</div>
+                            <div class="monitor-unit">kPa</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">IAT</div>
+                            <div class="monitor-value" id="val-iat">---</div>
+                            <div class="monitor-unit">°C</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">EOT</div>
+                            <div class="monitor-value" id="val-eot">---</div>
+                            <div class="monitor-unit">°C</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">VOLT</div>
+                            <div class="monitor-value" id="val-vol">---</div>
+                            <div class="monitor-unit">V</div>
+                        </div>
+                        <div class="monitor-card">
+                            <div class="monitor-label">ATM</div>
+                            <div class="monitor-value" id="val-ap">---</div>
+                            <div class="monitor-unit">hPa</div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .monitor-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                        gap: 10px;
+                    }
+
+                    .monitor-card {
+                        background: #252526;
+                        border: 1px solid #3c3c3c;
+                        border-radius: 6px;
+                        padding: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .monitor-label {
+                        font-size: 12px;
+                        color: #888;
+                        margin-bottom: 5px;
+                    }
+
+                    .monitor-value {
+                        font-size: 24px;
+                        font-family: 'Consolas', monospace;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+
+                    .monitor-unit {
+                        font-size: 10px;
+                        color: #666;
+                        margin-top: 2px;
+                    }
+                </style>
             </div>
 
             <!-- 3. ロガービュー -->
@@ -409,6 +498,7 @@
             setTimeout(() => dot.remove(), 500);
         }, true);
     </script>
+    <script src="js/monitor.js?v=debug_1"></script>
     <script src="js/app.js?v=debug_1"></script>
     <script src="js/ui.js?v=debug_1"></script>
     <script src="js/map.js?v=debug_1"></script>
