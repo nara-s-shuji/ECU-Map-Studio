@@ -655,7 +655,7 @@ body {
 /* Increased breakpoint to 1024px to cover Pro Max landscape and Tablets */
 @media (max-width: 1024px) {
     body {
-        font-size: 14px;
+        font-size: 12px;
         height: 100dvh;
         /* Use dynamic viewport height */
         overflow: hidden;
@@ -1227,4 +1227,5 @@ body {
     #graph-close {
         display: none !important;
     }
+}
 }
