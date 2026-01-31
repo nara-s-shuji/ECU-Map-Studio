@@ -20,6 +20,13 @@ class Monitor {
         }
 
         try {
+            // Security Check: Mixed Content
+            if (window.location.protocol === 'https:' && url.startsWith('ws:')) {
+                alert("【重要】セキュリティ制限により接続できません。\n\nHTTPS(GitHub Pages等)から、ws://(暗号化なし)への接続はブラウザによってブロックされます。\n\n対処法:\n1. サーバーをWSS対応にする(ESP32では困難)\n2. アプリをHTTPでホストする\n3. ローカルファイルとして開く");
+                this.updateStatus('error');
+                return;
+            }
+
             this.ws = new WebSocket(url);
             this.updateStatus('connecting');
 
@@ -46,6 +53,8 @@ class Monitor {
             this.ws.onerror = (error) => {
                 console.error('WebSocket Error:', error);
                 this.updateStatus('error');
+                // Mobile debugging aid
+                // alert("接続エラー: " + (error.message || "詳細不明"));
             };
 
         } catch (e) {
