@@ -698,17 +698,14 @@ body {
     /* Map Section & Scroll */
     #map-section {
         flex: 1;
-        /* Ensure scrolling works */
-        overflow: auto;
+        overflow-y: auto !important;
+        /* Force */
+        overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         position: relative;
         width: 100vw;
         padding-bottom: 70px;
-
-        /* Fix Vertical Scroll Freeze */
         touch-action: pan-x pan-y;
-
-        /* Info Bar Space */
         padding-top: 30px;
     }
 

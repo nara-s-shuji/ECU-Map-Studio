@@ -790,10 +790,10 @@ function updateUISelection() {
         labels[selT].classList.add('selected-label');
     }
 
+    // Display values for the primary selected cell (Focus)
+    // selT, selR are updated on click/drag to the latest focus
     const currentValue = fuelMap[selT][selR];
     const originalValue = originalFuelMap[selT][selR];
-    const change = currentValue - originalValue;
-    const changePercent = originalValue !== 0 ? ((change / originalValue) * 100).toFixed(1) : '0.0';
 
     const cellCount = selectedCells.size;
     let infoText = "";
@@ -810,6 +810,7 @@ function updateUISelection() {
 
     // --- Update Mobile Info Bar ---
     document.getElementById('info-filename').innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
+    // Use the focused cell values
     document.getElementById('info-values').innerText = `Orig:${originalValue} / Curr:${currentValue}`;
     // -----------------------------
 
