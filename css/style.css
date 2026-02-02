@@ -1031,6 +1031,10 @@ body {
         order: 5;
     }
 
+    #settings-menu.active {
+        display: block !important;
+    }
+
     /* Hide cell popup if not in editor mode (JS will toggle .hidden, but also basic display control) */
     body:not(.mode-editor) #cell-popup {
         display: none !important;
@@ -1230,6 +1234,11 @@ body {
 }
 
 /* --- Monitor View Enhancements --- */
+#monitor-view {
+    padding-bottom: 70px;
+    /* Space for Bottom Nav */
+}
+
 .monitor-toggle {
     width: 16px;
     height: 16px;
