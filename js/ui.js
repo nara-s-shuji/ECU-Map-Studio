@@ -796,18 +796,31 @@ function updateUISelection() {
     const changePercent = originalValue !== 0 ? ((change / originalValue) * 100).toFixed(1) : '0.0';
 
     const cellCount = selectedCells.size;
+    let infoText = "";
     if (cellCount > 1) {
+        infoText = `${cellCount} cells selected`;
         document.getElementById('info-cell').innerText = `${cellCount} cells selected (Main: TPS ${TPS_AXIS[selT]}%, RPM ${RPM_AXIS[selR]})`;
     } else {
-        document.getElementById('info-cell').innerText = `TPS: ${TPS_AXIS[selT]}%, RPM: ${RPM_AXIS[selR]}`;
+        infoText = `TPS: ${TPS_AXIS[selT]}%, RPM: ${RPM_AXIS[selR]}`;
+        document.getElementById('info-cell').innerText = infoText;
     }
 
     document.getElementById('info-value').innerText = currentValue;
     document.getElementById('info-original').innerText = originalValue;
-    // ... rest of info update
+
+    // --- Update Mobile Info Bar ---
+    document.getElementById('info-filename').innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
+    document.getElementById('info-values').innerText = `Orig:${originalValue} / Curr:${currentValue}`;
+    // -----------------------------
 
     updatePopupPosition();
 }
+
+window.updateFileInfo = function () {
+    // Helper to just update the filename independent of selection
+    const el = document.getElementById('info-filename');
+    if (el) el.innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
+};
 
 function updatePopupPosition() {
     const popup = document.getElementById('cell-popup');
@@ -870,6 +883,7 @@ window.updatePopupPosition = updatePopupPosition;
 // New Functions
 window.updateData = function (t, r, val) {
     if (fuelMap[t] && typeof fuelMap[t][r] !== 'undefined') {
+        val = Math.max(0, val); // Limit 0
         fuelMap[t][r] = val;
         saveHistory();
         renderTable(); // Re-render to update colors/diffs
