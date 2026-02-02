@@ -25,44 +25,44 @@ window.switchTab = function (tabName) {
     // Menu (4) is toggle
 
     // View Sections Update
-    document.getElementById('editor-view').style.display = 'none';
-    document.getElementById('monitor-view').style.display = 'none';
-    document.getElementById('logger-view').style.display = 'none';
-    document.getElementById('file-view').style.display = 'none'; // Ensure file view handles
+    const views = ['editor-view', 'monitor-view', 'logger-view', 'file-view'];
+    views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'none';
+            el.classList.remove('active');
+        }
+    });
 
-    // Graph Overlay Handling (Mobile Tab Mode)
+    // Graph Overlay Handling
     const graphOverlay = document.getElementById('graph-overlay');
     if (tabName === 'graph') {
         graphOverlay.classList.add('active');
-        // Force 3D mode on mobile graph tab
         document.getElementById('graph-type').value = '3d';
-        // Delay graph render slightly to ensure container is visible
         setTimeout(() => {
-            updateGraph();
-            // Trigger resize for Plotly to fit new container
+            if (typeof updateGraph === 'function') updateGraph();
             window.dispatchEvent(new Event('resize'));
         }, 50);
     } else {
         graphOverlay.classList.remove('active');
     }
 
-    const editorView = document.getElementById('editor-view');
-
     if (tabName === 'editor') {
-        editorView.style.display = 'block';
-        document.body.classList.add('mode-editor'); // Show Popup
-        // Force redraw after display change to ensure dimensions are correct
+        const v = document.getElementById('editor-view');
+        v.style.display = 'block';
+        v.classList.add('active'); // CSS hook
+        document.body.classList.add('mode-editor');
         setTimeout(renderTable, 10);
     } else {
-        document.body.classList.remove('mode-editor'); // Hide Popup
-
+        document.body.classList.remove('mode-editor');
         if (tabName === 'monitor') {
-            document.getElementById('monitor-view').style.display = 'flex';
-        } else if (tabName === 'logger') {
-            // Deprecated usage
-            document.getElementById('logger-view').style.display = 'flex';
+            const v = document.getElementById('monitor-view');
+            v.style.display = 'flex';
+            v.classList.add('active');
         } else if (tabName === 'file') {
-            document.getElementById('file-view').style.display = 'flex';
+            const v = document.getElementById('file-view');
+            v.style.display = 'flex';
+            v.classList.add('active');
         }
     }
 };
