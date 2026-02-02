@@ -62,7 +62,7 @@ window.switchTab = function (tabName) {
             // Deprecated usage
             document.getElementById('logger-view').style.display = 'flex';
         } else if (tabName === 'file') {
-            document.getElementById('file-view').style.display = 'block';
+            document.getElementById('file-view').style.display = 'flex';
         }
     }
 };
@@ -195,7 +195,7 @@ function selectColumnRange(start, end) {
     // So selectColumnRange means picking ALL rows for cols min..max.
 
     for (let c = min; c <= max; c++) {
-        for (let r = 0; r < TPS_AXIS.length; r++) {
+        for (let r = 0; r < RPM_AXIS.length; r++) {
             selectedCells.add(`${r}-${c}`);
         }
     }
@@ -491,7 +491,7 @@ function getColor(val, t, r) {
     } else {
         let min = Infinity, max = -Infinity;
         for (let t = 0; t < 21; t++) {
-            for (let r = 0; r < 20; r++) {
+            for (let r = 0; r < fuelMap[t].length; r++) {
                 if (fuelMap[t][r] < min) min = fuelMap[t][r];
                 if (fuelMap[t][r] > max) max = fuelMap[t][r];
             }
@@ -534,7 +534,7 @@ function renderTable() {
     corner.onclick = () => {
         selectedCells.clear();
         for (let t = 0; t < 21; t++) {
-            for (let r = 0; r < 20; r++) {
+            for (let r = 0; r < RPM_AXIS.length; r++) {
                 selectedCells.add(`${t}-${r}`);
             }
         }
@@ -611,7 +611,7 @@ function renderTable() {
                 const end = Math.max(lastSelectedRow, t);
                 selectedCells.clear();
                 for (let i = start; i <= end; i++) {
-                    for (let r = 0; r < 20; r++) {
+                    for (let r = 0; r < RPM_AXIS.length; r++) {
                         selectedCells.add(`${i}-${r}`);
                     }
                 }
@@ -628,7 +628,7 @@ function renderTable() {
                 const end = Math.max(headerDragStart, t);
                 selectedCells.clear();
                 for (let i = start; i <= end; i++) {
-                    for (let r = 0; r < 20; r++) {
+                    for (let r = 0; r < RPM_AXIS.length; r++) {
                         selectedCells.add(`${i}-${r}`);
                     }
                 }
@@ -911,7 +911,7 @@ window.selectColumn = function (c) {
 window.selectRow = function (t) {
     selectedCells.clear();
     // TPS Axis t (Row) -> Select all Cols (RPM)
-    for (let r = 0; r < 20; r++) {
+    for (let r = 0; r < RPM_AXIS.length; r++) {
         selectedCells.add(`${t}-${r}`);
     }
     selT = t; selR = 0;
@@ -955,8 +955,8 @@ window.isColumnSelected = function (c) {
 
 window.isRowSelected = function (t) {
     // Check if row t (TPS) is selected (all 20 RPM cols)
-    if (selectedCells.size < 20) return false;
-    for (let r = 0; r < 20; r++) {
+    if (selectedCells.size < RPM_AXIS.length) return false;
+    for (let r = 0; r < RPM_AXIS.length; r++) {
         if (!selectedCells.has(`${t}-${r}`)) return false;
     }
     return true;

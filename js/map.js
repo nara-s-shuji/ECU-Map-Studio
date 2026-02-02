@@ -5,7 +5,7 @@ function initData() {
     for (let t = 0; t < 21; t++) {
         fuelMap[t] = [];
         originalFuelMap[t] = [];
-        for (let r = 0; r < 20; r++) {
+        for (let r = 0; r < window.RPM_AXIS.length; r++) {
             const val = Math.floor(1000 + 800 * Math.sin(r / 5) * Math.cos(t / 10) + t * 20);
             fuelMap[t][r] = val;
             originalFuelMap[t][r] = val;
@@ -118,7 +118,7 @@ function importFromCSV(input) {
             values.shift();
             if (t < 21) {
                 values.forEach((val, r) => {
-                    if (r < 20) fuelMap[t][r] = parseInt(val) || 0;
+                    if (r < window.RPM_AXIS.length) fuelMap[t][r] = parseInt(val) || 0;
                 });
             }
         });
@@ -149,7 +149,7 @@ function importBaseFromCSV(input) {
             values.shift();
             if (t < 21) {
                 values.forEach((val, r) => {
-                    if (r < 20) originalFuelMap[t][r] = parseInt(val) || 0;
+                    if (r < window.RPM_AXIS.length) originalFuelMap[t][r] = parseInt(val) || 0;
                 });
             }
         });

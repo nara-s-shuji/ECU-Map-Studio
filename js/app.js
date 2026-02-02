@@ -1,8 +1,5 @@
-window.RPM_AXIS = Array.from({ length: 20 }, (_, i) => {
-    let val = 2000 + (i * (13000 / 19));
-    return Math.round(val / 50) * 50;
-});
-window.RPM_AXIS[19] = 15000;
+// 2000 to 15000, step 500 -> 27 columns
+window.RPM_AXIS = Array.from({ length: 27 }, (_, i) => 2000 + (i * 500));
 window.TPS_AXIS = Array.from({ length: 21 }, (_, i) => i * 5);
 window.fuelMap = [];
 window.originalFuelMap = [];
