@@ -1,6 +1,3 @@
-// NEW: Filename State
-var currentFileName = "New_Map.csv";
-
 function initData() {
     for (let t = 0; t < 21; t++) {
         fuelMap[t] = [];
@@ -12,7 +9,6 @@ function initData() {
         }
     }
     saveHistory();
-    if (typeof updateFileInfo === 'function') updateFileInfo();
 }
 
 window.openFile = function () {
@@ -123,11 +119,6 @@ function importFromCSV(input) {
             }
         });
         originalFuelMap = fuelMap.map(row => row.slice());
-
-        // Update Filename
-        currentFileName = file.name;
-        if (typeof updateFileInfo === 'function') updateFileInfo();
-
         saveHistory();
         renderTable();
         if (document.getElementById('graph-overlay').classList.contains('active')) {

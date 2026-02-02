@@ -92,39 +92,6 @@
 
             <!-- 1. エディタビュー -->
             <div id="editor-view" class="view-section active">
-                <style>
-                    /* Mobile Info Bar - Fixed above RPM Labels */
-                    #mobile-info-bar {
-                        display: none;
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 30px;
-                        background: #2d2d30;
-                        border-bottom: 1px solid #3c3c3c;
-                        color: #ccc;
-                        font-size: 11px;
-                        z-index: 10000;
-                        /* High z-index */
-                        align-items: center;
-                        justify-content: space-between;
-                        padding: 0 10px;
-                        box-sizing: border-box;
-                    }
-
-                    @media (max-width: 1024px) {
-                        #mobile-info-bar {
-                            display: flex;
-                        }
-                    }
-                </style>
-                <div id="mobile-info-bar">
-                    <span id="info-filename"
-                        style="max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</span>
-                    <span id="info-values" style="font-family: 'Consolas', monospace;">Orig: - / Curr: -</span>
-                </div>
-
                 <div id="info-section">
                     <div class="info-item">
                         <span class="info-label">Selected:</span>
@@ -177,73 +144,41 @@
                             <div class="monitor-label">RPM</div>
                             <div class="monitor-value" id="val-rpm">---</div>
                             <div class="monitor-unit">rev/min</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">TPS</div>
                             <div class="monitor-value" id="val-tp">---</div>
                             <div class="monitor-unit">%</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">MAP 0</div>
                             <div class="monitor-value" id="val-map0">---</div>
                             <div class="monitor-unit">kPa</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">MAP 1</div>
                             <div class="monitor-value" id="val-map1">---</div>
                             <div class="monitor-unit">kPa</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">IAT</div>
                             <div class="monitor-value" id="val-iat">---</div>
                             <div class="monitor-unit">°C</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">EOT</div>
                             <div class="monitor-value" id="val-eot">---</div>
                             <div class="monitor-unit">°C</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">VOLT</div>
                             <div class="monitor-value" id="val-vol">---</div>
                             <div class="monitor-unit">V</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                         <div class="monitor-card">
                             <div class="monitor-label">ATM</div>
                             <div class="monitor-value" id="val-ap">---</div>
                             <div class="monitor-unit">hPa</div>
-                            <div class="monitor-actions">
-                                <button class="btn-monitor-action">保存</button>
-                                <button class="btn-monitor-action">記録</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -283,76 +218,10 @@
                         color: #666;
                         margin-top: 2px;
                     }
-
-                    .monitor-actions {
-                        display: flex;
-                        gap: 5px;
-                        margin-top: 8px;
-                        width: 100%;
-                    }
-
-                    .btn-monitor-action {
-                        flex: 1;
-                        background: #3c3c3c;
-                        border: 1px solid #555;
-                        color: #ccc;
-                        font-size: 10px;
-                        padding: 2px 0;
-                        border-radius: 3px;
-                        cursor: pointer;
-                    }
-
-                    .btn-monitor-action:active {
-                        background: #0078d4;
-                        color: white;
-                    }
                 </style>
             </div>
 
-            <!-- 3. ファイルビュー (NEW) -->
-            <div id="file-view" class="view-section" style="display:none; padding: 10px;">
-                <h3 style="margin-top: 0; color: #888; border-bottom: 1px solid #444; padding-bottom: 10px;">Data Items
-                </h3>
-                <div class="file-list">
-                    <div class="file-item active">燃料マップ</div>
-                    <div class="file-item">アイドリング時燃料マップ</div>
-                    <div class="file-item">インジェクター無効噴射時間</div>
-                    <div class="file-item">非同期噴射</div>
-                    <div class="file-item">加速増量</div>
-                    <div class="file-item">回転数補正</div>
-                    <div class="file-item">油温補正</div>
-                    <div class="file-item">ドエル時間</div>
-                    <div class="file-item">点火マップ</div>
-                </div>
-                <style>
-                    .file-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-                    }
-
-                    .file-item {
-                        padding: 12px;
-                        background: #2d2d30;
-                        border: 1px solid #3c3c3c;
-                        color: #ccc;
-                        cursor: pointer;
-                        border-radius: 4px;
-                    }
-
-                    .file-item.active {
-                        border-color: #0078d4;
-                        background: #333;
-                        color: #fff;
-                    }
-
-                    .file-item:hover {
-                        background: #3e3e42;
-                    }
-                </style>
-            </div>
-
-            <!-- 4. ロガービュー (削除/非表示) -->
+            <!-- 3. ロガービュー -->
             <div id="logger-view" class="view-section"
                 style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
                 <h2>💾 Data Logger</h2>
@@ -364,9 +233,9 @@
 
     <!-- Bottom Navigation -->
     <div id="bottom-nav" style="touch-action: none;">
-        <button class="nav-item" onclick="switchTab('file')" id="nav-file">
-            <span class="nav-icon">📁</span>
-            <span>ファイル</span>
+        <button class="nav-item" onclick="toggleSettings()" id="nav-menu">
+            <span class="nav-icon">≡</span>
+            <span>メニュー</span>
         </button>
         <button class="nav-item active" onclick="switchTab('editor')" id="nav-editor">
             <span class="nav-icon">▤</span>
@@ -380,9 +249,9 @@
             <span class="nav-icon">📊</span>
             <span>モニター</span>
         </button>
-        <button class="nav-item" onclick="toggleSettings()" id="nav-menu">
-            <span class="nav-icon">≡</span>
-            <span>メニュー</span>
+        <button class="nav-item" onclick="switchTab('logger')" id="nav-log">
+            <span class="nav-icon">📈</span>
+            <span>ログ</span>
         </button>
     </div>
 

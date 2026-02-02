@@ -16,19 +16,16 @@ window.switchTab = function (tabName) {
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     // Find button that calls this tab (simplified matching index)
     const navBtns = document.getElementById('bottom-nav').children;
-
-    // New Order: File, Edit, Graph, Monitor, Menu
-    if (tabName === 'file') navBtns[0].classList.add('active');
-    if (tabName === 'editor') navBtns[1].classList.add('active');
+    if (tabName === 'editor') navBtns[1].classList.add('active'); // 0=Menu, 1=Edit
     if (tabName === 'graph') navBtns[2].classList.add('active');
     if (tabName === 'monitor') navBtns[3].classList.add('active');
-    // Menu (4) is toggle
+    if (tabName === 'logger') navBtns[4].classList.add('active');
+    // Note: Updated indices based on new order: Menu, Edit, Graph, Monitor, Log
 
     // View Sections Update
     document.getElementById('editor-view').style.display = 'none';
     document.getElementById('monitor-view').style.display = 'none';
     document.getElementById('logger-view').style.display = 'none';
-    document.getElementById('file-view').style.display = 'none'; // Ensure file view handles
 
     // Graph Overlay Handling (Mobile Tab Mode)
     const graphOverlay = document.getElementById('graph-overlay');
@@ -59,10 +56,7 @@ window.switchTab = function (tabName) {
         if (tabName === 'monitor') {
             document.getElementById('monitor-view').style.display = 'flex';
         } else if (tabName === 'logger') {
-            // Deprecated usage
             document.getElementById('logger-view').style.display = 'flex';
-        } else if (tabName === 'file') {
-            document.getElementById('file-view').style.display = 'block';
         }
     }
 };
@@ -346,6 +340,123 @@ window.adjustDelta = function (direction) {
 // --- New Spinner Logic ---
 
 
+// --- Global Event Logic (Debounced) ---
+let applyInterval, applyTimeout;
+let spinnerInterval, spinnerTimeout;
+let lastTouchTime = 0;
+
+function handleTouchDebounce(e) {
+    if (e.type === 'touchstart') {
+        lastTouchTime = Date.now();
+        return true; // Allow touch
+    }
+    if (e.type === 'mousedown') {
+        if (Date.now() - lastTouchTime < 1000) {
+            e.preventDefault();
+            return false; // Block ghost mouse
+        }
+    }
+    return true;
+}
+
+window.startApply = function (direction, e) {
+    if (e && e.type === 'touchstart') e.preventDefault();
+    if (e && !handleTouchDebounce(e)) return;
+
+    adjustCellValue(direction); // Initial
+    applyTimeout = setTimeout(() => {
+        applyInterval = setInterval(() => adjustCellValue(direction), 100);
+    }, 500);
+};
+
+window.stopApply = function (e) {
+    if (e) {
+        // e.preventDefault(); // Optional, but might interfere with click? Left out for safety unless needed
+    }
+    clearTimeout(applyTimeout);
+    clearInterval(applyInterval);
+};
+
+window.startSpinner = function (direction, e) {
+    if (e && !handleTouchDebounce(e)) return;
+
+    adjustDelta(direction);
+
+    spinnerTimeout = setTimeout(() => {
+        spinnerInterval = setInterval(() => adjustDelta(direction), 100);
+    }, 500);
+};
+
+window.stopSpinner = function (e) {
+    clearTimeout(spinnerTimeout);
+    clearInterval(spinnerInterval);
+};
+
+// Removed setupSpinnerEvents and setupApplyEvents as we moved to inline HTML handlers for robustness
+document.addEventListener('DOMContentLoaded', () => {
+    setupTablePinchZoom();
+});
+
+function setupTablePinchZoom() {
+    // Target the wrapper or grid
+    const target = document.getElementById('mapGrid');
+    const container = document.getElementById('map-section'); // Scroll container
+
+    if (!target || !container) return;
+
+    let initialScale = 1;
+    let currentScale = 1;
+    let initialDist = 0;
+
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            // e.preventDefault(); // Might block scroll? Only if we are zooming.
+            // If we don't preventDefault, browser zoom might kick in.
+            // User rules say user-scalable=no, so browser zoom is disabled.
+            // But we should preventDefault to be safe and stop scroll interference during pinch.
+            e.preventDefault();
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            initialDist = Math.hypot(dx, dy);
+            initialScale = currentScale;
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialDist > 0) {
+            e.preventDefault();
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.hypot(dx, dy);
+
+            const scaleFactor = dist / initialDist;
+            let newScale = initialScale * scaleFactor;
+
+            // Clamping
+            newScale = Math.max(0.5, Math.min(newScale, 2.5));
+            currentScale = newScale;
+
+            // Apply Zoom
+            target.style.zoom = newScale;
+            // Also scale headers?
+            const headerRow = document.getElementById('headerRow');
+            if (headerRow) headerRow.style.zoom = newScale;
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+            initialDist = 0;
+        }
+    });
+}
+
+
+// Removed old startAdjusting/stopAdjusting global functions to clear clutter
+
+
 window.adjustCellValue = function (direction) {
     // console.log("adjustCellValue called", direction); // Debug
     const deltaInput = document.getElementById('popup-delta');
@@ -388,9 +499,6 @@ window.adjustCellValue = function (direction) {
             newValue = currentValue + (direction * changeAmount);
         }
 
-        // Limit 0 or higher
-        newValue = Math.max(0, newValue);
-
         fuelMap[t][r] = Math.round(newValue);
 
         const input = document.querySelector(`#c-${t}-${r} input`);
@@ -408,65 +516,6 @@ window.adjustCellValue = function (direction) {
     if (graphOverlay && graphOverlay.classList.contains('active')) {
         if (typeof updateGraph === 'function') updateGraph();
     }
-};
-
-window.getColor = getColor;
-
-// --- Global Event Logic (Debounced) ---
-let applyInterval, applyTimeout;
-let spinnerInterval, spinnerTimeout;
-let lastTouchTime = 0;
-
-function handleTouchDebounce(e) {
-    if (e.type === 'touchstart') {
-        lastTouchTime = Date.now();
-        return true; // Allow touch
-    }
-    if (e.type === 'mousedown') {
-        if (Date.now() - lastTouchTime < 1000) {
-            e.preventDefault();
-            return false; // Block ghost mouse
-        }
-    }
-    return true;
-}
-
-window.addEventListener('mouseup', () => { stopApply(); stopSpinner(); });
-window.addEventListener('touchend', () => { stopApply(); stopSpinner(); });
-
-window.startApply = function (direction, e) {
-    if (e && e.type === 'touchstart') e.preventDefault();
-    if (e && !handleTouchDebounce(e)) return;
-
-    adjustCellValue(direction); // Initial
-    clearTimeout(applyTimeout); clearInterval(applyInterval);
-    applyTimeout = setTimeout(() => {
-        applyInterval = setInterval(() => adjustCellValue(direction), 100);
-    }, 500);
-};
-
-window.stopApply = function (e) {
-    if (e) {
-        // e.preventDefault(); // Optional, but might interfere with click? Left out for safety unless needed
-    }
-    clearTimeout(applyTimeout);
-    clearInterval(applyInterval);
-};
-
-window.startSpinner = function (direction, e) {
-    if (e && !handleTouchDebounce(e)) return;
-
-    adjustDelta(direction);
-
-    clearTimeout(spinnerTimeout); clearInterval(spinnerInterval);
-    spinnerTimeout = setTimeout(() => {
-        spinnerInterval = setInterval(() => adjustDelta(direction), 100);
-    }, 500);
-};
-
-window.stopSpinner = function (e) {
-    clearTimeout(spinnerTimeout);
-    clearInterval(spinnerInterval);
 };
 
 function getColor(val, t, r) {

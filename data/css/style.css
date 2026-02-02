@@ -702,21 +702,18 @@ body {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         position: relative;
+        position: relative;
         width: 100vw;
         padding-bottom: 70px;
-
-        /* Fix Vertical Scroll Freeze */
-        touch-action: pan-x pan-y;
-
-        /* Info Bar Space */
-        padding-top: 30px;
+        /* Reduced to stop right above popup */
+        /* Ensure content is reachable but not excessive */
     }
 
     #table-wrapper {
         min-height: auto;
+        /* Allow it to shrink/grow */
         padding-bottom: 75px;
-        /* Scroll Fix */
-        touch-action: pan-x pan-y;
+        /* Match Popup Height + small margin */
     }
 
     /* Grid Adjustments - Force display grid */
