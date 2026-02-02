@@ -1036,3 +1036,41 @@ window.resetCellToOriginal = function () {
         }
     }
 };
+
+// --- File Menu Logic ---
+window.toggleFileMode = function () {
+    const toggle = document.getElementById('mode-toggle');
+    if (toggle && toggle.checked) {
+        document.body.classList.remove('basic-mode');
+    } else {
+        document.body.classList.add('basic-mode');
+    }
+};
+
+window.selectFileItem = function (el, type) {
+    // UI Update
+    document.querySelectorAll('.file-item').forEach(item => {
+        item.classList.remove('active');
+        item.style.border = "1px solid #3c3c3c"; // Reset inline
+    });
+
+    el.classList.add('active');
+    el.style.border = "2px solid #0078d4";
+
+    // Logic to switch data would go here
+    console.log("Selected Item:", type);
+};
+
+// Initialize Basic Mode
+document.addEventListener('DOMContentLoaded', () => {
+    // Default Basic? Toggle unchecked = Basic
+    // Ensure element exists before checking
+    const toggle = document.getElementById('mode-toggle');
+    if (toggle && !toggle.checked) {
+        document.body.classList.add('basic-mode');
+    }
+
+    // Also re-apply scroll fixes just in case
+    const mapSection = document.getElementById('map-section');
+    if (mapSection) mapSection.scrollTop = 0;
+});
