@@ -173,54 +173,97 @@
                     </div>
                 </div>
                 <!-- Monitor Global Actions -->
-                <div style="padding: 10px; display: flex; gap: 10px;">
-                    <button class="btn-monitor-global" style="flex:1;">全て保存</button>
-                    <button class="btn-monitor-global" style="flex:1;">全て記録</button>
-                </div>
+                <!-- Monitor Global Actions Removed from Top -->
 
                 <div class="monitor-content" style="flex: 1; padding: 10px; overflow-y: auto;">
                     <div class="monitor-grid">
                         <div class="monitor-card">
-                            <div class="monitor-label">RPM</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">RPM</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="rpm" checked>
+                            </div>
                             <div class="monitor-value" id="val-rpm">---</div>
                             <div class="monitor-unit">rev/min</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">TPS</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">TPS</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="tp" checked>
+                            </div>
                             <div class="monitor-value" id="val-tp">---</div>
                             <div class="monitor-unit">%</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">MAP 0</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">MAP 0</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="map0" checked>
+                            </div>
                             <div class="monitor-value" id="val-map0">---</div>
                             <div class="monitor-unit">kPa</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">MAP 1</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">MAP 1</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="map1" checked>
+                            </div>
                             <div class="monitor-value" id="val-map1">---</div>
                             <div class="monitor-unit">kPa</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">IAT</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">IAT</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="iat" checked>
+                            </div>
                             <div class="monitor-value" id="val-iat">---</div>
                             <div class="monitor-unit">°C</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">EOT</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">EOT</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="eot" checked>
+                            </div>
                             <div class="monitor-value" id="val-eot">---</div>
                             <div class="monitor-unit">°C</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">VOLT</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">VOLT</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="vol" checked>
+                            </div>
                             <div class="monitor-value" id="val-vol">---</div>
                             <div class="monitor-unit">V</div>
                         </div>
                         <div class="monitor-card">
-                            <div class="monitor-label">ATM</div>
+                            <div
+                                style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+                                <div class="monitor-label">ATM</div>
+                                <input type="checkbox" class="monitor-toggle" data-key="ap" checked>
+                            </div>
                             <div class="monitor-value" id="val-ap">---</div>
                             <div class="monitor-unit">hPa</div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Monitor Footer Actions (New Position) -->
+                <div style="padding: 10px; display: flex; gap: 10px; border-top: 1px solid #3c3c3c; margin-top: auto;">
+                    <!-- Record Button (Left) -->
+                    <button id="btn-record-all" class="btn-monitor-global" onclick="monitor.toggleRecording()"
+                        style="flex:1; display:flex; gap:8px; justify-content:center; align-items:center; font-weight:bold;">
+                        <span style="color:#ff4444; font-size:18px;">⏺</span> <span>記録</span>
+                    </button>
+                    <!-- Save Button (Right) -->
+                    <button id="btn-save-all" class="btn-monitor-global" onclick="monitor.saveLog()" disabled
+                        style="flex:1; display:flex; gap:8px; justify-content:center; align-items:center; font-weight:bold;">
+                        <span style="font-size:18px;">💾</span> <span>保存</span>
+                    </button>
                 </div>
 
                 <style>

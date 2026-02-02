@@ -894,33 +894,8 @@ window.updateData = function (t, r, val) {
     }
 };
 
-window.resetCellToOriginal = function () {
-    // Determine target cells: either multi-selection or single focused cell
-    let targets = [];
-    if (selectedCells.size > 0) {
-        selectedCells.forEach(key => {
-            const [t, r] = key.split('-').map(Number);
-            targets.push({ t, r });
-        });
-    } else {
-        targets.push({ t: selT, r: selR });
-    }
+// Old resetCellToOriginal removed
 
-    targets.forEach(pos => {
-        if (originalFuelMap[pos.t] && typeof originalFuelMap[pos.t][pos.r] !== 'undefined') {
-            fuelMap[pos.t][pos.r] = originalFuelMap[pos.t][pos.r];
-        }
-    });
-
-    saveHistory();
-    renderTable();
-    updateUISelection(); // Restore highlights
-
-    const graphOverlay = document.getElementById('graph-overlay');
-    if (graphOverlay && graphOverlay.classList.contains('active')) {
-        if (typeof updateGraph === 'function') updateGraph();
-    }
-};
 
 window.selectColumn = function (c) {
     selectedCells.clear();
@@ -1073,4 +1048,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Also re-apply scroll fixes just in case
     const mapSection = document.getElementById('map-section');
     if (mapSection) mapSection.scrollTop = 0;
+
+    // Ensure Editor View is active initially
+    if (typeof switchTab === 'function') {
+        switchTab('editor');
+    }
 });

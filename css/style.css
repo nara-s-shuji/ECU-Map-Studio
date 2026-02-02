@@ -1228,4 +1228,46 @@ body {
         display: none !important;
     }
 }
+
+/* --- Monitor View Enhancements --- */
+.monitor-toggle {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #0078d4;
+    margin: 0;
+}
+
+@keyframes recordPulse {
+    0% {
+        background-color: #3c3c3c;
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
+    }
+
+    50% {
+        background-color: #5a2e2e;
+        box-shadow: 0 0 10px 0 rgba(255, 68, 68, 0.7);
+    }
+
+    100% {
+        background-color: #3c3c3c;
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+    }
+}
+
+.recording-active {
+    animation: recordPulse 2s infinite;
+    border-color: #ff4444 !important;
+    background-color: #5a2e2e !important;
+}
+
+.btn-monitor-global .icon {
+    font-size: 1.5em;
+    /* Larger icons */
+    margin-right: 5px;
+}
+
+/* Ensure #file-view is hidden if not active class */
+#file-view:not(.active) {
+    display: none !important;
 }
