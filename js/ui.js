@@ -975,17 +975,25 @@ function updateUISelection() {
     let infoText = "";
     if (cellCount > 1) {
         infoText = `${cellCount} cells selected`;
-        document.getElementById('info-cell').innerText = `${cellCount} cells selected (Main: TPS ${TPS_AXIS[selT]}%, RPM ${RPM_AXIS[selR]})`;
     } else {
         infoText = `TPS: ${TPS_AXIS[selT]}%, RPM: ${RPM_AXIS[selR]}`;
-        document.getElementById('info-cell').innerText = infoText;
     }
 
-    document.getElementById('info-value').innerText = currentValue;
-    document.getElementById('info-original').innerText = originalValue;
+    // Safely update elements that might be removed
+    const elCell = document.getElementById('info-cell');
+    if (elCell) {
+        if (cellCount > 1) elCell.innerText = `${cellCount} cells selected (Main: TPS ${TPS_AXIS[selT]}%, RPM ${RPM_AXIS[selR]})`;
+        else elCell.innerText = infoText;
+    }
+
+    const elValue = document.getElementById('info-value');
+    if (elValue) elValue.innerText = currentValue;
+
+    const elOriginal = document.getElementById('info-original');
+    if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_55)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_57)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1005,7 +1013,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_56)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_57)';
 };
 
 // Expose closePopup globally
