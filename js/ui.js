@@ -94,6 +94,14 @@ function switchTab(tabId) {
         setTimeout(() => target.classList.add('active'), 10);
     }
 
+    const nameDisplay = document.getElementById('info-filename');
+    const valDisplay = document.getElementById('info-values');
+    if (nameDisplay) nameDisplay.innerText = (currentFileName || 'New_Map.csv') + ' (debug_45)';
+    // Note: 'orig' and 'curr' variables are not defined in this scope.
+    // If they are global or defined elsewhere, this line will work.
+    // Otherwise, it will cause a ReferenceError.
+    if (valDisplay) valDisplay.innerText = `Orig: ${orig} / Curr: ${curr}`;
+
     // Auto-close menu if open
     const menu = document.getElementById('settings-menu');
     const overlay = document.getElementById('menu-overlay');
