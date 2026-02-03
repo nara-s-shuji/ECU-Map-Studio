@@ -1055,9 +1055,7 @@ body {
             top: 0;
             left: auto;
             right: 0;
-            right: 0;
             width: 50px;
-            height: 100%;
             height: 100%;
             padding-bottom: 0;
             padding-right: env(safe-area-inset-right);
@@ -1066,54 +1064,39 @@ body {
             border-top: none;
             border-left: 1px solid #444;
             justify-content: flex-start;
-            /* Stack from top */
-            /* Stack from top */
             padding-top: env(safe-area-inset-top);
         }
 
         /* Fix Overlap: Allow scrolling past the fixed right menu */
         #map-section {
             padding-right: 60px !important;
-            /* Space for Right Menu */
             padding-bottom: 20px !important;
         }
 
         #edit-popup-v2 {
-            bottom: auto !important;
+            bottom: 0 !important;
             top: 0 !important;
+            /* Full Height in Landscape */
             padding-top: env(safe-area-inset-top);
             height: 100vh !important;
-            /* Full Height */
-            top: env(safe-area-inset-top) !important;
-            /* Align top? */
-            /* User said "Attach to left edge of menu" */
-            /* And Vertical buttons */
             transform: none !important;
+
             right: calc(60px + env(safe-area-inset-right)) !important;
             /* Left of Nav */
             left: auto !important;
             width: 50px !important;
-            /* Narrower Vertical strip */
-            height: 100vh !important;
+
             flex-direction: column !important;
             justify-content: flex-start !important;
             gap: 10px;
             padding: 10px 0;
+
             border-top: none;
             border-right: 2px solid var(--accent);
             border-bottom: 2px solid var(--accent);
-            /* Full border */
             border-left: 2px solid var(--accent);
             border-radius: 0;
-            right: calc(60px + env(safe-area-inset-right)) !important;
-            /* Adjacent to menu */
-            bottom: 0 !important;
-
-            border: 2px solid var(--accent);
-            box-sizing: border-box;
-            /* Fix missing border */
         }
-
 
         /* 
            Landscape Order: 
@@ -1158,11 +1141,29 @@ body {
 
         /* Wrapper replaces input */
 
-        #cell-popup .popup-controls button:nth-of-type(2) {
+        /* - */
+        #edit-popup-v2 .popup-controls button:nth-of-type(4) {
             order: 4;
         }
 
-        /* - */
+        #btn-close-popup {
+            display: none !important;
+            /* Hide Close in Landscape (Auto-hide on deselect) */
+        }
+
+        /* Spinner Adjust Buttons - Hidden in tight vertical strip? Or stacked? */
+        .spinner-btns {
+            display: none !important;
+            /* Too small */
+        }
+
+        /* Buttons bigger */
+        .popup-btn {
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 20px !important;
+            padding: 0;
+        }
 
         #cell-popup .popup-mode-selector {
             flex-direction: column !important;
