@@ -1009,13 +1009,14 @@ body {
         left: 0;
         width: 100%;
         height: 60px;
-        padding-bottom: env(safe-area-inset-bottom);
-        background-color: #1a1a1a;
-        border-top: 1px solid #444;
-        z-index: 10000;
+        background: #2d2d30;
+        border-top: 1px solid var(--border);
         justify-content: space-around;
         align-items: center;
-        box-sizing: content-box;
+        z-index: 2147483647;
+        /* Forced Maximum Visibility */
+        padding-bottom: env(safe-area-inset-bottom);
+        box-sizing: border-box;
     }
 
     /* Portrait Menu Order: Edit, Graph, Monitor, Log, Menu */
@@ -1077,7 +1078,7 @@ body {
             padding-bottom: 20px !important;
         }
 
-        #cell-popup {
+        #edit-popup-v2 {
             bottom: auto !important;
             top: 0 !important;
             padding-top: env(safe-area-inset-top);
@@ -1119,7 +1120,7 @@ body {
            Reset (Top of +) -> We can put Reset at order 1, + at 2, Input 3, - 4 
         */
 
-        #cell-popup .popup-controls {
+        #edit-popup-v2 .popup-controls {
             flex-direction: column !important;
             width: 100%;
             gap: 5px;
@@ -1140,7 +1141,7 @@ body {
             height: 40px !important;
         }
 
-        #cell-popup .popup-controls button:nth-of-type(3) {
+        #edit-popup-v2 .popup-controls button:nth-of-type(3) {
             order: 2;
         }
 
