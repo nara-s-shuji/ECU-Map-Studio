@@ -13,7 +13,24 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=3.11">
+    <link rel="stylesheet" href="css/style.css?v=debug_26">
+    <style>
+        /* CRITICAL FALLBACK FOR BOTTOM NAV */
+        #bottom-nav {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 60px !important;
+            z-index: 2147483647 !important;
+            /* Max Int */
+            background: #2d2d30 !important;
+            border-top: 1px solid #3c3c3c !important;
+        }
+    </style>
     <script>
         window.onerror = function (msg, url, line, col, error) {
             alert("JS Error: " + msg + "\nLine: " + line);
@@ -688,7 +705,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_25</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_26</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -964,11 +981,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_25"></script>
-                <script src="js/app.js?v=debug_25"></script>
-                <script src="js/ui.js?v=debug_25"></script>
-                <script src="js/map.js?v=debug_25"></script>
-                <script src="js/graph.js?v=debug_25"></script>
+                <script src="js/monitor.js?v=debug_26"></script>
+                <script src="js/app.js?v=debug_26"></script>
+                <script src="js/ui.js?v=debug_26"></script>
+                <script src="js/map.js?v=debug_26"></script>
+                <script src="js/graph.js?v=debug_26"></script>
 
 </body>
 
