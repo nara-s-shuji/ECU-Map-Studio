@@ -112,7 +112,7 @@
 
         <!-- DEBUG: Test Popup Button -->
         <button class="toolbar-btn"
-            onclick="document.getElementById('cell-popup').classList.toggle('active'); alert('Toggled Popup');"
+            onclick="try { let el = document.getElementById('cell-popup'); if(!el) { alert('FATAL: #cell-popup NOT FOUND in DOM'); } else { el.classList.toggle('active'); alert('Toggled. Classes: ' + el.className + ' | Style Display: ' + el.style.display); } } catch(e) { alert('JS Error: ' + e.message); }"
             style="background: red; color: white;">🐞</button>
 
         <div class="toolbar-separator"></div>
@@ -151,7 +151,8 @@
 
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
-        <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0</span>
+        <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_33)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
@@ -773,7 +774,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_32</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_33</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1092,11 +1093,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_32"></script>
-                <script src="js/app.js?v=debug_32"></script>
-                <script src="js/ui.js?v=debug_32"></script>
-                <script src="js/map.js?v=debug_32"></script>
-                <script src="js/graph.js?v=debug_32"></script>
+                <script src="js/monitor.js?v=debug_33"></script>
+                <script src="js/app.js?v=debug_33"></script>
+                <script src="js/ui.js?v=debug_33"></script>
+                <script src="js/map.js?v=debug_33"></script>
+                <script src="js/graph.js?v=debug_33"></script>
 
 </body>
 
