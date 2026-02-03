@@ -335,8 +335,14 @@ function handleTouchEnd() {
 }
 
 document.addEventListener('touchstart', function (e) {
+    // Enable Pinch Zoom: If more than 1 point, DO NOT prevent default
+    if (e.touches.length > 1) return;
+
     const cell = e.target.closest('.cell');
     if (cell && cell.id && cell.id.startsWith('c-')) {
+        // e.preventDefault(); // allow zoom? NO, if cell interaction, we might want to block scroll/zoom?
+        // Actually, for pinch zoom to work on the GRID, we must NOT preventDefault on the container unless necessary.
+        // If we touch a cell to select, we process it.
         const parts = cell.id.split('-');
         handleTouchStart(e, 'cell', parts[1], parts[2]);
     } else if (e.target.dataset.col !== undefined) {
@@ -346,7 +352,10 @@ document.addEventListener('touchstart', function (e) {
     }
 }, { passive: false });
 
-document.addEventListener('touchmove', handleTouchMove, { passive: false });
+document.addEventListener('touchmove', function (e) {
+    if (e.touches.length > 1) return; // Allow pinch
+    handleTouchMove(e);
+}, { passive: false });
 document.addEventListener('touchend', handleTouchEnd);
 
 

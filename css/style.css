@@ -725,12 +725,14 @@ body {
     .grid-container,
     .header-row {
         display: grid !important;
-        grid-template-columns: 60px repeat(27, 50px) !important;
+        grid-template-columns: 60px repeat(27, 60px) !important;
+        /* Widened to 60px */
         width: max-content;
     }
 
     .cell {
-        width: 50px;
+        width: 60px;
+        /* Widened to 60px */
         height: 40px;
         /* Taller for touch */
         font-size: 14px;
@@ -748,6 +750,7 @@ body {
     .label-cell,
     .corner-cell {
         width: 60px;
+        /* Matched to grid-template-columns */
         left: 0;
         z-index: 100;
     }
