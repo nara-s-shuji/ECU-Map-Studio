@@ -206,7 +206,7 @@
                     style="width: 30px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
 
                 <input type="number" id="popup-delta" class="popup-input" value="10" readonly
-                    style="width: 40px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0;">
+                    style="width: 40px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0; user-select: none; pointer-events: none;">
 
                 <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)" onmouseup="stopSpinner(event)"
                     onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(1, event)"
@@ -279,34 +279,13 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; top: 0; position: fixed; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_51)</span>
+                        (debug_56)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
 
-                <div id="info-section">
-                    <div class="info-item">
-                        <span class="info-label">Selected:</span>
-                        <span class="info-value" id="info-cell">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Value:</span>
-                        <span class="info-value" id="info-value">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label" style="color: #0078d4;">Original:</span>
-                        <span class="info-value" id="info-original">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Change:</span>
-                        <span class="info-value" id="info-change">-</span>
-                        <span class="info-value" id="info-change-percent" style="font-size: 0.8em; color: #888;"></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Range:</span>
-                        <span class="info-value" id="info-range">-</span>
-                    </div>
-                </div>
+                <!-- Info Section REMOVED to fix gap (User Request) -->
+                <!-- <div id="info-section">...</div> -->
 
                 <div id="map-section">
                     <div id="table-wrapper">
@@ -324,7 +303,7 @@
                     style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #3c3c3c;">
                     <h2 style="color: #ccc; margin: 0; font-size: 18px;">モニター</h2>
                     <button onclick="monitor.toggleConnection()" class="btn-connect"
-                        style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">接続</button>
+                        style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">未接続</button>
                 </div>
 
                 <!-- Connection Status / URL (Hidden/Collapsed) -->

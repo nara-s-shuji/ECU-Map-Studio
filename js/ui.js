@@ -993,10 +993,19 @@ function updateUISelection() {
     updatePopupPosition();
 }
 
+// ALIAS FOR HTML CALLS
+window.resetToOriginal = function () {
+    if (typeof resetCellToOriginal === 'function') {
+        resetCellToOriginal();
+    } else {
+        console.error('resetCellToOriginal function not found!');
+    }
+};
+
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_55)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_56)';
 };
 
 // Expose closePopup globally
