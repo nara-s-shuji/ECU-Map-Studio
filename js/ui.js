@@ -981,7 +981,7 @@ window.updateFileInfo = function () {
 };
 
 function updatePopupPosition() {
-    const popup = document.getElementById('cell-popup');
+    const popup = document.getElementById('edit-popup-v2');
     const selectedCell = document.getElementById(`c-${selT}-${selR}`);
     if (!selectedCell) {
         popup.classList.remove('active');

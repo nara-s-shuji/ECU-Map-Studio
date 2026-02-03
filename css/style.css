@@ -915,7 +915,7 @@ body {
         border-bottom: 1px solid #555;
     }
 
-    #cell-popup.active {
+    #edit-popup-v2.active {
         display: flex !important;
     }
 

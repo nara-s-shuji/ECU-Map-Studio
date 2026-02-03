@@ -18,6 +18,7 @@ function initData() {
 window.openFile = function () {
     console.log('openFile called');
     const fileInput = document.getElementById('file-input');
+    const popup = document.getElementById('edit-popup-v2');
     if (fileInput) {
         fileInput.click();
     } else {
