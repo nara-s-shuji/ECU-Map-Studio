@@ -322,14 +322,14 @@
                 <!-- Header: Title + Connect -->
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #3c3c3c;">
-                    <h2 style="color: #ccc; margin: 0; font-size: 18px;">MONITOR</h2>
+                    <h2 style="color: #ccc; margin: 0; font-size: 18px;">モニター</h2>
                     <button onclick="monitor.toggleConnection()" class="btn-connect"
                         style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">接続</button>
                 </div>
 
-                <!-- Connection Status / URL -->
+                <!-- Connection Status / URL (Hidden/Collapsed) -->
                 <div class="monitor-header"
-                    style="padding: 10px; border-bottom: 1px solid #3c3c3c; display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    style="display: none; padding: 10px; border-bottom: 1px solid #3c3c3c; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                     <div style="font-weight: bold; color: #888;">モニター</div>
                     <!-- Recording Timer -->
                     <div id="recording-timer"

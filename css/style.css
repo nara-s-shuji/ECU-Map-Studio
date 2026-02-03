@@ -672,6 +672,7 @@ body {
     #toolbar,
     #explorer,
     #info-section,
+    /* Hiding this fixes the gap! */
     #settings-menu,
     #graph-close {
         display: none !important;
