@@ -917,6 +917,9 @@ function renderTable() {
 }
 
 function handleCellMouseDown(e, t, r) {
+    // GUARD: Universal Visibility Check
+    if (window.currentTabId !== 'editor') return;
+
     if (e && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         const key = `${t}-${r}`;
@@ -951,6 +954,9 @@ function handleCellMouseDown(e, t, r) {
 }
 
 function handleCellMouseEnter(e, t, r) {
+    // GUARD: Universal Visibility Check
+    if (window.currentTabId !== 'editor') return;
+
     if (isSelecting && selectionStart) {
         const minT = Math.min(selectionStart.t, t);
         const maxT = Math.max(selectionStart.t, t);
@@ -1035,7 +1041,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_68)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_69)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1055,7 +1061,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_68)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_69)';
 };
 
 // Expose closePopup globally
@@ -1093,11 +1099,17 @@ window.togglePopupMode = function () {
 function updatePopupPosition() {
     const popup = document.getElementById('edit-popup-v2');
 
-    // GUARD: If Editor View is NOT visible, force hide and return.
-    const editorView = document.getElementById('editor-view');
+    // GUARD: Universal Visibility Check (Strict State)
+    if (window.currentTabId !== 'editor') {
+        if (popup) {
+            popup.classList.remove('active');
+            popup.style.display = 'none';
+        }
+        return;
+    }
 
-    // Robust Check: Check for 'active' class AND offsetParent (layout visibility)
-    // This handles cases where style.display is empty string but class hides it.
+    // Previous DOM checks removed as they were unreliable/confusing
+    const editorView = document.getElementById('editor-view');
     if (editorView && (!editorView.classList.contains('active') || editorView.offsetParent === null)) {
         if (popup) {
             popup.classList.remove('active');
