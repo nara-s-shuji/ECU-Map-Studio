@@ -13,7 +13,8 @@ class Monitor {
         if (this.isConnected) {
             this.disconnect();
         } else {
-            const url = document.getElementById('ws-url').value;
+            const el = document.getElementById('ws-url');
+            const url = el ? el.value : 'ws://192.168.4.1/ws';
             this.connect(url);
         }
     }
