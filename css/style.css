@@ -1287,13 +1287,15 @@ body {
 }
 
 /* Fix Map Section Scroll - Needs to be explicit */
+/* Fix Map Section Scroll - Needs to be explicit */
 #map-section {
     flex: 1;
     overflow-y: auto !important;
     height: 100%;
+    min-height: 0;
+    /* Critical for flex scrolling */
     padding-bottom: 80px;
     -webkit-overflow-scrolling: touch;
-    /* Smooth scroll */
 }
 
 /* Fix File View Overflow */
@@ -1302,6 +1304,9 @@ body {
     padding-bottom: 80px !important;
     width: 100%;
     box-sizing: border-box;
+    flex: 1;
+    min-height: 0;
+    /* Keep it constrained */
 }
 
 /* Fix File Item Width */
@@ -1313,10 +1318,31 @@ body {
 
 /* Fix Menu Position */
 #settings-menu {
-    top: env(safe-area-inset-top) !important;
+    top: 0 !important;
+    /* Full top as requested */
     bottom: calc(60px + env(safe-area-inset-bottom)) !important;
     height: auto !important;
-    padding-top: 40px;
-    /* Space for close button if needed, or adjust */
+    padding-top: calc(40px + env(safe-area-inset-top));
+    /* Handle safe area internally */
     width: 280px !important;
+}
+
+/* Fix "ADVANCE" Truncation */
+.toggle-container {
+    flex-shrink: 0;
+}
+
+.file-item-header {
+    overflow-x: hidden;
+    /* Prevent spill */
+}
+
+/* Ensure Buttons are visible */
+.file-footer-actions {
+    position: sticky;
+    bottom: 0;
+    background: #1e1e1e;
+    /* Match bg */
+    z-index: 10;
+    padding-bottom: 20px;
 }
