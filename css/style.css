@@ -1301,8 +1301,8 @@ body {
 }
 
 #table-wrapper {
-    padding-bottom: 250px;
-    /* Clearance for Popup */
+    padding-bottom: 120px;
+    /* Reduced clearance as requested */
     min-width: 100%;
     min-height: 100%;
     display: inline-block;

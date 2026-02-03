@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
@@ -171,6 +171,9 @@
                             style="width: 12px; height: 12px; border-radius: 50%; background: #666;">
                         </div>
                     </div>
+                    <!-- Recording Timer -->
+                    <div id="recording-timer"
+                        style="color: #ff4444; font-weight: bold; font-family: monospace; display: none;">00:00</div>
                 </div>
                 <!-- Monitor Global Actions -->
                 <!-- Monitor Global Actions Removed from Top -->
@@ -330,6 +333,12 @@
                             style="flex: 1; min-width: 0; background: #3c3c3c; color: white; border: 1px solid #555; padding: 5px; border-radius: 4px;">
                         <button onclick="monitor.toggleConnection()" id="btn-monitor-connect-file"
                             style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; white-space:nowrap;">接続</button>
+                        <meta name="viewport"
+                            content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+                        <meta name="apple-mobile-web-app-capable" content="yes">
+                        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+                        <link rel="manifest" href="manifest.json">
+                        <title>ECU Map Studio 2026</title>
                         <div id="connection-status-file"
                             style="width: 12px; height: 12px; border-radius: 50%; background: #666;">
                         </div>
@@ -351,8 +360,8 @@
                 </div>
 
                 <div class="file-list" style="flex: 1; overflow-y: auto;">
-                    <!-- Fuel Map -->
-                    <div class="file-item active" onclick="selectFileItem(this, 'fuel')">
+                    <!-- Fuel Map (Existing) -->
+                    <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
                         <div class="file-item-header">
                             <span>燃料マップ</span>
                             <div class="file-item-actions">
@@ -361,10 +370,36 @@
                             </div>
                         </div>
                         <div class="file-item-sub" onclick="event.stopPropagation()">
-                            <button class="sub-btn active">1</button>
-                            <button class="sub-btn">2</button>
-                            <button class="sub-btn">3</button>
-                            <button class="sub-btn">4</button>
+                            <button class="sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
+                        </div>
+                    </div>
+
+                    <!-- Priority Map (New) -->
+                    <div class="file-item" style="cursor: default;">
+                        <div class="file-item-header">
+                            <span>優先マップ</span>
+                        </div>
+                        <div class="file-item-sub" onclick="event.stopPropagation()">
+                            <button class="sub-btn" onclick="selectPriorityMap(1)" id="btn-prio-1">1</button>
+                            <button class="sub-btn" onclick="selectPriorityMap(2)" id="btn-prio-2">2</button>
+                            <button class="sub-btn" onclick="selectPriorityMap(3)" id="btn-prio-3">3</button>
+                            <button class="sub-btn" onclick="selectPriorityMap(4)" id="btn-prio-4">4</button>
+                        </div>
+                    </div>
+
+                    <!-- Next Map (New) -->
+                    <div class="file-item" style="cursor: default;">
+                        <div class="file-item-header">
+                            <span>次点マップ</span>
+                        </div>
+                        <div class="file-item-sub" onclick="event.stopPropagation()">
+                            <button class="sub-btn" onclick="selectNextMap(1)" id="btn-next-1">1</button>
+                            <button class="sub-btn" onclick="selectNextMap(2)" id="btn-next-2">2</button>
+                            <button class="sub-btn" onclick="selectNextMap(3)" id="btn-next-3">3</button>
+                            <button class="sub-btn" onclick="selectNextMap(4)" id="btn-next-4">4</button>
                         </div>
                     </div>
 
@@ -373,55 +408,63 @@
                         <div class="file-item" onclick="selectFileItem(this, 'idle_fuel')">
                             <span>アイドリング時燃料マップ</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'dead_time')">
                             <span>インジェクター無効噴射時間</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'async_inj')">
                             <span>非同期噴射</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'accel')">
                             <span>加速増量</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'rpm_corr')">
                             <span>回転数補正</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'oil_corr')">
                             <span>油温補正</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'dwell')">
                             <span>ドエル時間</span>
                             <div class="file-item-actions">
-                                <span class="file-status">📝</span><span class="file-status">📤</span>
+                                <span class="badge status-edited" style="display:none;">編集済</span>
+                                <span class="badge status-synced" style="display:none;">転送済</span>
                             </div>
                         </div>
                         <div class="file-item" onclick="selectFileItem(this, 'ign_map')">
                             <div class="file-item-header">
                                 <span>点火マップ</span>
                                 <div class="file-item-actions">
-                                    <span class="file-status">📝</span><span class="file-status">📤</span>
+                                    <span class="badge status-edited" style="display:none;">編集済</span>
+                                    <span class="badge status-synced" style="display:none;">転送済</span>
                                 </div>
                             </div>
                             <div class="file-item-sub" onclick="event.stopPropagation()">
-                                <button class="sub-btn active">1</button>
-                                <button class="sub-btn">2</button>
+                                <button class="sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
+                                <button class="sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
                             </div>
                         </div>
                     </div>
@@ -889,11 +932,11 @@
             setTimeout(() => dot.remove(), 500);
         }, true);
     </script>
-    <script src="js/monitor.js?v=debug_13"></script>
-    <script src="js/app.js?v=debug_13"></script>
-    <script src="js/ui.js?v=debug_13"></script>
-    <script src="js/map.js?v=debug_13"></script>
-    <script src="js/graph.js?v=debug_13"></script>
+    <script src="js/monitor.js?v=debug_14"></script>
+    <script src="js/app.js?v=debug_14"></script>
+    <script src="js/ui.js?v=debug_14"></script>
+    <script src="js/map.js?v=debug_14"></script>
+    <script src="js/graph.js?v=debug_14"></script>
 
 </body>
 

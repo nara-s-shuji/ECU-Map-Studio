@@ -81,6 +81,105 @@ window.toggleExplorer = function () {
     exp.classList.toggle('active');
 };
 
+// Main Tab Switching
+function switchTab(tabId) {
+    document.querySelectorAll('.view-section').forEach(el => {
+        el.style.display = 'none';
+        el.classList.remove('active');
+    });
+
+    const target = document.getElementById(tabId);
+    if (target) {
+        target.style.display = (tabId === 'file-view' || tabId === 'monitor-view') ? 'flex' : 'block';
+        setTimeout(() => target.classList.add('active'), 10);
+    }
+
+    // Auto-close menu if open
+    const menu = document.getElementById('settings-menu');
+    const overlay = document.getElementById('menu-overlay');
+    if (menu && menu.classList.contains('active')) {
+        menu.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+        // Update toggle button state
+        const btn = document.getElementById('btn-settings');
+        if (btn) btn.classList.remove('active');
+    }
+}
+
+// --- Map Selection Logic ---
+
+let currentPriorityMap = 0;
+let currentNextMap = 0;
+let currentFuelMapIndex = 1;
+let currentIgnMapIndex = 1;
+
+window.selectMapSlot = function (type, index) {
+    // Update State
+    if (type === 'fuel') currentFuelMapIndex = index;
+    if (type === 'ign') currentIgnMapIndex = index;
+
+    // Update UI
+    const container = type === 'fuel' ? document.getElementById('file-item-fuel') :
+        (type === 'ign' ? document.querySelector(`.file-item[onclick*="'ign_map'"]`) : null);
+
+    if (container) {
+        const btns = container.querySelectorAll('.sub-btn');
+        btns.forEach((btn, i) => {
+            if ((i + 1) === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+    console.log(`Selected ${type} map index: ${index}`);
+};
+
+window.selectPriorityMap = function (index) {
+    if (currentPriorityMap === index) return; // No change
+
+    // Mutual Exclusion Check
+    if (currentNextMap === index) {
+        // Deselect Next Map if it's the same
+        currentNextMap = 0;
+        updateNextMapUI();
+    }
+
+    currentPriorityMap = index;
+    updatePriorityMapUI();
+};
+
+window.selectNextMap = function (index) {
+    if (currentNextMap === index) return; // No change
+
+    // Mutual Exclusion Check
+    if (currentPriorityMap === index) {
+        // Deselect Priority Map if it's the same
+        currentPriorityMap = 0;
+        updatePriorityMapUI();
+    }
+
+    currentNextMap = index;
+    updateNextMapUI();
+};
+
+function updatePriorityMapUI() {
+    for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btn-prio-${i}`);
+        if (btn) {
+            if (i === currentPriorityMap) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+    }
+}
+
+function updateNextMapUI() {
+    for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btn-next-${i}`);
+        if (btn) {
+            if (i === currentNextMap) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+    }
+}
+// ---------------------------
 // --- Mobile Long-Press Selection Logic ---
 let longPressTimer;
 let isLongPressMode = false;

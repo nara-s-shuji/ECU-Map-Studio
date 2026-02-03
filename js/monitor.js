@@ -142,6 +142,7 @@ class Monitor {
     toggleRecording() {
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
+        const timerEl = document.getElementById('recording-timer');
 
         if (this.isRecording) {
             // Stop
@@ -153,6 +154,10 @@ class Monitor {
             }
             // Enable Save if we have data
             if (btnSave) btnSave.disabled = false;
+
+            // Stop Timer
+            if (this.timerInterval) clearInterval(this.timerInterval);
+            if (timerEl) timerEl.style.display = 'none';
 
         } else {
             // Start
@@ -166,6 +171,18 @@ class Monitor {
                 btnRecord.classList.add('recording-active');
             }
             if (btnSave) btnSave.disabled = true;
+
+            // Start Timer
+            if (timerEl) {
+                timerEl.style.display = 'block';
+                timerEl.innerText = '00:00';
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                    const ss = String(elapsed % 60).padStart(2, '0');
+                    timerEl.innerText = `${mm}:${ss}`;
+                }, 1000);
+            }
 
             // Generate some dummy data immediately for visual feedback/demo if not connected
             if (!this.isConnected) {
