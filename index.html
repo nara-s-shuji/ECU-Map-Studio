@@ -15,7 +15,7 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/style.css?v=debug_26">
     <style>
-        /* CRITICAL FALLBACK FOR BOTTOM NAV */
+        /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE */
         #bottom-nav {
             display: flex !important;
             opacity: 1 !important;
@@ -29,6 +29,35 @@
             /* Max Int */
             background: #2d2d30 !important;
             border-top: 1px solid #3c3c3c !important;
+            padding-bottom: env(safe-area-inset-bottom);
+            box-sizing: border-box;
+            /* Ensure padding doesn't add to height if not handled */
+        }
+
+        .nav-item {
+            background: transparent !important;
+            border: none !important;
+            color: #888 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 10px !important;
+            width: 100% !important;
+            height: 100% !important;
+            cursor: pointer !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .nav-item.active {
+            color: #0078d4 !important;
+        }
+
+        .nav-icon {
+            font-size: 20px !important;
+            margin-bottom: 2px !important;
+            display: block !important;
         }
     </style>
     <script>
@@ -705,7 +734,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_26</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_27</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -981,11 +1010,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_26"></script>
-                <script src="js/app.js?v=debug_26"></script>
-                <script src="js/ui.js?v=debug_26"></script>
-                <script src="js/map.js?v=debug_26"></script>
-                <script src="js/graph.js?v=debug_26"></script>
+                <script src="js/monitor.js?v=debug_27"></script>
+                <script src="js/app.js?v=debug_27"></script>
+                <script src="js/ui.js?v=debug_27"></script>
+                <script src="js/map.js?v=debug_27"></script>
+                <script src="js/graph.js?v=debug_27"></script>
 
 </body>
 
