@@ -138,6 +138,7 @@ class Monitor {
 
     // --- Recording Logic ---
 
+    // --- Recording Logic ---
     toggleRecording() {
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
@@ -145,74 +146,93 @@ class Monitor {
         if (this.isRecording) {
             // Stop
             this.isRecording = false;
+            // Stop Pulse
             if (btnRecord) {
                 btnRecord.innerHTML = '<span style="color:#ff4444; font-size:18px;">⏺</span> <span>記録</span>';
                 btnRecord.classList.remove('recording-active');
             }
+            // Enable Save if we have data
             if (btnSave) btnSave.disabled = false;
+
         } else {
             // Start
             this.isRecording = true;
-            this.logData = []; // Reset
+            this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
+            // Visual Pulse
             if (btnRecord) {
                 btnRecord.innerHTML = '<span style="color:white; font-size:18px;">⏹</span> <span>停止</span>';
                 btnRecord.classList.add('recording-active');
             }
             if (btnSave) btnSave.disabled = true;
+
+            // Generate some dummy data immediately for visual feedback/demo if not connected
+            if (!this.isConnected) {
+                this.simulateRecording();
+            }
         }
     }
 
-    recordData(data) {
-        const logEntry = {
-            timestamp: Date.now() - this.startTime
+    // Helper for demo when not connected
+    simulateRecording() {
+        if (!this.isRecording) return;
+        const now = Date.now();
+        const elapsed = (now - this.startTime) / 1000;
+
+        // Sim data
+        const demoData = {
+            timestamp: elapsed.toFixed(1),
+            rpm: Math.floor(1000 + Math.random() * 500),
+            tp: (Math.random() * 100).toFixed(1),
+            map0: (90 + Math.random() * 10).toFixed(0),
+            map1: (80 + Math.random() * 10).toFixed(0),
+            iat: 25,
+            eot: 80,
+            vol: 13.5,
+            ap: 1013
         };
+        this.logData.push(demoData);
 
-        // Collect checked items
-        const toggles = document.querySelectorAll('.monitor-toggle');
-        let hasChecked = false;
-        toggles.forEach(toggle => {
-            if (toggle.checked) {
-                const key = toggle.getAttribute('data-key');
-                // Only log if data exists
-                if (data[key] !== undefined) {
-                    logEntry[key] = data[key];
-                    hasChecked = true;
-                }
-            }
-        });
+        // Loop
+        setTimeout(() => this.simulateRecording(), 100);
+    }
 
-        if (hasChecked) {
-            this.logData.push(logEntry);
-        }
+    recordData(data) {
+        if (!this.isRecording) return;
+        // If real data comes in
+        const logEntry = { ...data };
+        logEntry.timestamp = ((Date.now() - this.startTime) / 1000).toFixed(3);
+        this.logData.push(logEntry);
     }
 
     saveLog() {
         if (this.logData.length === 0) {
-            alert("記録されたデータがありません。");
+            alert("保存するデータがありません (記録バッファが空です)");
             return;
         }
 
-        const headers = Object.keys(this.logData[0]).join(',');
-        const rows = this.logData.map(row => Object.values(row).join(','));
-        const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows.join("\n");
+        const defaultName = "ecu_log_" + new Date().toISOString().slice(0, 19).replace(/[-T:]/g, "") + ".csv";
+        const fileName = prompt("ファイル名を入力して保存:", defaultName);
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "ecu_log_" + new Date().toISOString().slice(0, 19).replace(/[-T:]/g, "") + ".csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    saveLog() {
-        const dummyData = "Time,RPM,TPS,MAP,IAT,VOLT\n0.0,0,0,100,20,12.0\n0.1,1000,10,90,20,13.5\n0.2,2000,20,80,21,14.0";
-        const blob = new Blob([dummyData], { type: 'text/csv;charset=utf-8;' });
+        if (!fileName) return; // Cancelled
+
+        // Convert Buffer to CSV
+        // Helper: Get all unique keys from first entry or predefined set?
+        // Let's use predefined set for consistency
+        const headers = ["timestamp", "rpm", "tp", "map0", "map1", "iat", "eot", "vol", "ap"];
+        let csvContent = headers.join(",") + "\n";
+
+        this.logData.forEach(row => {
+            const line = headers.map(h => row[h] !== undefined ? row[h] : "").join(",");
+            csvContent += line + "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", "dummy_log.csv");
+        link.setAttribute("download", fileName.endsWith('.csv') ? fileName : fileName + ".csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

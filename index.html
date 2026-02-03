@@ -321,6 +321,21 @@
             <!-- 3. ファイルビュー -->
             <div id="file-view" class="view-section"
                 style="display:none; padding: 10px; display: flex; flex-direction: column; height: 100%;">
+
+                <!-- WS Connection Header (Shared) -->
+                <div class="monitor-header"
+                    style="padding-bottom: 10px; border-bottom: 1px solid #3c3c3c; display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <div style="display:flex; gap:10px; align-items:center; flex:1;">
+                        <input type="text" id="ws-url-file" value="ws://192.168.4.1/ws"
+                            style="flex: 1; min-width: 0; background: #3c3c3c; color: white; border: 1px solid #555; padding: 5px; border-radius: 4px;">
+                        <button onclick="monitor.toggleConnection()" id="btn-monitor-connect-file"
+                            style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; white-space:nowrap;">接続</button>
+                        <div id="connection-status-file"
+                            style="width: 12px; height: 12px; border-radius: 50%; background: #666;">
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 10px;">
                     <h3 style="margin: 0; color: #888; font-size: 14px;">Data Items</h3>
@@ -874,11 +889,11 @@
             setTimeout(() => dot.remove(), 500);
         }, true);
     </script>
-    <script src="js/monitor.js?v=debug_10"></script>
-    <script src="js/app.js?v=debug_10"></script>
-    <script src="js/ui.js?v=debug_10"></script>
-    <script src="js/map.js?v=debug_10"></script>
-    <script src="js/graph.js?v=debug_10"></script>
+    <script src="js/monitor.js?v=debug_11"></script>
+    <script src="js/app.js?v=debug_11"></script>
+    <script src="js/ui.js?v=debug_11"></script>
+    <script src="js/map.js?v=debug_11"></script>
+    <script src="js/graph.js?v=debug_11"></script>
 
 </body>
 

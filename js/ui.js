@@ -1,7 +1,16 @@
 window.toggleSettings = function () {
     const menu = document.getElementById('settings-menu');
-    // Mobile: Toggle Settings menu
+    const btn = document.getElementById('btn-menu'); // Ensure ID exists in HTML
+
+    // Toggle
     menu.classList.toggle('active');
+
+    // Update Button State
+    if (menu.classList.contains('active')) {
+        if (btn) btn.classList.add('active');
+    } else {
+        if (btn) btn.classList.remove('active');
+    }
 
     // Mobile Explorer Toggle (Can be hooked to a button later or swipe)
     if (window.innerWidth <= 1024) {
