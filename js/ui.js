@@ -687,10 +687,7 @@ function renderTable() {
 
     const corner = document.createElement('div');
     corner.className = 'cell header-cell corner-cell';
-    corner.innerHTML = `<div style="font-size:10px; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-        <span>TPS\\RPM</span>
-        <span style="color:#00ff00;">debug_43</span>
-    </div>`;
+    corner.innerText = 'TPS\\RPM';
     corner.onclick = () => {
         selectedCells.clear();
         for (let t = 0; t < 21; t++) {
