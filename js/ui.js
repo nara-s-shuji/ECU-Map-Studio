@@ -96,7 +96,7 @@ function switchTab(tabId) {
 
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (currentFileName || 'New_Map.csv') + ' (debug_45)';
+    if (nameDisplay) nameDisplay.innerText = (currentFileName || 'New_Map.csv') + ' (debug_46)';
     // Note: 'orig' and 'curr' variables are not defined in this scope.
     // If they are global or defined elsewhere, this line will work.
     // Otherwise, it will cause a ReferenceError.
