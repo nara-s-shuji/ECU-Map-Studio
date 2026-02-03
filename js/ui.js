@@ -100,11 +100,17 @@ function switchTab(tabId) {
         setTimeout(() => target.classList.add('active'), 10);
     }
 
-    // Hide Popup if not Editor
+    // Hide Popup if not Editor (Strict Enforcement)
     const popup = document.getElementById('edit-popup-v2');
-    if (popup && tabId !== 'editor') {
-        popup.style.display = 'none';
-        document.body.classList.remove('popup-active');
+    if (popup) {
+        if (tabId === 'editor') {
+            // Do nothing, let other logic handle showing it if selection exists
+            // Or maybe ensure it's hidden if no selection? 
+            // Better to leave it alone here unless we want to restore state.
+        } else {
+            popup.style.display = 'none';
+            document.body.classList.remove('popup-active');
+        }
     }
 
     const nameDisplay = document.getElementById('info-filename');
@@ -993,7 +999,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_61)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_62)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1013,7 +1019,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_61)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_62)';
 };
 
 // Expose closePopup globally
