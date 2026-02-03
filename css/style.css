@@ -1332,6 +1332,8 @@ body {
 .cell input {
     font-size: 16px !important;
     /* Prevents iOS Zoom */
+    touch-action: manipulation;
+    /* Prevents double-tap zoom */
 }
 
 /* Fix Menu Position */
