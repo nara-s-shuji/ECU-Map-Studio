@@ -149,9 +149,38 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_49)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_50)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
+
+    <!-- MOVED NAVIGATION TO TOP OF DOM (BUT VISUALLY FIXED) -->
+    <!-- DEBUG POSITION: TOP 200px -->
+    <div id="main-nav"
+        style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; top: 200px !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #0000FF !important; border: 5px solid yellow !important;">
+        <div style="position: absolute; top: -20px; color: white; background: blue; font-weight:bold;">DEBUG:
+            ID=MAIN-NAV (Blue)</div>
+        <button class="nav-item" onclick="switchTab('file')" id="nav-file">
+            <span class="nav-icon">📁</span>
+            <span>ファイル</span>
+        </button>
+        <button class="nav-item active" onclick="switchTab('editor')" id="nav-editor">
+            <span class="nav-icon">▤</span>
+            <span>編集</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('graph')" id="nav-graph">
+            <span class="nav-icon">📉</span>
+            <span>グラフ</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('monitor')" id="nav-monitor">
+            <span class="nav-icon">📊</span>
+            <span>モニター</span>
+        </button>
+        <button class="nav-item" onclick="toggleSettings()" id="nav-menu">
+            <span class="nav-icon">≡</span>
+            <span>メニュー</span>
+        </button>
+    </div>
+
 
     <!-- Main Views -->
     <!-- EDIT POPUP (v2) - Restored Full Features -->
@@ -818,7 +847,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_49</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_50</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1034,11 +1063,11 @@
 
 
 
-                <script src="js/monitor.js?v=debug_49"></script>
-                <script src="js/app.js?v=debug_49"></script>
-                <script src="js/ui.js?v=debug_49"></script>
-                <script src="js/map.js?v=debug_49"></script>
-                <script src="js/graph.js?v=debug_49"></script>
+                <script src="js/monitor.js?v=debug_50"></script>
+                <script src="js/app.js?v=debug_50"></script>
+                <script src="js/ui.js?v=debug_50"></script>
+                <script src="js/map.js?v=debug_50"></script>
+                <script src="js/graph.js?v=debug_50"></script>
 
 </body>
 

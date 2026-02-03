@@ -24,7 +24,13 @@ window.switchTab = function (tabName) {
     // Nav Items Update
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     // Find button that calls this tab (simplified matching index)
-    const navBtns = document.getElementById('main-nav').children;
+    // Find button that calls this tab (simplified matching index)
+    const navContainer = document.getElementById('main-nav');
+    if (!navContainer) {
+        console.error('Navbar not found!');
+        return;
+    }
+    const navBtns = navContainer.children;
 
     // New Order: File, Edit, Graph, Monitor, Menu
     if (tabName === 'file') navBtns[0].classList.add('active');
@@ -985,7 +991,7 @@ function updateUISelection() {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_49)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_50)';
 };
 
 // Expose closePopup globally
