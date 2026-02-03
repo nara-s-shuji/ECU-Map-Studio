@@ -1286,8 +1286,37 @@ body {
     display: none !important;
 }
 
-/* Fix Map Section Scroll */
+/* Fix Map Section Scroll - Needs to be explicit */
 #map-section {
+    flex: 1;
     overflow-y: auto !important;
+    height: 100%;
     padding-bottom: 80px;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll */
+}
+
+/* Fix File View Overflow */
+#file-view {
+    overflow-y: auto !important;
+    padding-bottom: 80px !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fix File Item Width */
+.file-item {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    max-width: none !important;
+}
+
+/* Fix Menu Position */
+#settings-menu {
+    top: env(safe-area-inset-top) !important;
+    bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+    height: auto !important;
+    padding-top: 40px;
+    /* Space for close button if needed, or adjust */
+    width: 280px !important;
 }

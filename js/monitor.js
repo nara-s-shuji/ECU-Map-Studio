@@ -207,7 +207,15 @@ class Monitor {
         document.body.removeChild(link);
     }
     saveLog() {
-        window.saveDummy();
+        const dummyData = "Time,RPM,TPS,MAP,IAT,VOLT\n0.0,0,0,100,20,12.0\n0.1,1000,10,90,20,13.5\n0.2,2000,20,80,21,14.0";
+        const blob = new Blob([dummyData], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "dummy_log.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
 // Singleton Instance
