@@ -78,6 +78,21 @@
             margin-bottom: 2px !important;
             display: block !important;
         }
+
+        /* CRITICAL: Force Cell Popup Visibility when active */
+        #cell-popup.active {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 20000 !important;
+            /* Higher than Bottom Nav (9990) */
+            bottom: 70px !important;
+            /* Above bottom nav */
+            position: fixed !important;
+            background: #252526 !important;
+            border: 1px solid #0078d4 !important;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) !important;
+        }
     </style>
     <script>
         window.onerror = function (msg, url, line, col, error) {
@@ -94,6 +109,11 @@
         <button class="toolbar-btn" data-tooltip="ファイルを開く (Ctrl+O)" onclick="openFile()">📁</button>
         <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
         <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
+
+        <!-- DEBUG: Test Popup Button -->
+        <button class="toolbar-btn"
+            onclick="document.getElementById('cell-popup').classList.toggle('active'); alert('Toggled Popup');"
+            style="background: red; color: white;">🐞</button>
 
         <div class="toolbar-separator"></div>
 
@@ -753,7 +773,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_30</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_31</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1029,11 +1049,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_30"></script>
-                <script src="js/app.js?v=debug_30"></script>
-                <script src="js/ui.js?v=debug_30"></script>
-                <script src="js/map.js?v=debug_30"></script>
-                <script src="js/graph.js?v=debug_30"></script>
+                <script src="js/monitor.js?v=debug_31"></script>
+                <script src="js/app.js?v=debug_31"></script>
+                <script src="js/ui.js?v=debug_31"></script>
+                <script src="js/map.js?v=debug_31"></script>
+                <script src="js/graph.js?v=debug_31"></script>
 
 </body>
 
