@@ -1395,27 +1395,30 @@ body {
     background: #4CAF50;
     color: white;
 }
+
 /* Bottom Navigation */
 #bottom-nav {
     height: 60px;
     background: #2d2d30;
     border-top: 1px solid #3c3c3c;
-    display: none; /* Hidden by default on PC */
+    display: flex;
+    /* Always visible */
     justify-content: space-around;
     align-items: center;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 9999;
+    /* Very high z-index */
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
     #bottom-nav {
-        display: flex; /* Visible on Mobile */
+        display: flex; 
     }
-}
+} */
 
 .nav-item {
     background: transparent;
@@ -1439,4 +1442,3 @@ body {
     font-size: 20px;
     margin-bottom: 2px;
 }
-
