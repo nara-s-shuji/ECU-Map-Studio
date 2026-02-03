@@ -136,30 +136,27 @@ function switchTab(tabId) {
             popup.classList.remove('active');
         }
     }
+    // 7. Update Info Bar & Close Menu (Restored Logic)
+    const nameDisplay = document.getElementById('info-filename');
+    const valDisplay = document.getElementById('info-values');
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
+    // Reset values display on tab switch
+    if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
+
+    // Auto-close menu if open
+    const menu = document.getElementById('settings-menu');
+    const overlay = document.getElementById('menu-overlay');
+    if (menu && menu.classList.contains('active')) {
+        menu.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+        // Update toggle button state
+        const btn = document.getElementById('btn-settings');
+        if (btn) btn.classList.remove('active');
+    }
 }
-
-// End of switchTab
-
-
-const nameDisplay = document.getElementById('info-filename');
-const valDisplay = document.getElementById('info-values');
-if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
-// Reset values display on tab switch
-if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
-
-// Auto-close menu if open
-const menu = document.getElementById('settings-menu');
-const overlay = document.getElementById('menu-overlay');
-if (menu && menu.classList.contains('active')) {
-    menu.classList.remove('active');
-    if (overlay) overlay.classList.remove('active');
-    // Update toggle button state
-    const btn = document.getElementById('btn-settings');
-    if (btn) btn.classList.remove('active');
-
-    // Also update nav button
-    const navBtn = document.getElementById('nav-menu');
-    if (navBtn) navBtn.classList.remove('active');
+// End of SwitchTab
+const navBtn = document.getElementById('nav-menu');
+if (navBtn) navBtn.classList.remove('active');
 }
 }
 
@@ -1037,7 +1034,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_66)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1057,7 +1054,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_66)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
 };
 
 // Expose closePopup globally
