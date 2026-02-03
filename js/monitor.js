@@ -25,12 +25,14 @@ class Monitor {
         }
 
         try {
-            // Security Check: Mixed Content
+            // Security Check: Mixed Content (DISABLED BY USER REQUEST)
+            /*
             if (window.location.protocol === 'https:' && url.startsWith('ws:')) {
                 alert("【重要】セキュリティ制限により接続できません。\n\nHTTPS(GitHub Pages等)から、ws://(暗号化なし)への接続はブラウザによってブロックされます。\n\n対処法:\n1. サーバーをWSS対応にする(ESP32では困難)\n2. アプリをHTTPでホストする\n3. ローカルファイルとして開く");
                 this.updateStatus('error');
                 return;
             }
+            */
 
             this.ws = new WebSocket(url);
             this.updateStatus('connecting');
@@ -45,7 +47,7 @@ class Monitor {
                     const data = JSON.parse(event.data);
                     this.updateUI(data);
                 } catch (e) {
-                    console.error('JSON Parse Error:', e);
+                    // console.error('JSON Parse Error:', e);
                 }
             };
 
@@ -57,9 +59,10 @@ class Monitor {
 
             this.ws.onerror = (error) => {
                 console.error('WebSocket Error:', error);
+
+                // If mixed content blocks it, onerror fires immediately.
+                // We'll let it show error state if it fails.
                 this.updateStatus('error');
-                // Mobile debugging aid
-                // alert("接続エラー: " + (error.message || "詳細不明"));
             };
 
         } catch (e) {
@@ -78,28 +81,45 @@ class Monitor {
 
     updateStatus(status) {
         const indicator = document.getElementById('connection-status');
-        const btn = document.getElementById('btn-monitor-connect');
-
-        if (!indicator || !btn) return;
+        const btn = document.getElementById('btn-monitor-connect'); // This might be old but let's keep it safe or just target .btn-connect
+        const btns = document.querySelectorAll('.btn-connect');
 
         this.isConnected = (status === 'connected');
 
-        if (status === 'connected') {
-            indicator.style.background = '#00ff00';
-            indicator.style.boxShadow = '0 0 10px #00ff00';
-            btn.textContent = '切断';
-            btn.style.background = '#d83b01';
-        } else if (status === 'connecting') {
-            indicator.style.background = '#ffff00';
-            indicator.style.boxShadow = 'none';
-            btn.textContent = '接続中...';
-            btn.disabled = true;
-        } else {
-            indicator.style.background = '#666';
-            indicator.style.boxShadow = 'none';
-            btn.textContent = '接続';
-            btn.style.background = '#0078d4';
-            btn.disabled = false;
+        btns.forEach(b => {
+            if (status === 'connected') {
+                b.innerText = '接続中';
+                b.style.background = '#d13438'; // Red
+            } else if (status === 'connecting') {
+                // User requested: Text "接続中", Color Red even for connecting
+                b.innerText = '接続中';
+                b.style.background = '#d13438'; // Red
+            } else {
+                b.innerText = '未接続';
+                b.style.background = '#0078d4'; // Blue
+                b.disabled = false;
+            }
+        });
+
+        // Keep old indicator logic if it exists
+        if (indicator && btn) {
+            if (status === 'connected') {
+                indicator.style.background = '#00ff00';
+                indicator.style.boxShadow = '0 0 10px #00ff00';
+                btn.textContent = '切断';
+                btn.style.background = '#d83b01';
+            } else if (status === 'connecting') {
+                indicator.style.background = '#ffff00';
+                indicator.style.boxShadow = 'none';
+                btn.textContent = '接続中...';
+                btn.disabled = true;
+            } else {
+                indicator.style.background = '#666';
+                indicator.style.boxShadow = 'none';
+                btn.textContent = '接続';
+                btn.style.background = '#0078d4';
+                btn.disabled = false;
+            }
         }
     }
 
