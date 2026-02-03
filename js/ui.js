@@ -974,7 +974,7 @@ function updateUISelection() {
     document.getElementById('info-original').innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_47)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -985,7 +985,26 @@ function updateUISelection() {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_47)';
+};
+
+// Expose closePopup globally
+window.closePopup = function () {
+    const popup = document.getElementById('edit-popup-v2');
+    if (popup) {
+        popup.classList.remove('active');
+        popup.style.display = 'none'; // Force hide
+        document.body.classList.remove('popup-active');
+    }
+};
+
+window.togglePopupMode = function () {
+    popupMode = (popupMode === 'abs') ? 'pct' : 'abs';
+    const btn = document.getElementById('btn-mode-toggle');
+    if (btn) {
+        btn.innerText = (popupMode === 'abs') ? 'ABS' : '%';
+        btn.style.color = (popupMode === 'abs') ? 'var(--accent)' : '#ff9900';
+    }
 };
 
 function updatePopupPosition() {
@@ -993,11 +1012,14 @@ function updatePopupPosition() {
     const selectedCell = document.getElementById(`c-${selT}-${selR}`);
     if (!selectedCell) {
         popup.classList.remove('active');
+        popup.style.display = 'none';
         return;
     }
 
-    // Logic updated to respect CSS classes primarily, but needs position info?
-    // In CSS we set fixed positions for mobile/landscape.
+    // Force display block/flex when active
+    popup.classList.add('active');
+    popup.style.display = 'flex';
+
     if (window.innerWidth <= 1024) {
         popup.classList.add('active');
         popup.style.top = '';

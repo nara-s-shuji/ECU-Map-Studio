@@ -192,9 +192,9 @@
                 ontouchend="stopApply(event)"
                 style="flex: 1; min-width: 40px; height: 50px; font-size: 24px; font-weight: bold;">+</button>
 
-            <!-- 5. Close Button -->
-            <button class="popup-btn" id="btn-close-popup" onclick="closePopup()"
-                style="width: 36px; height: 50px; color: #ff6b6b; font-size: 20px;">×</button>
+            <!-- 5. Mode Toggle (Replacing Close for now) -->
+            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()"
+                style="width: 40px; height: 50px; font-size: 14px; font-weight:bold; color: var(--accent);">ABS</button>
         </div>
     </div>
 
@@ -818,7 +818,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_46</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_47</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1033,10 +1033,11 @@
 
 
                 <!-- Bottom Navigation -->
+                <!-- DEBUG POSITION: TOP 50% -->
                 <div id="bottom-nav"
-                    style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #550000 !important; border: 3px solid lime !important;">
-                    <div style="position: absolute; top: -20px; color: yellow; background: black;">DEBUG: MENU LAYER
-                    </div>
+                    style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; top: 50% !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #00AA00 !important; border: 5px solid red !important;">
+                    <div style="position: absolute; top: -20px; color: black; background: white; font-weight:bold;">
+                        DEBUG: IF VISIBLE HERE, IT WAS OFF-SCREEN BEFORE</div>
                     <button class="nav-item" onclick="switchTab('file')" id="nav-file">
                         <span class="nav-icon">📁</span>
                         <span>ファイル</span>
@@ -1059,11 +1060,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_46"></script>
-                <script src="js/app.js?v=debug_46"></script>
-                <script src="js/ui.js?v=debug_46"></script>
-                <script src="js/map.js?v=debug_46"></script>
-                <script src="js/graph.js?v=debug_46"></script>
+                <script src="js/monitor.js?v=debug_47"></script>
+                <script src="js/app.js?v=debug_47"></script>
+                <script src="js/ui.js?v=debug_47"></script>
+                <script src="js/map.js?v=debug_47"></script>
+                <script src="js/graph.js?v=debug_47"></script>
 
 </body>
 
