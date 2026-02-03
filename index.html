@@ -110,9 +110,9 @@
         <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
         <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
 
-        <!-- DEBUG: Test Popup Button -->
+        <!-- DEBUG: Test Popup Button (Round 20) -->
         <button class="toolbar-btn"
-            onclick="try { let el = document.getElementById('cell-popup'); if(!el) { alert('FATAL: #cell-popup NOT FOUND in DOM'); } else { el.classList.toggle('active'); alert('Toggled. Classes: ' + el.className + ' | Style Display: ' + el.style.display); } } catch(e) { alert('JS Error: ' + e.message); }"
+            onclick="let el = document.getElementById('cell-popup'); if(!el) { alert('FATAL: Missing'); } else { el.style.display='flex'; el.style.position='fixed'; el.style.zIndex='99999'; el.style.visibility='visible'; el.style.bottom='50%'; el.style.left='0'; el.style.right='0'; el.style.margin='auto'; let rect = el.getBoundingClientRect(); alert('Forced Styles. Geometry: ' + rect.width + 'x' + rect.height + ' at ' + rect.top + ',' + rect.left); }"
             style="background: red; color: white;">🐞</button>
 
         <div class="toolbar-separator"></div>
@@ -152,7 +152,7 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_33)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_34)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
@@ -774,7 +774,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_33</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_34</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1093,11 +1093,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_33"></script>
-                <script src="js/app.js?v=debug_33"></script>
-                <script src="js/ui.js?v=debug_33"></script>
-                <script src="js/map.js?v=debug_33"></script>
-                <script src="js/graph.js?v=debug_33"></script>
+                <script src="js/monitor.js?v=debug_34"></script>
+                <script src="js/app.js?v=debug_34"></script>
+                <script src="js/ui.js?v=debug_34"></script>
+                <script src="js/map.js?v=debug_34"></script>
+                <script src="js/graph.js?v=debug_34"></script>
 
 </body>
 
