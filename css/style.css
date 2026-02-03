@@ -1021,7 +1021,8 @@ body {
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
     }
 
-    #bottom-nav {
+    /* Bottom Navigation (Renamed) */
+    #main-nav {
         display: flex !important;
         position: fixed;
         bottom: 0;
@@ -1070,7 +1071,7 @@ body {
 
     /* Landscape Mode: Nav on Right, Popup on Left of Nav */
     @media (orientation: landscape) {
-        #bottom-nav {
+        #main-nav {
             top: 0;
             left: auto;
             right: 0;

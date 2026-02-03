@@ -149,7 +149,7 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_45)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_48)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
@@ -818,7 +818,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_47</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_48</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1032,12 +1032,12 @@
                 </script>
 
 
-                <!-- Bottom Navigation -->
+                <!-- Navigation (Renamed to main-nav to escape possible ID cursing) -->
                 <!-- DEBUG POSITION: TOP 50% -->
-                <div id="bottom-nav"
-                    style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; top: 50% !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #00AA00 !important; border: 5px solid red !important;">
-                    <div style="position: absolute; top: -20px; color: black; background: white; font-weight:bold;">
-                        DEBUG: IF VISIBLE HERE, IT WAS OFF-SCREEN BEFORE</div>
+                <div id="main-nav"
+                    style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; top: 50% !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #0000FF !important; border: 5px solid yellow !important;">
+                    <div style="position: absolute; top: -20px; color: white; background: blue; font-weight:bold;">
+                        DEBUG: ID=MAIN-NAV (Blue)</div>
                     <button class="nav-item" onclick="switchTab('file')" id="nav-file">
                         <span class="nav-icon">📁</span>
                         <span>ファイル</span>
@@ -1060,11 +1060,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_47"></script>
-                <script src="js/app.js?v=debug_47"></script>
-                <script src="js/ui.js?v=debug_47"></script>
-                <script src="js/map.js?v=debug_47"></script>
-                <script src="js/graph.js?v=debug_47"></script>
+                <script src="js/monitor.js?v=debug_48"></script>
+                <script src="js/app.js?v=debug_48"></script>
+                <script src="js/ui.js?v=debug_48"></script>
+                <script src="js/map.js?v=debug_48"></script>
+                <script src="js/graph.js?v=debug_48"></script>
 
 </body>
 

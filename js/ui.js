@@ -24,7 +24,7 @@ window.switchTab = function (tabName) {
     // Nav Items Update
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     // Find button that calls this tab (simplified matching index)
-    const navBtns = document.getElementById('bottom-nav').children;
+    const navBtns = document.getElementById('main-nav').children;
 
     // New Order: File, Edit, Graph, Monitor, Menu
     if (tabName === 'file') navBtns[0].classList.add('active');
@@ -974,7 +974,7 @@ function updateUISelection() {
     document.getElementById('info-original').innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_47)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_48)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -985,7 +985,7 @@ function updateUISelection() {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_47)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_48)';
 };
 
 // Expose closePopup globally
@@ -1001,9 +1001,22 @@ window.closePopup = function () {
 window.togglePopupMode = function () {
     popupMode = (popupMode === 'abs') ? 'pct' : 'abs';
     const btn = document.getElementById('btn-mode-toggle');
+    const input = document.getElementById('popup-delta');
+
     if (btn) {
         btn.innerText = (popupMode === 'abs') ? 'ABS' : '%';
         btn.style.color = (popupMode === 'abs') ? 'var(--accent)' : '#ff9900';
+    }
+
+    // Update input value
+    if (input) {
+        if (popupMode === 'abs') {
+            popupDeltaAbs = 10; // Default or saved? Using 10 as reset
+            input.value = popupDeltaAbs;
+        } else {
+            popupDeltaPct = 1.0;
+            input.value = popupDeltaPct.toFixed(1);
+        }
     }
 };
 
