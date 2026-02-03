@@ -137,20 +137,9 @@ function switchTab(tabId) {
         }
     }
 }
-    }
 
-// Hide Popup if not Editor (Strict Enforcement)
-const popup = document.getElementById('edit-popup-v2');
-if (popup) {
-    if (tabId === 'editor') {
-        // Do nothing, let other logic handle showing it if selection exists
-        // Or maybe ensure it's hidden if no selection? 
-        // Better to leave it alone here unless we want to restore state.
-    } else {
-        popup.style.display = 'none';
-        document.body.classList.remove('popup-active');
-    }
-}
+// End of switchTab
+
 
 const nameDisplay = document.getElementById('info-filename');
 const valDisplay = document.getElementById('info-values');
@@ -1048,7 +1037,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_65)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_66)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1068,7 +1057,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_65)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_66)';
 };
 
 // Expose closePopup globally
