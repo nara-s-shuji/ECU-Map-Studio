@@ -62,12 +62,14 @@ class Monitor {
 
                 // If mixed content blocks it, onerror fires immediately.
                 // We'll let it show error state if it fails.
-                this.updateStatus('error');
+                // UPDATE: User wants to keep "Connecting" (Red) state to allow toggling it off manually.
+                // So we SUPPRESS the visual update for error here.
+                // this.updateStatus('error');
             };
 
         } catch (e) {
             console.error('Connection Error:', e);
-            this.updateStatus('error');
+            // this.updateStatus('error');
         }
     }
 
@@ -84,13 +86,11 @@ class Monitor {
         const btn = document.getElementById('btn-monitor-connect'); // This might be old but let's keep it safe or just target .btn-connect
         const btns = document.querySelectorAll('.btn-connect');
 
-        this.isConnected = (status === 'connected');
+        // KEY FIX: Treat 'connecting' as connected so clicking it again triggers disconnect()
+        this.isConnected = (status === 'connected' || status === 'connecting');
 
         btns.forEach(b => {
-            if (status === 'connected') {
-                b.innerText = '接続中';
-                b.style.background = '#d13438'; // Red
-            } else if (status === 'connecting') {
+            if (status === 'connected' || status === 'connecting') {
                 // User requested: Text "接続中", Color Red even for connecting
                 b.innerText = '接続中';
                 b.style.background = '#d13438'; // Red
@@ -112,7 +112,7 @@ class Monitor {
                 indicator.style.background = '#ffff00';
                 indicator.style.boxShadow = 'none';
                 btn.textContent = '接続中...';
-                btn.disabled = true;
+                // btn.disabled = true; // Allow clicking
             } else {
                 indicator.style.background = '#666';
                 indicator.style.boxShadow = 'none';
