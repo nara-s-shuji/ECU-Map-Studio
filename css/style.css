@@ -1395,3 +1395,48 @@ body {
     background: #4CAF50;
     color: white;
 }
+/* Bottom Navigation */
+#bottom-nav {
+    height: 60px;
+    background: #2d2d30;
+    border-top: 1px solid #3c3c3c;
+    display: none; /* Hidden by default on PC */
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 1024px) {
+    #bottom-nav {
+        display: flex; /* Visible on Mobile */
+    }
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.nav-item.active {
+    color: #0078d4;
+}
+
+.nav-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+
