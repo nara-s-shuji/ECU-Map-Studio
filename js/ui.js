@@ -153,11 +153,12 @@ function switchTab(tabId) {
         const btn = document.getElementById('btn-settings');
         if (btn) btn.classList.remove('active');
     }
-}
-// End of SwitchTab
-const navBtn = document.getElementById('nav-menu');
-if (navBtn) navBtn.classList.remove('active');
-}
+
+    // Also ensure nav-menu is not active if we switched away
+    const navMenuBtn = document.getElementById('nav-menu');
+    if (navMenuBtn && tabId !== 'menu') {
+        navMenuBtn.classList.remove('active');
+    }
 }
 
 // --- Map Selection Logic ---
@@ -1034,7 +1035,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_68)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1054,7 +1055,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_68)';
 };
 
 // Expose closePopup globally
