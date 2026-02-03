@@ -87,52 +87,91 @@ window.toggleExplorer = function () {
     exp.classList.toggle('active');
 };
 
+// Global State for Tab Tracking (Fix for Popup Visibility)
+window.currentTabId = 'editor'; // Default
+
 // Main Tab Switching
 function switchTab(tabId) {
+    // 1. Update Global State
+    window.currentTabId = tabId;
+
+    // 2. Hide all views
     document.querySelectorAll('.view-section').forEach(el => {
         el.style.display = 'none';
         el.classList.remove('active');
     });
 
-    const target = document.getElementById(tabId);
-    if (target) {
-        target.style.display = (tabId === 'file-view' || tabId === 'monitor-view') ? 'flex' : 'block';
-        setTimeout(() => target.classList.add('active'), 10);
-    }
-
-    // Hide Popup if not Editor (Strict Enforcement)
-    const popup = document.getElementById('edit-popup-v2');
-    if (popup) {
-        if (tabId === 'editor') {
-            // Do nothing, let other logic handle showing it if selection exists
-            // Or maybe ensure it's hidden if no selection? 
-            // Better to leave it alone here unless we want to restore state.
-        } else {
-            popup.style.display = 'none';
-            document.body.classList.remove('popup-active');
+    // 3. Resolve Target Element (Handle 'editor' -> 'editor-view' mapping)
+    let targetId = tabId;
+    if (!document.getElementById(targetId)) {
+        if (document.getElementById(tabId + '-view')) {
+            targetId = tabId + '-view';
         }
     }
 
-    const nameDisplay = document.getElementById('info-filename');
-    const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
-    // Reset values display on tab switch
-    if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
-
-    // Auto-close menu if open
-    const menu = document.getElementById('settings-menu');
-    const overlay = document.getElementById('menu-overlay');
-    if (menu && menu.classList.contains('active')) {
-        menu.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-        // Update toggle button state
-        const btn = document.getElementById('btn-settings');
-        if (btn) btn.classList.remove('active');
-
-        // Also update nav button
-        const navBtn = document.getElementById('nav-menu');
-        if (navBtn) navBtn.classList.remove('active');
+    // 4. Show Target
+    const target = document.getElementById(targetId);
+    if (target) {
+        // Special Flex/Block handling
+        const isFlex = (targetId === 'file-view' || targetId === 'monitor-view');
+        target.style.display = isFlex ? 'flex' : 'block';
+        setTimeout(() => target.classList.add('active'), 10);
     }
+
+    // 5. Update Nav Buttons
+    document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active'); // Remove from all
+    });
+    // Add active to the clicked button (e.g., nav-editor)
+    const navBtn = document.getElementById('nav-' + tabId);
+    if (navBtn) navBtn.classList.add('active');
+
+    // 6. Force Popup Hiding if not editor
+    const popup = document.getElementById('edit-popup-v2');
+    if (popup) {
+        if (tabId === 'editor') {
+            // Allow popup (don't force show, just allow logic)
+        } else {
+            popup.style.display = 'none';
+            popup.classList.remove('active');
+        }
+    }
+}
+    }
+
+// Hide Popup if not Editor (Strict Enforcement)
+const popup = document.getElementById('edit-popup-v2');
+if (popup) {
+    if (tabId === 'editor') {
+        // Do nothing, let other logic handle showing it if selection exists
+        // Or maybe ensure it's hidden if no selection? 
+        // Better to leave it alone here unless we want to restore state.
+    } else {
+        popup.style.display = 'none';
+        document.body.classList.remove('popup-active');
+    }
+}
+
+const nameDisplay = document.getElementById('info-filename');
+const valDisplay = document.getElementById('info-values');
+if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
+// Reset values display on tab switch
+if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
+
+// Auto-close menu if open
+const menu = document.getElementById('settings-menu');
+const overlay = document.getElementById('menu-overlay');
+if (menu && menu.classList.contains('active')) {
+    menu.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+    // Update toggle button state
+    const btn = document.getElementById('btn-settings');
+    if (btn) btn.classList.remove('active');
+
+    // Also update nav button
+    const navBtn = document.getElementById('nav-menu');
+    if (navBtn) navBtn.classList.remove('active');
+}
 }
 
 // --- Map Selection Logic ---
@@ -942,9 +981,8 @@ function handleCellMouseEnter(e, t, r) {
 }
 
 function updateUISelection() {
-    // GUARD: If Editor View is NOT visible, do not update selection UI (performance & safety)
-    const editorView = document.getElementById('editor-view');
-    if (editorView && (!editorView.classList.contains('active') || editorView.offsetParent === null)) {
+    // GUARD: Logic-Based Visibility Check
+    if (window.currentTabId !== 'editor') {
         const popup = document.getElementById('edit-popup-v2');
         if (popup) {
             popup.style.display = 'none';
@@ -1010,7 +1048,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_64)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_65)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1030,7 +1068,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_64)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_65)';
 };
 
 // Expose closePopup globally
