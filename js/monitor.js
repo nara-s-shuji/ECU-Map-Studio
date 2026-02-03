@@ -206,8 +206,14 @@ class Monitor {
         link.click();
         document.body.removeChild(link);
     }
+    saveLog() {
+        window.saveDummy();
+    }
 }
-
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
+
+window.saveDummy = function () {
+    alert("Monitor Data Saved (Dummy)");
+};

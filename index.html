@@ -330,7 +330,8 @@
                             <input type="checkbox" id="mode-toggle" onchange="toggleFileMode()">
                             <span class="slider round"></span>
                         </label>
-                        <span style="font-size: 11px; color: #888; margin-left: 5px;">ADVANCE</span>
+                        <span
+                            style="font-size: 11px; color: #888; margin-left: 5px; white-space: nowrap;">ADVANCE</span>
                     </div>
                 </div>
 
@@ -412,11 +413,16 @@
                 </div>
 
                 <!-- Footer Buttons -->
-                <div class="file-footer-actions">
-                    <button class="file-action-btn">開く</button>
-                    <button class="file-action-btn">保存</button>
-                    <button class="file-action-btn">ECU読込</button>
-                    <button class="file-action-btn">ECU保存</button>
+                <!-- Footer Buttons -->
+                <div class="file-footer-actions" style="grid-template-columns: repeat(4, 1fr) !important;">
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="document.getElementById('file-input').click()">Open</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="exportToCSV()">Save</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="alert('ECU Read - Start')">Read</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="alert('ECU Write - Start')">Write</button>
                 </div>
             </div>
 
@@ -619,7 +625,7 @@
 
     <div id="settings-menu" class="settings-menu">
         <div class="settings-content">
-            <h3>Menu (v1.0.1)</h3>
+            <h3>Menu <button class="menu-close-btn" onclick="toggleSettings()">×</button></h3>
             <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
             <hr style="border-color: #444; margin: 10px 0;">
             <div class="menu-item" style="cursor: default; background: transparent;">
@@ -711,13 +717,13 @@
         #settings-menu {
             position: fixed;
             top: 40px;
-            /* Below Toolbar */
             right: -250px;
             width: 250px;
             height: calc(100% - 40px);
             background: #252526;
             border-left: 1px solid #3c3c3c;
-            z-index: 10000;
+            z-index: 25000;
+            /* Above Popup (20000) and Nav (10000) */
             transition: right 0.3s ease;
             padding: 20px;
             box-sizing: border-box;
@@ -733,6 +739,17 @@
             color: #ccc;
             border-bottom: 1px solid #444;
             padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
         }
 
         .menu-item {
@@ -857,11 +874,11 @@
             setTimeout(() => dot.remove(), 500);
         }, true);
     </script>
-    <script src="js/monitor.js?v=debug_7"></script>
-    <script src="js/app.js?v=debug_7"></script>
-    <script src="js/ui.js?v=debug_7"></script>
-    <script src="js/map.js?v=debug_7"></script>
-    <script src="js/graph.js?v=debug_7"></script>
+    <script src="js/monitor.js?v=debug_8"></script>
+    <script src="js/app.js?v=debug_8"></script>
+    <script src="js/ui.js?v=debug_8"></script>
+    <script src="js/map.js?v=debug_8"></script>
+    <script src="js/graph.js?v=debug_8"></script>
 
 </body>
 

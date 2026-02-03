@@ -1285,3 +1285,9 @@ body {
 #file-view:not(.active) {
     display: none !important;
 }
+
+/* Fix Map Section Scroll */
+#map-section {
+    overflow-y: auto !important;
+    padding-bottom: 80px;
+}

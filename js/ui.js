@@ -811,7 +811,7 @@ function updateUISelection() {
     // --- Update Mobile Info Bar ---
     document.getElementById('info-filename').innerText = typeof currentFileName !== 'undefined' ? currentFileName : 'No File';
     // Use the focused cell values
-    document.getElementById('info-values').innerText = `Orig:${originalValue} / Curr:${currentValue}`;
+    document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
 
     updatePopupPosition();
