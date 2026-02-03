@@ -139,7 +139,7 @@ function switchTab(tabId) {
     // 7. Update Info Bar & Close Menu (Restored Logic)
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_67)';
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_70)';
     // Reset values display on tab switch
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 
@@ -1041,7 +1041,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_69)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_70)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1061,7 +1061,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_69)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_70)';
 };
 
 // Expose closePopup globally
@@ -1101,6 +1101,16 @@ function updatePopupPosition() {
 
     // GUARD: Universal Visibility Check (Strict State)
     if (window.currentTabId !== 'editor') {
+        if (popup) {
+            popup.classList.remove('active');
+            popup.style.display = 'none';
+        }
+        return;
+    }
+
+    // NEW: Check for Graph Overlay
+    const graphOverlay = document.getElementById('graph-overlay');
+    if (graphOverlay && graphOverlay.classList.contains('active')) {
         if (popup) {
             popup.classList.remove('active');
             popup.style.display = 'none';
