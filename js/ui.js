@@ -12,6 +12,9 @@ window.toggleSettings = function () {
         if (btn) btn.classList.remove('active');
     }
 
+    // Force Popup Update
+    if (typeof updatePopupPosition === 'function') updatePopupPosition();
+
     // Mobile Explorer Toggle (Can be hooked to a button later or swipe)
     if (window.innerWidth <= 1024) {
         document.getElementById('explorer').classList.remove('active');
@@ -139,7 +142,7 @@ function switchTab(tabId) {
     // 7. Update Info Bar & Close Menu (Restored Logic)
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_70)';
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_71)';
     // Reset values display on tab switch
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 
@@ -1108,9 +1111,12 @@ function updatePopupPosition() {
         return;
     }
 
-    // NEW: Check for Graph Overlay
+    // NEW: Check for Graph Overlay OR Settings Menu
     const graphOverlay = document.getElementById('graph-overlay');
-    if (graphOverlay && graphOverlay.classList.contains('active')) {
+    const settingsMenu = document.getElementById('settings-menu');
+
+    if ((graphOverlay && graphOverlay.classList.contains('active')) ||
+        (settingsMenu && settingsMenu.classList.contains('active'))) {
         if (popup) {
             popup.classList.remove('active');
             popup.style.display = 'none';

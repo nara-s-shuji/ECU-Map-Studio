@@ -8,6 +8,9 @@ window.toggleGraph = function () {
         const navBtn = document.getElementById('nav-graph');
         if (navBtn) navBtn.classList.toggle('active', overlay.classList.contains('active'));
 
+        // Force Popup Update
+        if (typeof window.updatePopupPosition === 'function') window.updatePopupPosition();
+
         if (overlay.classList.contains('active')) {
             updateGraph();
             // グラフ表示時にリサイズハンドルを初期化
