@@ -152,8 +152,34 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_39)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_40)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
+    </div>
+
+    <!-- Main Views -->
+    <!-- NEW EDIT POPUP: Renamed to evade bad CSS/Sequencing. Placed at Top. -->
+    <div id="edit-popup-v2"
+        style="user-select: none; -webkit-user-select: none; position: fixed; top: 100px; right: 10px; width: 300px; height: 80px; z-index: 2147483647; background: green; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: bold; border: 5px solid lime; border-radius: 8px;">
+        <div>DEBUG: NEW ID #edit-popup-v2</div>
+        <div class="popup-controls"
+            style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
+            <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
+                style="width:30px;height:40px;">↺</button>
+            <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
+                ontouchend="stopApply(event)" style="flex:1;height:40px;">-</button>
+
+            <div class="delta-spinner-group" style="display: flex; align-items: center; height: 40px; margin: 0 4px;">
+                <input type="number" id="popup-delta" class="popup-input" value="10" readonly
+                    style="width:40px; height:100%; color:black;">
+            </div>
+
+            <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
+                ontouchend="stopApply(event)" style="flex:1;height:40px;">+</button>
+            <button class="popup-btn" id="btn-close-popup" onclick="closePopup()"
+                style="width:30px;height:40px;color:red;">×</button>
+        </div>
     </div>
 
     <!-- メインコンテナ: サイドバーとコンテンツ部分 -->
@@ -774,7 +800,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_39</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_40</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -986,51 +1012,7 @@
                         setTimeout(() => dot.remove(), 500);
                     }, true);
                 </script>
-                <!-- RESTORED CELL POPUP -->
-                <div id="cell-popup"
-                    style="user-select: none; -webkit-user-select: none; position: fixed; bottom: 70px; left: 0; width: 100%; height: 60px; z-index: 2147483647; background: purple; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 5px solid yellow;">
-                    <div style="position:absolute; top:-20px; background:black; color:white; font-size:10px;">DEBUG: IF
-                        YOU SEE THIS, HTML IS OK</div>
-                    <div class="popup-controls"
-                        style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
-                        <!-- 1. Reset Button -->
-                        <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
-                            style="width: 36px; height: 54px; margin:0; box-sizing:border-box; font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center;">↺</button>
 
-                        <!-- 2. Apply Minus -->
-                        <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
-                            onmouseup="stopApply(event)" onmouseleave="stopApply(event)"
-                            ontouchstart="startApply(-1, event)" ontouchend="stopApply(event)"
-                            style="flex: 1; min-width: 44px; height: 54px; margin:0; box-sizing:border-box; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0;">-</button>
-
-                        <!-- 3. Spinner Group -->
-                        <div class="delta-spinner-group"
-                            style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 54px; margin: 0 4px; flex-shrink: 0;">
-                            <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)"
-                                onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                                ontouchstart="startSpinner(-1, event)" ontouchend="stopSpinner(event)"
-                                style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">▽</button>
-
-                            <input type="number" id="popup-delta" class="popup-input" value="10" readonly
-                                style="width: 45px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0;">
-
-                            <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)"
-                                onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                                ontouchstart="startSpinner(1, event)" ontouchend="stopSpinner(event)"
-                                style="width: 32px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc; display: flex; align-items: center; justify-content: center; padding: 0;">△</button>
-                        </div>
-
-                        <!-- 4. Apply Plus -->
-                        <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
-                            onmouseup="stopApply(event)" onmouseleave="stopApply(event)"
-                            ontouchstart="startApply(1, event)" ontouchend="stopApply(event)"
-                            style="flex: 1; min-width: 44px; height: 54px; margin:0; box-sizing:border-box; font-size: 24px; font-weight: bold; padding: 0; display: flex; align-items: center; justify-content: center; line-height: 0;">+</button>
-
-                        <!-- 5. Close Button -->
-                        <button class="popup-btn" id="btn-close-popup" onclick="closePopup()"
-                            style="width: 36px; height: 54px; margin:0; box-sizing:border-box; color: #ff6b6b; font-size: 20px; padding: 0; display: flex; align-items: center; justify-content: center;">×</button>
-                    </div>
-                </div>
 
                 <!-- Bottom Navigation -->
                 <div id="bottom-nav" style="touch-action: none;">
@@ -1056,11 +1038,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_39"></script>
-                <script src="js/app.js?v=debug_39"></script>
-                <script src="js/ui.js?v=debug_39"></script>
-                <script src="js/map.js?v=debug_39"></script>
-                <script src="js/graph.js?v=debug_39"></script>
+                <script src="js/monitor.js?v=debug_40"></script>
+                <script src="js/app.js?v=debug_40"></script>
+                <script src="js/ui.js?v=debug_40"></script>
+                <script src="js/map.js?v=debug_40"></script>
+                <script src="js/graph.js?v=debug_40"></script>
 
 </body>
 
