@@ -110,10 +110,7 @@
         <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
         <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
 
-        <!-- DEBUG: Test Popup Button (Round 25) -->
-        <button class="toolbar-btn"
-            onclick="let el = document.getElementById('edit-popup-v2'); if(!el){alert('FATAL: #edit-popup-v2 MISSING');}else{let r = el.getBoundingClientRect(); alert('NewID Geometry: ' + r.width + 'x' + r.height + ' | Computed Display: ' + window.getComputedStyle(el).display + ' | Visibility: ' + window.getComputedStyle(el).visibility);}"
-            style="background: red; color: white;">🐞</button>
+
 
         <div class="toolbar-separator"></div>
 
@@ -152,15 +149,13 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_40)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_41)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
     <!-- Main Views -->
-    <!-- NEW EDIT POPUP: Renamed to evade bad CSS/Sequencing. Placed at Top. -->
-    <div id="edit-popup-v2"
-        style="user-select: none; -webkit-user-select: none; position: fixed; top: 100px; right: 10px; width: 300px; height: 80px; z-index: 2147483647; background: green; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: bold; border: 5px solid lime; border-radius: 8px;">
-        <div>DEBUG: NEW ID #edit-popup-v2</div>
+    <!-- EDIT POPUP (v2) -->
+    <div id="edit-popup-v2" style="user-select: none; -webkit-user-select: none; display: none;">
         <div class="popup-controls"
             style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
             <button class="popup-btn" id="btn-reset" onclick="resetCellToOriginal()"
@@ -800,7 +795,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_40</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_41</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -1038,11 +1033,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_40"></script>
-                <script src="js/app.js?v=debug_40"></script>
-                <script src="js/ui.js?v=debug_40"></script>
-                <script src="js/map.js?v=debug_40"></script>
-                <script src="js/graph.js?v=debug_40"></script>
+                <script src="js/monitor.js?v=debug_41"></script>
+                <script src="js/app.js?v=debug_41"></script>
+                <script src="js/ui.js?v=debug_41"></script>
+                <script src="js/map.js?v=debug_41"></script>
+                <script src="js/graph.js?v=debug_41"></script>
 
 </body>
 

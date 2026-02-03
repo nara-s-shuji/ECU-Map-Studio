@@ -855,7 +855,7 @@ body {
     }
 
     /* Portrait Transition (Override default transform) */
-    #cell-popup[style*="display: none"] {
+    #edit-popup-v2[style*="display: none"] {
         display: none !important;
     }
 
