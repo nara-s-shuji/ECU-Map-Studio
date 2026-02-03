@@ -110,11 +110,10 @@
         <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
         <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
 
-        <!-- DEBUG: Test Popup Button (Round 23) -->
-        <button class="toolbar-btn" onclick="let list = document.querySelectorAll('#cell-popup'); let msg = 'Count: ' + list.length; if(list.length > 0) { let el = list[0]; msg += ' | ID: ' + el.id + ' | Tag: ' + el.tagName + ' | HTML: ' + el.outerHTML.substring(0, 50); el.style.cssText = 'display:flex !important; position:fixed !important; bottom:0 !important; left:0 !important; width:100% !important; height:100px !important; z-index:2147483647 !important; background:red !important; visibility:visible !important; opacity:1 !important;'; let r = el.getBoundingClientRect(); msg += ' | Rect: ' + r.width + 'x' + r.height; } else { msg += ' | FATAL: None found'; } 
-        /* TEST BLUE BOX */
-        let testBox = document.createElement('div'); testBox.style.cssText='position:fixed; top:0; left:0; width:50px; height:50px; background:blue; z-index:2147483647;'; document.body.appendChild(testBox); setTimeout(()=>testBox.remove(), 3000);
-        alert(msg + ' | Blue Box created (3s)');" style="background: red; color: white;">🐞</button>
+        <!-- DEBUG: Test Popup Button (Round 24) -->
+        <button class="toolbar-btn"
+            onclick="let el = document.getElementById('cell-popup'); let r = el.getBoundingClientRect(); alert('Geometry: ' + r.width + 'x' + r.height + ' | Computed Display: ' + window.getComputedStyle(el).display + ' | Visibility: ' + window.getComputedStyle(el).visibility);"
+            style="background: red; color: white;">🐞</button>
 
         <div class="toolbar-separator"></div>
 
@@ -153,7 +152,7 @@
         <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
 
         <span class="toolbar-title">ECU Map Studio - Kitaco S3 v1.0 <span
-                style="font-size:10px; color:#888; margin-left:5px;">(debug_37)</span></span>
+                style="font-size:10px; color:#888; margin-left:5px;">(debug_38)</span></span>
         <button class="hamburger-menu" onclick="toggleSettings()" id="btn-settings">☰</button>
     </div>
 
@@ -775,7 +774,7 @@
                 <div id="settings-menu" class="settings-menu">
                     <div class="settings-content">
                         <h3>Menu <span
-                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_37</span>
+                                style="font-size:12px; color:#aaa; background:#222; padding:2px 6px; border-radius:4px; margin-left:5px;">debug_38</span>
                             <button class="menu-close-btn" onclick="toggleSettings()">×</button>
                         </h3>
                         <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
@@ -989,7 +988,9 @@
                 </script>
                 <!-- RESTORED CELL POPUP -->
                 <div id="cell-popup"
-                    style="user-select: none; -webkit-user-select: none; position: fixed; bottom: 70px; left: 0; width: 100%; height: 60px; z-index: 20000; background: #252526; display: none;">
+                    style="user-select: none; -webkit-user-select: none; position: fixed; bottom: 70px; left: 0; width: 100%; height: 60px; z-index: 2147483647; background: purple; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 5px solid yellow;">
+                    <div style="position:absolute; top:-20px; background:black; color:white; font-size:10px;">DEBUG: IF
+                        YOU SEE THIS, HTML IS OK</div>
                     <div class="popup-controls"
                         style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
                         <!-- 1. Reset Button -->
@@ -1055,11 +1056,11 @@
                     </button>
                 </div>
 
-                <script src="js/monitor.js?v=debug_37"></script>
-                <script src="js/app.js?v=debug_37"></script>
-                <script src="js/ui.js?v=debug_37"></script>
-                <script src="js/map.js?v=debug_37"></script>
-                <script src="js/graph.js?v=debug_37"></script>
+                <script src="js/monitor.js?v=debug_38"></script>
+                <script src="js/app.js?v=debug_38"></script>
+                <script src="js/ui.js?v=debug_38"></script>
+                <script src="js/map.js?v=debug_38"></script>
+                <script src="js/graph.js?v=debug_38"></script>
 
 </body>
 
