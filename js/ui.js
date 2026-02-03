@@ -100,13 +100,18 @@ function switchTab(tabId) {
         setTimeout(() => target.classList.add('active'), 10);
     }
 
+    // Hide Popup if not Editor
+    const popup = document.getElementById('edit-popup-v2');
+    if (popup && tabId !== 'editor') {
+        popup.style.display = 'none';
+        document.body.classList.remove('popup-active');
+    }
+
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (currentFileName || 'New_Map.csv') + ' (debug_46)';
-    // Note: 'orig' and 'curr' variables are not defined in this scope.
-    // If they are global or defined elsewhere, this line will work.
-    // Otherwise, it will cause a ReferenceError.
-    if (valDisplay) valDisplay.innerText = `Orig: ${orig} / Curr: ${curr}`;
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
+    // Reset values display on tab switch
+    if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 
     // Auto-close menu if open
     const menu = document.getElementById('settings-menu');
@@ -980,7 +985,7 @@ function updateUISelection() {
     document.getElementById('info-original').innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_52)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -991,7 +996,7 @@ function updateUISelection() {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_53)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_54)';
 };
 
 // Expose closePopup globally
