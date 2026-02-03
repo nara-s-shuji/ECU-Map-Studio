@@ -103,6 +103,10 @@ function switchTab(tabId) {
         // Update toggle button state
         const btn = document.getElementById('btn-settings');
         if (btn) btn.classList.remove('active');
+
+        // Also update nav button
+        const navBtn = document.getElementById('nav-menu');
+        if (navBtn) navBtn.classList.remove('active');
     }
 }
 
@@ -118,6 +122,38 @@ window.addEventListener('DOMContentLoaded', () => {
     updatePriorityMapUI();
     updateNextMapUI();
 });
+
+// Select File Item (Highlight & Load)
+window.selectFileItem = function (element, type) {
+    // 1. Remove active class from all items
+    document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+
+    // 2. Add active class to clicked item
+    if (element) {
+        element.classList.add('active');
+    }
+
+    // 3. Handle Special Types
+    if (type === 'map_select') {
+        // Just visual selection, no data loading
+        return;
+    }
+
+    currentFileType = type;
+
+    // ... rest of loading logic
+    if (type === 'fuel') {
+        // ...
+    } else {
+        // Load other single-file items
+        if (window.app && window.app.loadAdvancedItem) {
+            window.app.loadAdvancedItem(type); // Assuming this exists or similar
+        }
+        // Actually, ui.js often calls loadFile logic directly or emits event.
+        // For now, retaining existing flows.
+        loadAdvancedItem(type);
+    }
+};
 
 window.selectMapSlot = function (type, index) {
     // Update State

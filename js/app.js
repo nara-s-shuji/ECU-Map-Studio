@@ -27,6 +27,23 @@ window.popupDeltaPct = 1.0; // %モードの値を保存
 // ECU接続状態
 window.ecuConnected = false;
 
+// Toggle Settings Menu
+function toggleSettings() {
+    const menu = document.getElementById('settings-menu');
+    const overlay = document.getElementById('menu-overlay');
+    const navBtn = document.getElementById('nav-menu'); // Bottom nav button
+
+    if (menu.classList.contains('active')) {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+        if (navBtn) navBtn.classList.remove('active');
+    } else {
+        menu.classList.add('active');
+        overlay.classList.add('active');
+        if (navBtn) navBtn.classList.add('active');
+    }
+}
+
 // Global Event Listeners setup
 document.addEventListener('DOMContentLoaded', function () {
     // Other initializations attached to DOMContentLoaded
