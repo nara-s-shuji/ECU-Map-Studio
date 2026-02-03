@@ -944,7 +944,7 @@ function handleCellMouseEnter(e, t, r) {
 function updateUISelection() {
     // GUARD: If Editor View is NOT visible, do not update selection UI (performance & safety)
     const editorView = document.getElementById('editor-view');
-    if (editorView && editorView.style.display === 'none') {
+    if (editorView && (!editorView.classList.contains('active') || editorView.offsetParent === null)) {
         const popup = document.getElementById('edit-popup-v2');
         if (popup) {
             popup.style.display = 'none';
@@ -1010,7 +1010,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_63)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_64)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1030,7 +1030,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_63)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_64)';
 };
 
 // Expose closePopup globally
@@ -1070,9 +1070,10 @@ function updatePopupPosition() {
 
     // GUARD: If Editor View is NOT visible, force hide and return.
     const editorView = document.getElementById('editor-view');
-    // Check style.display directly or use a better heuristic if needed.
-    // Based on switchTab logic, non-active views get display = 'none'.
-    if (editorView && editorView.style.display === 'none') {
+
+    // Robust Check: Check for 'active' class AND offsetParent (layout visibility)
+    // This handles cases where style.display is empty string but class hides it.
+    if (editorView && (!editorView.classList.contains('active') || editorView.offsetParent === null)) {
         if (popup) {
             popup.classList.remove('active');
             popup.style.display = 'none';
@@ -1090,8 +1091,10 @@ function updatePopupPosition() {
     }
 
     // Force display block/flex when active
-    popup.classList.add('active');
-    popup.style.display = 'flex';
+    if (popup) {
+        popup.classList.add('active');
+        popup.style.display = 'flex';
+    }
 
     if (window.innerWidth <= 1024) {
         popup.classList.add('active');
