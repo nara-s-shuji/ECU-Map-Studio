@@ -1351,13 +1351,18 @@ body {
     /* Keep it constrained */
 }
 
+/* Hide Scrollbar for File View */
+#file-view::-webkit-scrollbar {
+    display: none;
+}
+
 /* Fix File Item Width & Spacing */
 .file-item {
     width: 100% !important;
     box-sizing: border-box !important;
     max-width: none !important;
-    margin-bottom: 15px;
-    /* Added spacing */
+    margin-bottom: 20px !important;
+    /* Uniform spacing */
 }
 
 /* Fix Mobile Auto-Zoom on Input Focus */
