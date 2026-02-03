@@ -108,10 +108,16 @@ function switchTab(tabId) {
 
 // --- Map Selection Logic ---
 
-let currentPriorityMap = 0;
-let currentNextMap = 0;
+let currentPriorityMap = 1; // Default 1
+let currentNextMap = 2;     // Default 2
 let currentFuelMapIndex = 1;
 let currentIgnMapIndex = 1;
+
+// Initialize Defaults on Load
+window.addEventListener('DOMContentLoaded', () => {
+    updatePriorityMapUI();
+    updateNextMapUI();
+});
 
 window.selectMapSlot = function (type, index) {
     // Update State
@@ -135,10 +141,9 @@ window.selectMapSlot = function (type, index) {
 window.selectPriorityMap = function (index) {
     if (currentPriorityMap === index) return; // No change
 
-    // Mutual Exclusion Check
+    // Conflict Resolution: If selecting same as Next, SWAP Next to old Priority
     if (currentNextMap === index) {
-        // Deselect Next Map if it's the same
-        currentNextMap = 0;
+        currentNextMap = currentPriorityMap;
         updateNextMapUI();
     }
 
@@ -149,10 +154,9 @@ window.selectPriorityMap = function (index) {
 window.selectNextMap = function (index) {
     if (currentNextMap === index) return; // No change
 
-    // Mutual Exclusion Check
+    // Conflict Resolution: If selecting same as Priority, SWAP Priority to old Next
     if (currentPriorityMap === index) {
-        // Deselect Priority Map if it's the same
-        currentPriorityMap = 0;
+        currentPriorityMap = currentNextMap;
         updatePriorityMapUI();
     }
 

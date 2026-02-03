@@ -1319,11 +1319,19 @@ body {
     /* Keep it constrained */
 }
 
-/* Fix File Item Width */
+/* Fix File Item Width & Spacing */
 .file-item {
     width: 100% !important;
     box-sizing: border-box !important;
     max-width: none !important;
+    margin-bottom: 15px;
+    /* Added spacing */
+}
+
+/* Fix Mobile Auto-Zoom on Input Focus */
+.cell input {
+    font-size: 16px !important;
+    /* Prevents iOS Zoom */
 }
 
 /* Fix Menu Position */
