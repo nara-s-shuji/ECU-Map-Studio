@@ -716,7 +716,8 @@ body {
         position: relative;
         width: 100vw;
         padding-bottom: 70px;
-        touch-action: pan-x pan-y;
+        touch-action: manipulation;
+        /* Allow Pan + Zoom (Pinch) */
         /* Padding top removed as info bar is now naturally stacked */
     }
 
@@ -724,7 +725,8 @@ body {
         min-height: auto;
         padding-bottom: 75px;
         /* Scroll Fix */
-        touch-action: pan-x pan-y;
+        touch-action: manipulation;
+        /* Allow Pan + Zoom (Pinch) */
     }
 
     /* Grid Adjustments - Force display grid */
@@ -750,6 +752,8 @@ body {
         height: 40px;
         font-size: 12px;
         position: sticky;
+        touch-action: pan-x pan-y !important;
+        /* DISABLE ZOOM on Headers */
         /* Ensure stickiness works */
     }
 
