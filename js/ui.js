@@ -144,13 +144,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_77)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_78)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_77)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_78)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_77)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_78)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1053,7 +1053,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_77)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_78)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1073,7 +1073,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_77)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_78)';
 };
 
 // Expose closePopup globally
@@ -1362,6 +1362,106 @@ window.selectFileItem = function (el, type) {
 };
 
 // Initialize Basic Mode
+// --- Visual Viewport Handling for Mobile Zoom ---
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateViewportLayout);
+    window.visualViewport.addEventListener('scroll', updateViewportLayout);
+}
+
+function updateViewportLayout() {
+    if (!window.visualViewport) return;
+
+    const viewport = window.visualViewport;
+    const scale = 1 / viewport.scale; // Inverse scale
+    const offsetLeft = viewport.offsetLeft;
+    const offsetTop = viewport.offsetTop;
+
+    // Target Elements: Bottom Nav, Fixed Info Bar, Popup
+    const bottomNav = document.getElementById('main-nav') || document.getElementById('bottom-nav');
+    const infoBar = document.getElementById('mobile-info-bar');
+    const popup = document.getElementById('edit-popup-v2');
+
+    // 1. Bottom Nav (Fixed Bottom)
+    if (bottomNav) {
+        // Keep it visual bottom
+        // Logic: transform scale(inverse) and translate to keep position relative to viewport
+        // Simpler approach: Just scale to keep size, but position:fixed usually handles placement unless zoomed in deeply.
+        // If zoomed in, position:fixed sticks to layout viewport, not visual viewport.
+        // We need to move it to visual viewport bottom.
+
+        // However, most modern browsers handle position:fixed reasonably well for bottom bars, 
+        // BUT when zoomed, they can be huge.
+
+        bottomNav.style.transformOrigin = 'bottom left';
+        // We need to translate it to the visual viewport's bottom
+        // Total Height - (offsetTop + height) ... complex.
+
+        // Let's stick to just scaling SIZE for now, as user requested "Menu and Popup shouldn't enlarge"
+        bottomNav.style.transform = `scale(${scale})`;
+        bottomNav.style.width = `${viewport.width}px`; // Match visual width
+        bottomNav.style.left = `${offsetLeft}px`;      // Move to visual left
+        bottomNav.style.bottom = `${0}px`; // This might need offset calculation if browser bars hide/show
+
+        // Actually, simpler to just set width 100% of visual viewport and scale.
+        // But 'fixed' elements usually stick to Layout Viewport.
+        // To stick to Visual Viewport, we often need absolute positioning relative to window + scrolling.
+
+        // REVISED STRATEGY: 
+        // Use transform to Scale AND Translate to visual viewport location.
+        // But since they are position:fixed, they are relative to Layout Viewport.
+
+        // Calculate offset from Layout Viewport Bottom to Visual Viewport Bottom
+        // LayoutHeight - (VisualTop + VisualHeight)
+        const layoutHeight = document.documentElement.clientHeight;
+        const visualBottom = offsetTop + viewport.height;
+        const distFromBottom = layoutHeight - visualBottom;
+
+        bottomNav.style.transformOrigin = 'bottom left';
+        bottomNav.style.transform = `translate(${offsetLeft}px, -${distFromBottom}px) scale(${scale})`;
+        bottomNav.style.width = `${viewport.width * viewport.scale}px`; // Counteract scale? No.
+        bottomNav.style.width = `100%`; // Keep 100% of transformed container
+    }
+
+    // 2. Edit Popup (Center Bottom)
+    if (popup && popup.style.display !== 'none') {
+        const layoutHeight = document.documentElement.clientHeight;
+        const visualBottom = offsetTop + viewport.height;
+        const distFromBottom = layoutHeight - visualBottom;
+
+        // Popup base style: left: 50%, translateX(-50%), bottom: 60px
+        // We need to keep it centered in Visual Viewport and size-maintained.
+
+        popup.style.transformOrigin = 'bottom center';
+
+        // Calculate Center of Visual Viewport relative to Layout Viewport
+        const visualCenter = offsetLeft + (viewport.width / 2);
+
+        // We want the element's center to be at 'visualCenter'.
+        // Original CSS: left: 50% (of layout), translateX(-50%)
+
+        // Let's rely on transforms.
+        // TranslateY to stick to visual bottom (taking into account the 60px nav offset)
+        // TranslateX to stick to visual center (offset from layout center)
+
+        const layoutCenter = document.documentElement.clientWidth / 2;
+        const offsetX = visualCenter - layoutCenter;
+
+        // Base Transform is translateX(-50%). We add to that.
+        // And we add scale.
+        popup.style.transform = `translateX(-50%) translate(${offsetX}px, -${distFromBottom}px) scale(${scale})`;
+
+        // Note: This assumes the popup's original 'bottom' (60px) is respected relative to the shifted baseline.
+    }
+
+    // 3. Info Bar (Top) - Optional, user didn't explicitly ask, but good for consistency
+    if (infoBar) {
+        infoBar.style.transformOrigin = 'top left';
+        infoBar.style.transform = `translate(${offsetLeft}px, ${offsetTop}px) scale(${scale})`;
+        infoBar.style.width = `100%`;
+    }
+}
+// ---------------------------------------------
+
 document.addEventListener('DOMContentLoaded', () => {
     // Default Basic? Toggle unchecked = Basic
     // Ensure element exists before checking
