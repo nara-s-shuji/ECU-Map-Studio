@@ -701,6 +701,11 @@ body {
         position: relative;
     }
 
+    /* Force Editor View to Column for Mobile (Stack info bar and map) */
+    #editor-view {
+        flex-direction: column !important;
+    }
+
     /* Map Section & Scroll */
     #map-section {
         flex: 1;
@@ -712,9 +717,7 @@ body {
         width: 100vw;
         padding-bottom: 70px;
         touch-action: pan-x pan-y;
-        padding-top: 30px;
-        margin-top: -1px;
-        /* Force eliminate sub-pixel gaps */
+        /* Padding top removed as info bar is now naturally stacked */
     }
 
     #table-wrapper {
