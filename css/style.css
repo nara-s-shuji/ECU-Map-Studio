@@ -1347,7 +1347,10 @@ body {
     /* Reduced clearance as requested */
     min-width: 100%;
     min-height: 100%;
-    display: inline-block;
+    display: block;
+    /* CHANGED from inline-block to block to remove ghost vertical space */
+    width: max-content;
+    /* Ensure it wraps grid */
 }
 
 /* Fix File View Overflow */

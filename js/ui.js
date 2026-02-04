@@ -143,10 +143,16 @@ function switchTab(tabId) {
         }
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
-    const nameDisplay = document.getElementById('info-filename');
-    const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_74)';
+    // Mobile Info Bar Update
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_74)';
+    const headerDisplay = document.querySelector('.file-view-title');
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_74)</span>`;
+
+    // Ensure settings menu title also updates
+    const menuTitle = document.querySelector('#settings-menu .file-view-title');
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_74)</span>`;
     // Reset values display on tab switch
+    const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 
     // Auto-close menu if open
@@ -1067,7 +1073,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_70)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_74)';
 };
 
 // Expose closePopup globally
