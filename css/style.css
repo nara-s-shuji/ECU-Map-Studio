@@ -1364,7 +1364,8 @@ body {
     /* Strictly attach to top */
     /* padding-bottom removed; using #scroll-spacer instead */
     min-width: 100%;
-    min-height: 100%;
+    /* min-height: 100% removed to fix whitespace on small tables */
+    /* min-height: 100%; */
     display: block;
     /* CHANGED from inline-block to block to remove ghost vertical space */
     width: max-content;
