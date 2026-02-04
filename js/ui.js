@@ -1159,10 +1159,12 @@ function updatePopupPosition() {
     }
 
     if (window.innerWidth <= 1024) {
-        popup.classList.add('active');
-        popup.style.top = '';
-        popup.style.left = '';
-        popup.style.display = '';
+        if (popup) {
+            popup.classList.add('active');
+            popup.style.top = '';
+            popup.style.left = '';
+            popup.style.display = '';
+        }
         return;
     }
 
