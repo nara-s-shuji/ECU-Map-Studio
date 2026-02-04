@@ -715,10 +715,20 @@ body {
         -webkit-overflow-scrolling: touch;
         position: relative;
         width: 100vw;
-        padding-bottom: 300px;
+        padding-bottom: 0px;
+        /* Reset: controlled by spacer div */
         touch-action: manipulation;
         /* Allow Pan + Zoom (Pinch) */
         /* Padding top removed as info bar is now naturally stacked */
+    }
+
+    #table-wrapper {
+        min-height: auto;
+        padding-bottom: 0px;
+        /* Reset: spacer handles this outside zoom context */
+        /* Scroll Fix */
+        touch-action: manipulation;
+        /* Allow Pan + Zoom (Pinch) */
     }
 
     #table-wrapper {
