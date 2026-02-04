@@ -1362,8 +1362,7 @@ body {
 #table-wrapper {
     margin-top: 0 !important;
     /* Strictly attach to top */
-    padding-bottom: 120px;
-    /* Reduced clearance as requested */
+    /* padding-bottom removed; using #scroll-spacer instead */
     min-width: 100%;
     min-height: 100%;
     display: block;
