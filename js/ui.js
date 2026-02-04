@@ -144,13 +144,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_89)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_90)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_89)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_90)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_89)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_90)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1053,7 +1053,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_89)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_90)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1383,6 +1383,26 @@ function updateViewportLayout() {
     const bottomNav = document.getElementById('main-nav') || document.getElementById('bottom-nav');
     const infoBar = document.getElementById('mobile-info-bar');
     const popup = document.getElementById('edit-popup-v2');
+
+    // --- GUARD CLAUSE: Standard View (No Zoom) ---
+    // If scale is ~1.0, rely on standard CSS position:fixed which works reliably.
+    // This prevents "floating" elements due to minor safe-area/viewport discrepancies.
+    if (Math.abs(viewport.scale - 1.0) < 0.01) {
+        if (bottomNav) {
+            bottomNav.style.transform = '';
+            bottomNav.style.width = '';
+            bottomNav.style.left = '';
+            bottomNav.style.bottom = '';
+        }
+        if (popup) {
+            // Restore original CSS transform for centering
+            popup.style.transform = 'translateX(-50%)';
+            popup.style.width = '';
+            // popup.style.left = ''; // Don't touch if not needed, but safe to clear if we touched it
+            // popup.style.bottom = '';
+        }
+        return;
+    }
 
     // 1. Bottom Nav (Fixed Bottom)
     if (bottomNav) {
