@@ -1369,10 +1369,22 @@ body {
     /* Keep it constrained */
 }
 
-/* Hide Scrollbar for File View and File List */
+/* Hide Scrollbar for File View, File List, Map Section, and Table Wrapper */
 #file-view::-webkit-scrollbar,
-.file-list::-webkit-scrollbar {
-    display: none;
+.file-list::-webkit-scrollbar,
+#map-section::-webkit-scrollbar,
+#table-wrapper::-webkit-scrollbar,
+#content-area::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* For Firefox */
+#file-view,
+.file-list,
+#map-section,
+#table-wrapper,
+#content-area {
+    scrollbar-width: none !important;
 }
 
 /* Fix File Item Width & Spacing */
