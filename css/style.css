@@ -1073,7 +1073,14 @@ body {
     }
 
     /* Hide cell popup if not in editor mode (JS will toggle .hidden, but also basic display control) */
-    body:not(.mode-editor) #cell-popup {
+    /* Hide cell popup if not in editor mode (JS will toggle .hidden, but also basic display control) */
+    body:not(.mode-editor) #cell-popup,
+    body:not(.mode-editor) #edit-popup-v2 {
+        display: none !important;
+    }
+
+    /* Force hide when overlay is active */
+    body.overlay-active #edit-popup-v2 {
         display: none !important;
     }
 

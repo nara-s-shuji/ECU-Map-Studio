@@ -8,8 +8,10 @@ window.toggleSettings = function () {
     // Update Button State
     if (menu.classList.contains('active')) {
         if (btn) btn.classList.add('active');
+        document.body.classList.add('overlay-active'); // ADD
     } else {
         if (btn) btn.classList.remove('active');
+        document.body.classList.remove('overlay-active'); // ADD
     }
 
     // Force Popup Update
@@ -103,6 +105,7 @@ function switchTab(tabId) {
         el.style.display = 'none';
         el.classList.remove('active');
     });
+    document.body.classList.remove('overlay-active'); // Clear overlay state
 
     // 3. Resolve Target Element (Handle 'editor' -> 'editor-view' mapping)
     let targetId = tabId;
@@ -142,7 +145,7 @@ function switchTab(tabId) {
     // 7. Update Info Bar & Close Menu (Restored Logic)
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_71)';
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_72)';
     // Reset values display on tab switch
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 

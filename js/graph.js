@@ -3,6 +3,8 @@ window.toggleGraph = function () {
         const overlay = document.getElementById('graph-overlay');
         const btn = document.getElementById('btn-graph');
         overlay.classList.toggle('active');
+        const isActive = overlay.classList.contains('active');
+        document.body.classList.toggle('overlay-active', isActive); // ADD
         btn.classList.toggle('active');
         // Mobile Nav Update
         const navBtn = document.getElementById('nav-graph');
