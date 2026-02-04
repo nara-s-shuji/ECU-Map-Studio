@@ -731,13 +731,7 @@ body {
         /* Allow Pan + Zoom (Pinch) */
     }
 
-    #table-wrapper {
-        min-height: auto;
-        padding-bottom: 100px;
-        /* Scroll Fix */
-        touch-action: manipulation;
-        /* Allow Pan + Zoom (Pinch) */
-    }
+    /* Duplicate #table-wrapper block removed */
 
     /* Grid Adjustments - Force display grid */
     .grid-container,
