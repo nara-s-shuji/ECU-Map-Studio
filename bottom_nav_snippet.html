@@ -1,0 +1,29 @@
+<!-- RESTORED BOTTOM NAVIGATION -->
+<div id="bottom-nav"
+    style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d2d30; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3c3c3c; z-index: 10000; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box;">
+    <button class="nav-item active" id="nav-file" onclick="switchTab('file')"
+        style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+        <span style="font-size:20px; margin-bottom:2px;">📁</span>
+        <span>ファイル</span>
+    </button>
+    <button class="nav-item" id="nav-editor" onclick="switchTab('editor')"
+        style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+        <span style="font-size:20px; margin-bottom:2px;">📝</span>
+        <span>編集</span>
+    </button>
+    <button class="nav-item" id="nav-graph" onclick="switchTab('graph')"
+        style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+        <span style="font-size:20px; margin-bottom:2px;">📊</span>
+        <span>グラフ</span>
+    </button>
+    <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')"
+        style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+        <span style="font-size:20px; margin-bottom:2px;">⏱️</span>
+        <span>モニター</span>
+    </button>
+    <button class="nav-item" id="nav-menu" onclick="toggleSettings()"
+        style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+        <span style="font-size:20px; margin-bottom:2px;">☰</span>
+        <span>その他</span>
+    </button>
+</div>
