@@ -1359,8 +1359,9 @@ body {
     /* Keep it constrained */
 }
 
-/* Hide Scrollbar for File View */
-#file-view::-webkit-scrollbar {
+/* Hide Scrollbar for File View and File List */
+#file-view::-webkit-scrollbar,
+.file-list::-webkit-scrollbar {
     display: none;
 }
 
@@ -1370,7 +1371,13 @@ body {
     box-sizing: border-box !important;
     max-width: none !important;
     margin-bottom: 20px !important;
+    margin-top: 0 !important;
     /* Uniform spacing */
+}
+
+/* Ensure wrapper doesn't break spacing */
+.adv-only-wrapper {
+    display: contents;
 }
 
 /* Fix Mobile Auto-Zoom on Input Focus */
