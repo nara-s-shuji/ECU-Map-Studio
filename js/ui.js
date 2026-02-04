@@ -145,7 +145,7 @@ function switchTab(tabId) {
     // 7. Update Info Bar & Close Menu (Restored Logic)
     const nameDisplay = document.getElementById('info-filename');
     const valDisplay = document.getElementById('info-values');
-    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_73)';
+    if (nameDisplay) nameDisplay.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_74)';
     // Reset values display on tab switch
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 
