@@ -715,7 +715,7 @@ body {
         -webkit-overflow-scrolling: touch;
         position: relative;
         width: 100vw;
-        padding-bottom: 180px;
+        padding-bottom: 300px;
         touch-action: manipulation;
         /* Allow Pan + Zoom (Pinch) */
         /* Padding top removed as info bar is now naturally stacked */
