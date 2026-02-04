@@ -144,13 +144,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_79)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_80)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_79)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_80)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_79)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_80)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1053,7 +1053,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_79)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_80)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1073,7 +1073,7 @@ window.resetToOriginal = function () {
 window.updateFileInfo = function () {
     // Helper to just update the filename independent of selection
     const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_79)';
+    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_80)';
 };
 
 // Expose closePopup globally
@@ -1459,13 +1459,77 @@ function updateViewportLayout() {
     // 3. Info Bar (Top) - Optional, user didn't explicitly ask, but good for consistency
     if (infoBar) {
         infoBar.style.transformOrigin = 'top left';
-        infoBar.style.transform = `translate(${offsetLeft}px, ${offsetTop}px) scale(${scale})`;
         infoBar.style.width = `100%`;
     }
 }
 // ---------------------------------------------
-
+// Initialize Basic Mode
+// --- Virtual Pinch Zoom Implementation (Stable) ---
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Setup Virtual Zoom on #map-section or #editor-view
+    const editorView = document.getElementById('editor-view');
+    const tableWrapper = document.getElementById('table-wrapper');
+
+    if (editorView && tableWrapper) {
+        let initialDistance = 0;
+        let panned = false; // Flag to differentiate pinch from scroll
+        let currentZoom = 1.0;
+        const minZoom = 0.5;
+        const maxZoom = 3.0;
+
+        editorView.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                // Determine initial distance
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = Math.hypot(touch2.pageX - touch1.pageX, touch2.pageY - touch1.pageY);
+                // Prevent native behavior if possible
+                // e.preventDefault(); // Might block scroll, be careful. 
+                // We rely on touch-action: movement in CSS usually, but for custom pinch we might need preventDefault() on move.
+            }
+        }, { passive: false });
+
+        editorView.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault(); // Stop native zoom/scroll interference
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = Math.hypot(touch2.pageX - touch1.pageX, touch2.pageY - touch1.pageY);
+
+                if (initialDistance > 0) {
+                    const diff = currentDistance - initialDistance;
+                    const sensitivity = 0.005; // Adjust sensitivity
+
+                    let newZoom = currentZoom + (diff * sensitivity);
+
+                    // Clamp
+                    newZoom = Math.max(minZoom, Math.min(newZoom, maxZoom));
+
+                    // Apply
+                    tableWrapper.style.zoom = newZoom;
+
+                    // Update state for next move (optional, but better to keep accumulative from initial usually, 
+                    // or differential? Differential is safer for 'style.zoom' since it's absolute)
+                    // Actually, for smooth pinch, we usually want delta.
+                    // But here we are updating 'currentZoom' continuously? 
+                    // No, 'initialDistance' is fixed at start. So we calculated delta from START.
+
+                    // We need to store 'startZoom' at touchstart.
+                }
+            }
+        }, { passive: false });
+
+        editorView.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                // Capture Start Zoom to apply delta relative to it
+                const currentStyle = window.getComputedStyle(tableWrapper).zoom;
+                currentZoom = parseFloat(currentStyle) || 1.0;
+            }
+        }, { passive: true }); // Passive true for the second listener just to capture state is fine
+
+    }
+
     // Default Basic? Toggle unchecked = Basic
     // Ensure element exists before checking
     const toggle = document.getElementById('mode-toggle');
