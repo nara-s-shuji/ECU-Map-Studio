@@ -734,12 +734,23 @@ body {
     /* Duplicate #table-wrapper block removed */
 
     /* Grid Adjustments - Force display grid */
+    /* Grid Adjustments - Force display grid */
     .grid-container,
     .header-row {
         display: grid !important;
         grid-template-columns: 60px repeat(27, 60px) !important;
         /* Widened to 60px */
         width: max-content;
+    }
+
+    /* Make Header Sticky on Mobile */
+    .header-row {
+        position: sticky !important;
+        top: 30px !important;
+        /* Offset for Mobile Info Bar */
+        z-index: 50 !important;
+        background: #1e1e1e;
+        /* Ensure opacity */
     }
 
     .cell {
