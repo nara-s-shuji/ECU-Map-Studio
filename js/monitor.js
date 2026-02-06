@@ -315,8 +315,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_96)");
-// alert("Monitor Module Loaded (debug_96)");
+console.log("Monitor Module Loaded (debug_97)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
