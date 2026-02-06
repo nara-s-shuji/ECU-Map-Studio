@@ -1387,15 +1387,17 @@ body {
     /* Ensure it wraps grid */
 }
 
-/* Fix File View Overflow */
+/* Fix File View Overflow - Let inner .file-list handle scrolling */
 #file-view {
-    overflow-y: auto !important;
-    padding-bottom: 80px !important;
+    /* overflow-y: auto !important; */
+    /* padding-bottom: 80px !important; */
     width: 100%;
     box-sizing: border-box;
     flex: 1;
     min-height: 0;
     /* Keep it constrained */
+    overflow: hidden !important;
+    /* Force hidden so only inner list scrolls */
 }
 
 /* Hide Scrollbar for File View, File List, Map Section, and Table Wrapper */
