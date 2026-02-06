@@ -147,13 +147,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_123)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_124)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_123)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_124)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_123)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_124)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1056,7 +1056,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_123)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_124)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
