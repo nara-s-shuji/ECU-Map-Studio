@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_121">
+    <link rel="stylesheet" href="css/style.css?v=debug_122">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -238,7 +238,7 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_121)</span>
+                        (debug_122)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
@@ -1088,38 +1088,56 @@
     <!-- RESTORED BOTTOM NAVIGATION -->
     <div id="bottom-nav"
         style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d2d30; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3c3c3c; z-index: 10000; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box;">
-        <button class="nav-item" id="nav-file" onclick="switchTab('file')"
-            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-            <span style="font-size:20px; margin-bottom:2px;">📁</span>
+        <button class="nav-item" id="nav-file" onclick="switchTab('file')">
+            <span>📁</span>
             <span>ファイル</span>
         </button>
-        <button class="nav-item active" id="nav-editor" onclick="switchTab('editor')"
-            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-            <span style="font-size:20px; margin-bottom:2px;">📝</span>
+        <button class="nav-item active" id="nav-editor" onclick="switchTab('editor')">
+            <span>📝</span>
             <span>編集</span>
         </button>
-        <button class="nav-item" id="nav-graph" onclick="switchTab('graph')"
-            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-            <span style="font-size:20px; margin-bottom:2px;">📊</span>
+        <button class="nav-item" id="nav-graph" onclick="switchTab('graph')">
+            <span>📊</span>
             <span>グラフ</span>
         </button>
-        <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')"
-            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-            <span style="font-size:20px; margin-bottom:2px;">⏱️</span>
+        <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')">
+            <span>⏱️</span>
             <span>モニター</span>
         </button>
-        <button class="nav-item" id="nav-menu" onclick="toggleSettings()"
-            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-            <span style="font-size:20px; margin-bottom:2px;">☰</span>
+        <button class="nav-item" id="nav-menu" onclick="toggleSettings()">
+            <span>☰</span>
             <span>その他</span>
         </button>
     </div>
 
-    <script src="js/monitor.js?v=debug_121"></script>
-    <script src="js/app.js?v=debug_121"></script>
-    <script src="js/ui.js?v=debug_121"></script>
-    <script src="js/map.js?v=debug_121"></script>
-    <script src="js/graph.js?v=debug_121"></script>
+    <!-- Nav Item Styles (Inline moved to centralized CSS block for cleanliness) -->
+    <style>
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .nav-item span:first-child {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #0078d4 !important;
+        }
+    </style>
+
+    <script src="js/monitor.js?v=debug_122"></script>
+    <script src="js/app.js?v=debug_122"></script>
+    <script src="js/ui.js?v=debug_122"></script>
+    <script src="js/map.js?v=debug_122"></script>
+    <script src="js/graph.js?v=debug_122"></script>
 
 </body>
 

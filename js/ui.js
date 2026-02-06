@@ -1,25 +1,23 @@
-window.toggleSettings = function () {
+// Toggle Settings Menu
+window.toggleSettings = function (forceState) {
     const menu = document.getElementById('settings-menu');
-    const btn = document.getElementById('btn-menu'); // Ensure ID exists in HTML
+    const overlay = document.getElementById('settings-overlay');
+    const navBtn = document.getElementById('nav-menu');
+    if (!menu) return;
 
-    // Toggle
-    menu.classList.toggle('active');
+    let isActive = menu.classList.contains('active');
 
-    // Update Button State
-    if (menu.classList.contains('active')) {
-        if (btn) btn.classList.add('active');
-        document.body.classList.add('overlay-active'); // ADD
+    // Determine target state
+    let targetState = (typeof forceState !== 'undefined') ? forceState : !isActive;
+
+    if (targetState) {
+        menu.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+        if (navBtn) navBtn.classList.add('active');
     } else {
-        if (btn) btn.classList.remove('active');
-        document.body.classList.remove('overlay-active'); // ADD
-    }
-
-    // Force Popup Update
-    if (typeof updatePopupPosition === 'function') updatePopupPosition();
-
-    // Mobile Explorer Toggle (Can be hooked to a button later or swipe)
-    if (window.innerWidth <= 1024) {
-        document.getElementById('explorer').classList.remove('active');
+        menu.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+        if (navBtn) navBtn.classList.remove('active');
     }
 };
 
@@ -149,13 +147,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_121)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_122)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_121)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_122)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_121)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_122)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1058,7 +1056,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_121)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_122)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
