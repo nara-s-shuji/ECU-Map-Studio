@@ -197,8 +197,9 @@ class Monitor {
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
         const timerEl = document.getElementById('recording-timer');
+        const timerCount = document.querySelectorAll('#recording-timer').length;
 
-        alert(`DEBUG: toggleRecording. isRecording=${this.isRecording}, timerEl=${!!timerEl}`);
+        alert(`DEBUG: toggleRecording. isRecording=${this.isRecording}, timerEl=${!!timerEl}, Count=${timerCount}`);
 
         if (this.isRecording) {
             // Stop
@@ -221,14 +222,14 @@ class Monitor {
 
         } else {
             // Start
-            // alert("DEBUG: Flow -> Start Block");
+            alert("DEBUG: Flow -> Start Block");
             this.isRecording = true;
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
             // Timer -> Active State
             if (timerEl) {
-                // alert("DEBUG: updating timer text to 00:00");
+                alert(`DEBUG: updating timer text to 00:00 on element: ${timerEl.tagName}`);
                 timerEl.style.color = "#ff4444"; // Red for recording
                 timerEl.innerText = '00:00';
             } else {
@@ -244,7 +245,7 @@ class Monitor {
 
             // Start Timer
             if (timerEl) {
-                // alert("DEBUG: Setting Interval");
+                alert("DEBUG: Setting Interval");
                 this.timerInterval = setInterval(() => {
                     try {
                         const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
@@ -331,7 +332,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_100)");
+console.log("Monitor Module Loaded (debug_101)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
