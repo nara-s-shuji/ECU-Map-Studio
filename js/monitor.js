@@ -198,6 +198,8 @@ class Monitor {
         const btnSave = document.getElementById('btn-save-all');
         const timerEl = document.getElementById('recording-timer');
 
+        alert(`DEBUG: toggleRecording. isRecording=${this.isRecording}, timerEl=${!!timerEl}`);
+
         if (this.isRecording) {
             // Stop
             this.isRecording = false;
@@ -219,14 +221,18 @@ class Monitor {
 
         } else {
             // Start
+            // alert("DEBUG: Flow -> Start Block");
             this.isRecording = true;
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
             // Timer -> Active State
             if (timerEl) {
+                // alert("DEBUG: updating timer text to 00:00");
                 timerEl.style.color = "#ff4444"; // Red for recording
                 timerEl.innerText = '00:00';
+            } else {
+                alert("DEBUG: Timer El Missing in Start Block!");
             }
 
             // Visual Pulse
@@ -238,11 +244,16 @@ class Monitor {
 
             // Start Timer
             if (timerEl) {
+                // alert("DEBUG: Setting Interval");
                 this.timerInterval = setInterval(() => {
-                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-                    const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
-                    const ss = String(elapsed % 60).padStart(2, '0');
-                    timerEl.innerText = `${mm}:${ss}`;
+                    try {
+                        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                        const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                        const ss = String(elapsed % 60).padStart(2, '0');
+                        timerEl.innerText = `${mm}:${ss}`;
+                    } catch (e) {
+                        console.error("Timer Error", e);
+                    }
                 }, 1000);
             }
 
@@ -320,7 +331,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_99)");
+console.log("Monitor Module Loaded (debug_100)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
