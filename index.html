@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_139">
+    <link rel="stylesheet" href="css/style.css?v=debug_140">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -210,7 +210,7 @@
         <div id="content-area">
 
             <!-- 1. エディタビュー -->
-            <div id="editor-view" class="view-section active">
+            <div id="editor-view" class="view-section active" style="padding-top: 90px;">
                 <style>
                     /* Mobile Info Bar - Fixed above RPM Labels */
                     #mobile-info-bar {
@@ -242,7 +242,7 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_139)</span>
+                        (debug_140)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
@@ -458,10 +458,10 @@
             <div id="file-view" class="view-section" style="display:none; flex-direction: column; height: 100%;">
 
                 <div class="file-list-header"
-                    style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 0 10px 10px 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 0; margin-top: 0; user-select: none; -webkit-user-select: none;">
+                    style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 0 10px 10px 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 0; margin-top: 0; user-select: none; -webkit-user-select: none; position: sticky; top: 0; z-index: 500; background: #2d2d30; padding-top: max(10px, env(safe-area-inset-top));">
                     <!-- Top Row: Title + Connect (Restored) -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <div style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
+                        <div class="file-view-title" style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
                         <button onclick="monitor.toggleConnection()" class="btn-connect"
                             style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px;">未接続</button>
                     </div>
@@ -479,7 +479,7 @@
                     </div>
                 </div>
 
-                <div class="file-list" style="flex: 1; overflow-y: auto; padding: 0 10px; padding-bottom: 120px;">
+                <div class="file-list" style="flex: 1; overflow-y: auto; padding: 0 10px; padding-bottom: 0;">
                     <!-- Fuel Map (Existing) -->
                     <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
                         <div class="file-item-header">
@@ -611,7 +611,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Spacer for Scrolling -->
+                    <div style="height: 100px; width: 100%;"></div>
                 </div>
+
 
                 <!-- Fixed Bottom Controls (Sits on top of Menu) -->
                 <div
@@ -1146,11 +1149,11 @@
         }
     </style>
 
-    <script src="js/monitor.js?v=debug_139"></script>
-    <script src="js/app.js?v=debug_139"></script>
-    <script src="js/ui.js?v=debug_139"></script>
-    <script src="js/map.js?v=debug_139"></script>
-    <script src="js/graph.js?v=debug_139"></script>
+    <script src="js/monitor.js?v=debug_140"></script>
+    <script src="js/app.js?v=debug_140"></script>
+    <script src="js/ui.js?v=debug_140"></script>
+    <script src="js/map.js?v=debug_140"></script>
+    <script src="js/graph.js?v=debug_140"></script>
 
 </body>
 
