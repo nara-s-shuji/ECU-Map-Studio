@@ -212,11 +212,12 @@ class Monitor {
             // Enable Save if we have data
             if (btnSave) btnSave.disabled = false;
 
-            // Stop Timer -> Ready State
+            // Stop Timer -> Freeze State (Gray)
             if (this.timerInterval) clearInterval(this.timerInterval);
 
             timerEls.forEach(el => {
-                el.innerText = "Ready";
+                // Keep the current innerText (frozen time)
+                // Just change color to indicate stopped state
                 el.style.color = "#666";
             });
 
@@ -230,7 +231,7 @@ class Monitor {
             // Timer -> Active State
             timerEls.forEach(el => {
                 el.style.color = "#ff4444"; // Red for recording
-                el.innerText = '00:00';
+                el.innerText = '00:00.0';
             });
 
             // Visual Pulse
@@ -240,22 +241,26 @@ class Monitor {
             }
             if (btnSave) btnSave.disabled = true;
 
-            // Start Timer
+            // Start Timer (0.1s resolution)
             if (timerEls.length > 0) {
-                // alert("DEBUG: Setting Interval");
+                // Update every ~50ms to ensure we catch 0.1s changes smoothly
                 this.timerInterval = setInterval(() => {
                     try {
-                        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-                        const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
-                        const ss = String(elapsed % 60).padStart(2, '0');
+                        const diff = Date.now() - this.startTime;
+                        // Calculate components
+                        const mm = String(Math.floor(diff / 60000)).padStart(2, '0');
+                        const ss = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+                        const ms = Math.floor((diff % 1000) / 100); // 1/10th of a second
+
+                        const timeStr = `${mm}:${ss}.${ms}`;
 
                         timerEls.forEach(el => {
-                            el.innerText = `${mm}:${ss}`;
+                            el.innerText = timeStr;
                         });
                     } catch (e) {
                         console.error("Timer Error", e);
                     }
-                }, 1000);
+                }, 50);
             }
             // Generate some dummy data immediately for visual feedback/demo if not connected
             if (!this.isConnected) {
@@ -331,7 +336,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_103)");
+console.log("Monitor Module Loaded (debug_104)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
