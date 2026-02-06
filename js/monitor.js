@@ -194,9 +194,12 @@ class Monitor {
 
     // --- Recording Logic ---
     toggleRecording() {
+        alert("DEBUG: toggleRecording() ENTRY"); // Verify click
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
         const timerEl = document.getElementById('recording-timer');
+
+        alert(`DEBUG Elements: btnRecord=${!!btnRecord}, timerEl=${!!timerEl}`); // Verify elements
 
         if (this.isRecording) {
             // Stop
@@ -320,8 +323,8 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_94)");
-// alert("Monitor Module Loaded (debug_94)"); // Uncomment if needed
+console.log("Monitor Module Loaded (debug_95)");
+alert("Monitor Module Loaded (debug_95)"); // Force alert on load to confirm file update
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
