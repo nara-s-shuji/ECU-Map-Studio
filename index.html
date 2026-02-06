@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_109">
+    <link rel="stylesheet" href="css/style.css?v=debug_110">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -238,7 +238,7 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_109)</span>
+                        (debug_110)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
@@ -258,7 +258,8 @@
             </div>
 
             <!-- 2. モニタービュー -->
-            <div id="monitor-view" class="view-section" style="display:none; flex-direction: column; height: 100%;">
+            <div id="monitor-view" class="view-section"
+                style="display:none; flex-direction: column; height: 100%; padding-bottom: calc(60px + env(safe-area-inset-bottom)); box-sizing: border-box;">
                 <!-- Header: Title + Connect -->
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #3c3c3c;">
@@ -366,7 +367,7 @@
 
                 <!-- Monitor Footer Actions (Inside View) -->
                 <div
-                    style="padding: 10px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #3c3c3c; margin-top: 0; background: #252526;">
+                    style="padding: 10px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #3c3c3c; margin-top: auto; background: #252526;">
                     <!-- Timer Always Visible Strategy -->
                     <div id="recording-timer"
                         style="display:block; min-height: 24px; text-align: center; font-family: 'Consolas', monospace; font-size: 20px; color: #666; font-weight: bold;">
@@ -439,7 +440,7 @@
 
             <!-- 3. ファイルビュー -->
             <div id="file-view" class="view-section"
-                style="display:none; padding: 10px; flex-direction: column; height: 100%;">
+                style="display:none; padding: 10px; flex-direction: column; height: 100%; padding-bottom: calc(60px + env(safe-area-inset-bottom)); box-sizing: border-box;">
 
                 <div class="file-list-header"
                     style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 10px; user-select: none; -webkit-user-select: none;">
@@ -599,12 +600,12 @@
                 </div>
 
                 <!-- Footer Buttons -->
-                <!-- Footer Buttons -->
-                <div class="file-footer-actions" style="grid-template-columns: repeat(4, 1fr) !important;">
+                <div class="file-footer-actions"
+                    style="grid-template-columns: repeat(4, 1fr) !important; margin-top: auto;">
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                        onclick="alert('ECU Read - Start')">Read</button>
+                        onclick="monitor.readECU()">Read</button>
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                        onclick="alert('ECU Write - Start')">Write</button>
+                        onclick="monitor.writeECU()">Write</button>
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
                         onclick="window.openFile()">Open</button>
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
@@ -1081,11 +1082,11 @@
         </button>
     </div>
 
-    <script src="js/monitor.js?v=debug_109"></script>
-    <script src="js/app.js?v=debug_109"></script>
-    <script src="js/ui.js?v=debug_109"></script>
-    <script src="js/map.js?v=debug_109"></script>
-    <script src="js/graph.js?v=debug_109"></script>
+    <script src="js/monitor.js?v=debug_110"></script>
+    <script src="js/app.js?v=debug_110"></script>
+    <script src="js/ui.js?v=debug_110"></script>
+    <script src="js/map.js?v=debug_110"></script>
+    <script src="js/graph.js?v=debug_110"></script>
 
 </body>
 
