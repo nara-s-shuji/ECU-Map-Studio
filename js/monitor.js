@@ -313,13 +313,26 @@ class Monitor {
         if (!fileName) return; // Cancelled
 
         // Convert Buffer to CSV
-        // Helper: Get all unique keys from first entry or predefined set?
-        // Let's use predefined set for consistency
-        const headers = ["timestamp", "rpm", "tp", "map0", "map1", "iat", "eot", "vol", "ap"];
-        let csvContent = headers.join(",") + "\n";
+        // Dynamic Headers based on Checkboxes
+        const activeHeaders = ["timestamp"]; // Always include timestamp
+        const toggles = document.querySelectorAll('.monitor-toggle');
+        toggles.forEach(toggle => {
+            if (toggle.checked) {
+                // Ensure data-key matches the logData property names
+                activeHeaders.push(toggle.dataset.key);
+            }
+        });
+
+        // Debug: Ensure we have headers
+        if (activeHeaders.length === 1) {
+            // Warn if nothing checked? Or just save timestamp?
+            // Let's just allow it, maybe they only want timestamp.
+        }
+
+        let csvContent = activeHeaders.join(",") + "\n";
 
         this.logData.forEach(row => {
-            const line = headers.map(h => row[h] !== undefined ? row[h] : "").join(",");
+            const line = activeHeaders.map(h => row[h] !== undefined ? row[h] : "").join(",");
             csvContent += line + "\n";
         });
 
@@ -336,7 +349,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_104)");
+console.log("Monitor Module Loaded (debug_105)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
