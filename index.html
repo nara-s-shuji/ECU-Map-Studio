@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_111">
+    <link rel="stylesheet" href="css/style.css?v=debug_112">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -238,7 +238,7 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_111)</span>
+                        (debug_112)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
@@ -366,9 +366,9 @@
                 </div>
 
                 <!-- Monitor Footer Actions (Inside View) -->
-                <!-- padding-bottom increased to cover Nav area -->
                 <div
-                    style="padding: 10px; padding-bottom: calc(70px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #3c3c3c; margin-top: auto; background: #252526;">
+                    style="padding: 10px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #3c3c3c; margin-top: auto; background: #252526;">
+
                     <!-- Timer Always Visible Strategy -->
                     <div id="recording-timer"
                         style="display:block; min-height: 24px; text-align: center; font-family: 'Consolas', monospace; font-size: 20px; color: #666; font-weight: bold;">
@@ -436,6 +436,9 @@
                             color: white;
                         }
                     </style>
+                </div>
+                <!-- Spacer for Bottom Nav (60px + safe area) -->
+                <div style="height: calc(60px + env(safe-area-inset-bottom)); flex-shrink: 0; background: transparent;">
                 </div>
             </div>
 
@@ -602,7 +605,7 @@
 
                 <!-- Footer Buttons -->
                 <div class="file-footer-actions"
-                    style="grid-template-columns: repeat(4, 1fr) !important; margin-top: auto;">
+                    style="grid-template-columns: repeat(4, 1fr) !important; margin-top: auto; padding: 10px; background: #2d2d30; border-top: 1px solid #3c3c3c;">
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
                         onclick="monitor.readECU()">Read</button>
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
@@ -611,6 +614,9 @@
                         onclick="window.openFile()">Open</button>
                     <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
                         onclick="window.saveFile()">Save</button>
+                </div>
+                <!-- Spacer for Bottom Nav (60px + safe area) -->
+                <div style="height: calc(60px + env(safe-area-inset-bottom)); flex-shrink: 0; background: transparent;">
                 </div>
             </div>
 
@@ -1083,11 +1089,11 @@
         </button>
     </div>
 
-    <script src="js/monitor.js?v=debug_111"></script>
-    <script src="js/app.js?v=debug_111"></script>
-    <script src="js/ui.js?v=debug_111"></script>
-    <script src="js/map.js?v=debug_111"></script>
-    <script src="js/graph.js?v=debug_111"></script>
+    <script src="js/monitor.js?v=debug_112"></script>
+    <script src="js/app.js?v=debug_112"></script>
+    <script src="js/ui.js?v=debug_112"></script>
+    <script src="js/map.js?v=debug_112"></script>
+    <script src="js/graph.js?v=debug_112"></script>
 
 </body>
 
