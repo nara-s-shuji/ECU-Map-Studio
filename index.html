@@ -425,658 +425,657 @@
                         }
                     </style>
                 </div>
+            </div>
 
-                <!-- 3. ファイルビュー -->
-                <div id="file-view" class="view-section"
-                    style="display:none; padding: 10px; display: flex; flex-direction: column; height: 100%;">
+            <!-- 3. ファイルビュー -->
+            <div id="file-view" class="view-section"
+                style="display:none; padding: 10px; flex-direction: column; height: 100%;">
 
-                    <div class="file-list-header"
-                        style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 10px; user-select: none; -webkit-user-select: none;">
+                <div class="file-list-header"
+                    style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 10px; user-select: none; -webkit-user-select: none;">
 
-                        <!-- Top Row: Title + Connect -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <div style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
-                            <button onclick="monitor.toggleConnection()" class="btn-connect"
-                                style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px;">未接続</button>
+                    <!-- Top Row: Title + Connect -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
+                        <button onclick="monitor.toggleConnection()" class="btn-connect"
+                            style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px;">未接続</button>
+                    </div>
+
+                    <!-- Bottom Row: Toggles (Right Aligned) -->
+                    <div class="toggle-container"
+                        style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
+                        <span style="font-size: 11px; color: #888; margin-right: 5px;">BASIC</span>
+                        <label class="switch">
+                            <input type="checkbox" id="mode-toggle" onchange="toggleFileMode()">
+                            <span class="slider round"></span>
+                        </label>
+                        <span
+                            style="font-size: 11px; color: #888; margin-left: 5px; white-space: nowrap;">ADVANCE</span>
+                    </div>
+                </div>
+
+                <div class="file-list" style="flex: 1; overflow-y: auto; padding: 0 10px;">
+                    <!-- Fuel Map (Existing) -->
+                    <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
+                        <div class="file-item-header">
+                            <span>燃料マップ</span>
+                            <div class="file-item-actions">
+                                <span class="badge status-edited">編集済</span>
+                                <span class="badge status-synced">転送済</span>
+                            </div>
                         </div>
-
-                        <!-- Bottom Row: Toggles (Right Aligned) -->
-                        <div class="toggle-container"
-                            style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
-                            <span style="font-size: 11px; color: #888; margin-right: 5px;">BASIC</span>
-                            <label class="switch">
-                                <input type="checkbox" id="mode-toggle" onchange="toggleFileMode()">
-                                <span class="slider round"></span>
-                            </label>
-                            <span
-                                style="font-size: 11px; color: #888; margin-left: 5px; white-space: nowrap;">ADVANCE</span>
+                        <div class="file-item-sub" onclick="event.stopPropagation()">
+                            <button class="sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
+                            <button class="sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
                         </div>
                     </div>
 
-                    <div class="file-list" style="flex: 1; overflow-y: auto; padding: 0 10px;">
-                        <!-- Fuel Map (Existing) -->
-                        <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
+                    <!-- Map Selection Group (Updated: Selectable + Badges on Right) -->
+                    <div class="file-item" onclick="selectFileItem(this, 'map_select')" id="file-item-map-select"
+                        style="cursor: pointer; flex-direction: column; align-items: flex-start; gap: 8px;">
+                        <div class="file-item-header"
+                            style="width: 100%; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                            <span>燃料マップ選択</span>
+                            <div class="file-item-actions">
+                                <span class="badge status-edited">編集済</span>
+                                <span class="badge status-synced">転送済</span>
+                            </div>
+                        </div>
+
+                        <!-- Priority Map Row -->
+                        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-size: 12px; color: #aaa;">優先マップ</span>
+                            <div class="file-item-sub" onclick="event.stopPropagation()" style="margin-top: 0;">
+                                <button class="sub-btn" onclick="selectPriorityMap(1)" id="btn-prio-1">1</button>
+                                <button class="sub-btn" onclick="selectPriorityMap(2)" id="btn-prio-2">2</button>
+                                <button class="sub-btn" onclick="selectPriorityMap(3)" id="btn-prio-3">3</button>
+                                <button class="sub-btn" onclick="selectPriorityMap(4)" id="btn-prio-4">4</button>
+                            </div>
+                        </div>
+
+                        <!-- Next Map Row -->
+                        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-size: 12px; color: #aaa;">次点マップ</span>
+                            <div class="file-item-sub" onclick="event.stopPropagation()" style="margin-top: 0;">
+                                <button class="sub-btn" onclick="selectNextMap(1)" id="btn-next-1">1</button>
+                                <button class="sub-btn" onclick="selectNextMap(2)" id="btn-next-2">2</button>
+                                <button class="sub-btn" onclick="selectNextMap(3)" id="btn-next-3">3</button>
+                                <button class="sub-btn" onclick="selectNextMap(4)" id="btn-next-4">4</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Items -->
+                    <div class="adv-only-wrapper">
+                        <div class="file-item" onclick="selectFileItem(this, 'idle_fuel')">
                             <div class="file-item-header">
-                                <span>燃料マップ</span>
+                                <span>アイドリング時燃料マップ</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'dead_time')">
+                            <div class="file-item-header">
+                                <span>インジェクター無効噴射時間</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'async_inj')">
+                            <div class="file-item-header">
+                                <span>非同期噴射</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'accel')">
+                            <div class="file-item-header">
+                                <span>加速増量</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'rpm_corr')">
+                            <div class="file-item-header">
+                                <span>回転数補正</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'oil_corr')">
+                            <div class="file-item-header">
+                                <span>油温補正</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'dwell')">
+                            <div class="file-item-header">
+                                <span>ドエル時間</span>
+                                <div class="file-item-actions">
+                                    <span class="badge status-edited">編集済</span>
+                                    <span class="badge status-synced">転送済</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-item" onclick="selectFileItem(this, 'ign_map')">
+                            <div class="file-item-header">
+                                <span>点火マップ</span>
                                 <div class="file-item-actions">
                                     <span class="badge status-edited">編集済</span>
                                     <span class="badge status-synced">転送済</span>
                                 </div>
                             </div>
                             <div class="file-item-sub" onclick="event.stopPropagation()">
-                                <button class="sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
-                                <button class="sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
-                                <button class="sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
-                                <button class="sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
-                            </div>
-                        </div>
-
-                        <!-- Map Selection Group (Updated: Selectable + Badges on Right) -->
-                        <div class="file-item" onclick="selectFileItem(this, 'map_select')" id="file-item-map-select"
-                            style="cursor: pointer; flex-direction: column; align-items: flex-start; gap: 8px;">
-                            <div class="file-item-header"
-                                style="width: 100%; margin-bottom: 5px; display: flex; justify-content: space-between;">
-                                <span>燃料マップ選択</span>
-                                <div class="file-item-actions">
-                                    <span class="badge status-edited">編集済</span>
-                                    <span class="badge status-synced">転送済</span>
-                                </div>
-                            </div>
-
-                            <!-- Priority Map Row -->
-                            <div
-                                style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
-                                <span style="font-size: 12px; color: #aaa;">優先マップ</span>
-                                <div class="file-item-sub" onclick="event.stopPropagation()" style="margin-top: 0;">
-                                    <button class="sub-btn" onclick="selectPriorityMap(1)" id="btn-prio-1">1</button>
-                                    <button class="sub-btn" onclick="selectPriorityMap(2)" id="btn-prio-2">2</button>
-                                    <button class="sub-btn" onclick="selectPriorityMap(3)" id="btn-prio-3">3</button>
-                                    <button class="sub-btn" onclick="selectPriorityMap(4)" id="btn-prio-4">4</button>
-                                </div>
-                            </div>
-
-                            <!-- Next Map Row -->
-                            <div
-                                style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
-                                <span style="font-size: 12px; color: #aaa;">次点マップ</span>
-                                <div class="file-item-sub" onclick="event.stopPropagation()" style="margin-top: 0;">
-                                    <button class="sub-btn" onclick="selectNextMap(1)" id="btn-next-1">1</button>
-                                    <button class="sub-btn" onclick="selectNextMap(2)" id="btn-next-2">2</button>
-                                    <button class="sub-btn" onclick="selectNextMap(3)" id="btn-next-3">3</button>
-                                    <button class="sub-btn" onclick="selectNextMap(4)" id="btn-next-4">4</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Advanced Items -->
-                        <div class="adv-only-wrapper">
-                            <div class="file-item" onclick="selectFileItem(this, 'idle_fuel')">
-                                <div class="file-item-header">
-                                    <span>アイドリング時燃料マップ</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'dead_time')">
-                                <div class="file-item-header">
-                                    <span>インジェクター無効噴射時間</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'async_inj')">
-                                <div class="file-item-header">
-                                    <span>非同期噴射</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'accel')">
-                                <div class="file-item-header">
-                                    <span>加速増量</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'rpm_corr')">
-                                <div class="file-item-header">
-                                    <span>回転数補正</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'oil_corr')">
-                                <div class="file-item-header">
-                                    <span>油温補正</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'dwell')">
-                                <div class="file-item-header">
-                                    <span>ドエル時間</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="file-item" onclick="selectFileItem(this, 'ign_map')">
-                                <div class="file-item-header">
-                                    <span>点火マップ</span>
-                                    <div class="file-item-actions">
-                                        <span class="badge status-edited">編集済</span>
-                                        <span class="badge status-synced">転送済</span>
-                                    </div>
-                                </div>
-                                <div class="file-item-sub" onclick="event.stopPropagation()">
-                                    <button class="sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
-                                    <button class="sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
-                                </div>
+                                <button class="sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
+                                <button class="sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Footer Buttons -->
-                    <!-- Footer Buttons -->
-                    <div class="file-footer-actions" style="grid-template-columns: repeat(4, 1fr) !important;">
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="alert('ECU Read - Start')">Read</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="alert('ECU Write - Start')">Write</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="window.openFile()">Open</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="window.saveFile()">Save</button>
-                    </div>
                 </div>
 
-                <!-- Styles for File View -->
-                <style>
-                    /* Switch */
-                    .switch {
-                        position: relative;
-                        display: inline-block;
-                        width: 34px;
-                        height: 20px;
-                    }
-
-                    .switch input {
-                        opacity: 0;
-                        width: 0;
-                        height: 0;
-                    }
-
-                    .slider {
-                        position: absolute;
-                        cursor: pointer;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        background-color: #ccc;
-                        -webkit-transition: .4s;
-                        transition: .4s;
-                    }
-
-                    .slider:before {
-                        position: absolute;
-                        content: "";
-                        height: 12px;
-                        width: 12px;
-                        left: 4px;
-                        bottom: 4px;
-                        background-color: white;
-                        -webkit-transition: .4s;
-                        transition: .4s;
-                    }
-
-                    input:checked+.slider {
-                        background-color: #2196F3;
-                    }
-
-                    input:focus+.slider {
-                        box-shadow: 0 0 1px #2196F3;
-                    }
-
-                    input:checked+.slider:before {
-                        -webkit-transform: translateX(14px);
-                        -ms-transform: translateX(14px);
-                        transform: translateX(14px);
-                    }
-
-                    .slider.round {
-                        border-radius: 34px;
-                    }
-
-                    .slider.round:before {
-                        border-radius: 50%;
-                    }
-
-                    .toggle-container {
-                        display: flex;
-                        align-items: center;
-                    }
-
-                    .file-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 8px;
-                        user-select: none;
-                    }
-
-                    .file-item {
-                        padding: 10px;
-                        background: #2d2d30;
-                        border: 1px solid #3c3c3c;
-                        /* Default Border */
-                        color: #ccc;
-                        cursor: pointer;
-                        border-radius: 4px;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-                        transition: border-color 0.2s;
-                    }
-
-                    /* Active state handled by JS adjusting border color */
-                    .file-item.active {
-                        border: 2px solid #0078d4 !important;
-                        /* Blue Border */
-                        background: #333;
-                        color: #fff;
-                    }
-
-                    .file-item-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        width: 100%;
-                    }
-
-                    .file-item-sub {
-                        display: flex;
-                        gap: 5px;
-                        margin-top: 5px;
-                    }
-
-                    .sub-btn {
-                        background: #444;
-                        border: 1px solid #555;
-                        color: #ccc;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 4px;
-                        cursor: pointer;
-                        font-size: 10px;
-                    }
-
-                    .sub-btn.active {
-                        background: #0078d4;
-                        color: white;
-                        border-color: #0078d4;
-                    }
-
-                    .file-status {
-                        font-size: 12px;
-                        margin-left: 5px;
-                        opacity: 0.7;
-                    }
-
-                    .file-footer-actions {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 10px;
-                        margin-top: 10px;
-                        border-top: 1px solid #444;
-                        padding-top: 10px;
-                    }
-
-                    .file-action-btn {
-                        background: #3c3c3c;
-                        border: 1px solid #555;
-                        color: #fff;
-                        padding: 10px;
-                        border-radius: 4px;
-                        cursor: pointer;
-                    }
-
-                    .file-action-btn:active {
-                        background: #0078d4;
-                    }
-
-                    /* Basic Mode Hiding */
-                    body.basic-mode .adv-only-wrapper {
-                        display: none;
-                    }
-                </style>
-
-                <!-- 4. ロガービュー (削除/非表示) -->
-                <div id="logger-view" class="view-section"
-                    style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
-                    <h2>💾 Data Logger</h2>
-                    <p>未実装 (Coming Soon)</p>
+                <!-- Footer Buttons -->
+                <!-- Footer Buttons -->
+                <div class="file-footer-actions" style="grid-template-columns: repeat(4, 1fr) !important;">
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="alert('ECU Read - Start')">Read</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="alert('ECU Write - Start')">Write</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="window.openFile()">Open</button>
+                    <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
+                        onclick="window.saveFile()">Save</button>
                 </div>
-
             </div>
-        </div>
 
-        <!-- Bottom Navigation -->
-        <!-- Bottom Navigation moved to end of body -->
-
-        <!-- Scripts -->
-        <!-- Scripts -->
-
-        <div id="settings-menu" class="settings-menu">
-            <div class="settings-content">
-                <span class="file-view-title">ECU Map Studio <span
-                        style="font-size:10px; color:#888; margin-left:5px;">(debug_92)</span></span>
-                <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
-                <hr style="border-color: #444; margin: 10px 0;">
-                <div class="menu-item" style="cursor: default; background: transparent;">
-                    <label>Color Mode:</label>
-                    <select id="cell-color-mode" onchange="updateCellColorMode()"
-                        style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
-                        <option value="diff">Diff</option>
-                        <option value="absolute">Absolute</option>
-                    </select>
-                </div>
-                <button class="menu-item" onclick="openFile()">Open File...</button>
-                <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
-            </div>
-        </div>
-
-
-
-        <div id="graph-overlay">
-            <div id="graph-header">
-                <span>Graph View</span>
-                <select id="graph-type" onchange="updateGraph()"
-                    style="background: #444; color: white; border: none; margin: 0 10px;">
-                    <option value="3d">3D Surface</option>
-                    <option value="rpm">RPM Axis</option>
-                    <option value="tps">TPS Axis</option>
-                </select>
-                <button id="graph-close" onclick="toggleGraph()"
-                    style="background:none; border:none; color:white; font-size:16px;">×</button>
-            </div>
-            <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
-            <!-- Resize Handles -->
-            <div class="resize-handle resize-n"></div>
-            <div class="resize-handle resize-s"></div>
-            <div class="resize-handle resize-e"></div>
-            <div class="resize-handle resize-w"></div>
-            <div class="resize-handle resize-ne"></div>
-            <div class="resize-handle resize-nw"></div>
-            <div class="resize-handle resize-se"></div>
-            <div class="resize-handle resize-sw"></div>
-        </div>
-
-        <!-- Hidden File Inputs -->
-        <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
-        <input type="file" id="base-file-input" style="display:none;" accept=".csv" onchange="importBaseFromCSV(this)">
-
-        <style>
-            /* Emergency Styles for Restored Components */
-            /* Emergency Styles for Restored Components */
-            #settings-menu {
-                position: fixed;
-                top: 40px;
-                right: -250px;
-                width: 250px;
-                height: calc(100% - 40px);
-                background: #252526;
-                border-left: 1px solid #3c3c3c;
-                z-index: 25000;
-                /* Above Popup (20000) and Nav (10000) */
-                transition: right 0.3s ease;
-                padding: 20px;
-                box-sizing: border-box;
-                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-            }
-
-            #settings-menu.active {
-                right: 0;
-            }
-
-            .settings-content h3 {
-                margin-top: 0;
-                color: #ccc;
-                border-bottom: 1px solid #444;
-                padding-bottom: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .menu-close-btn {
-                background: none;
-                border: none;
-                color: #888;
-                font-size: 20px;
-                cursor: pointer;
-            }
-
-            .menu-item {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                background: #333;
-                color: white;
-                border: none;
-                margin-bottom: 5px;
-                text-align: left;
-                cursor: pointer;
-                border-radius: 4px;
-            }
-
-            .menu-item:hover {
-                background: #444;
-            }
-
-            /* Popup Buttons */
-            .mode-btn {
-                flex: 1;
-                padding: 5px;
-                background: #333;
-                color: #888;
-                border: 1px solid #555;
-                cursor: pointer;
-            }
-
-            .mode-btn.active {
-                background: #0078d4;
-                color: white;
-                border-color: #0078d4;
-            }
-
-            /* Resize Handles */
-            .resize-handle {
-                position: absolute;
-                background: transparent;
-                z-index: 100;
-            }
-
-            .resize-n {
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 5px;
-                cursor: ns-resize;
-            }
-
-            .resize-s {
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 5px;
-                cursor: ns-resize;
-            }
-
-            .resize-e {
-                top: 0;
-                right: 0;
-                width: 5px;
-                height: 100%;
-                cursor: ew-resize;
-            }
-
-            .resize-w {
-                top: 0;
-                left: 0;
-                width: 5px;
-                height: 100%;
-                cursor: ew-resize;
-            }
-        </style>
-
-        <script>
-            // --- IMPROVED DEBUGGER ---
-            // Capture resource loading errors (which use addEventListener) and runtime errors
-            window.addEventListener('error', function (event) {
-                let msg = '';
-                let line = '';
-
-                if (event instanceof ErrorEvent) {
-                    msg = event.message;
-                    line = event.lineno;
-                } else if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
-                    msg = "Resource Not Found: " + (event.target.src || event.target.href);
-                    line = 'N/A';
-                } else {
-                    msg = event.toString();
+            <!-- Styles for File View -->
+            <style>
+                /* Switch */
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 34px;
+                    height: 20px;
                 }
 
-                console.error("Global Error Caught:", event);
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
 
-                const errDiv = document.createElement('div');
-                errDiv.style.position = 'fixed';
-                errDiv.style.bottom = '10px';
-                errDiv.style.right = '10px';
-                errDiv.style.maxWidth = '300px';
-                errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
-                errDiv.style.color = 'white';
-                errDiv.style.zIndex = '1000000';
-                // Alert for visibility
-                alert("JS Error: " + msg + " (L" + line + ")");
-                return false; // Let default handler run if needed
-            }, true); // Capture phase
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                }
 
-            // Click Inspector (Modified to be less intrusive)
-            window.addEventListener('click', function (e) {
-                // Visual Feedback - Small fading dot
-                const dot = document.createElement('div');
-                dot.style.position = 'fixed';
-                dot.style.left = (e.clientX - 2) + 'px';
-                dot.style.top = (e.clientY - 2) + 'px';
-                dot.style.width = '4px';
-                dot.style.height = '4px';
-                dot.style.background = 'red';
-                dot.style.borderRadius = '50%';
-                dot.style.zIndex = '999999';
-                dot.style.pointerEvents = 'none';
-                document.body.appendChild(dot);
-                setTimeout(() => dot.remove(), 500);
-            }, true);
-        </script>
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 12px;
+                    width: 12px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                }
 
+                input:checked+.slider {
+                    background-color: #2196F3;
+                }
 
+                input:focus+.slider {
+                    box-shadow: 0 0 1px #2196F3;
+                }
 
+                input:checked+.slider:before {
+                    -webkit-transform: translateX(14px);
+                    -ms-transform: translateX(14px);
+                    transform: translateX(14px);
+                }
 
-        <!-- EDIT POPUP (v2) - Moved to Body Root for Positioning independent of Transforms -->
-        <div id="edit-popup-v2"
-            style="position: fixed; bottom: 60px !important; top: auto !important; left: 50% !important; transform: translateX(-50%) !important; width: 95%; height: 58px; z-index: 20000; display: none; background: #222; border: 2px solid #0078d4; border-radius: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); align-items: center; justify-content: center; touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; box-sizing: border-box;">
-            <div class="popup-controls"
-                style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
-                <!-- 1. Reset Button -->
-                <button class="popup-btn" onclick="resetToOriginal()"
-                    style="width: 40px; height: 50px; font-size: 18px; color: #ccc; margin-left: 5px;">↺</button>
+                .slider.round {
+                    border-radius: 34px;
+                }
 
-                <!-- 2. Apply Minus -->
-                <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
-                    onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
-                    ontouchend="stopApply(event)"
-                    style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">-</button>
+                .slider.round:before {
+                    border-radius: 50%;
+                }
 
-                <!-- 3. Spinner Group -->
-                <div class="delta-spinner-group"
-                    style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 50px; margin: 0 4px; flex: 1; justify-content: space-between;">
-                    <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)"
-                        onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                        ontouchstart="startSpinner(-1, event)" ontouchend="stopSpinner(event)"
-                        style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
+                .toggle-container {
+                    display: flex;
+                    align-items: center;
+                }
 
-                    <input type="number" id="popup-delta" class="popup-input" value="10" readonly
-                        style="width: 30px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0; user-select: none; pointer-events: none;">
+                .file-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    user-select: none;
+                }
 
-                    <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)"
-                        onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                        ontouchstart="startSpinner(1, event)" ontouchend="stopSpinner(event)"
-                        style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
-                </div>
+                .file-item {
+                    padding: 10px;
+                    background: #2d2d30;
+                    border: 1px solid #3c3c3c;
+                    /* Default Border */
+                    color: #ccc;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    transition: border-color 0.2s;
+                }
 
-                <!-- 4. Apply Plus -->
-                <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
-                    onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
-                    ontouchend="stopApply(event)"
-                    style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">+</button>
+                /* Active state handled by JS adjusting border color */
+                .file-item.active {
+                    border: 2px solid #0078d4 !important;
+                    /* Blue Border */
+                    background: #333;
+                    color: #fff;
+                }
 
-                <!-- 5. Mode Toggle -->
-                <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()"
-                    style="width: 40px; height: 50px; font-size: 14px; font-weight:bold; color: var(--accent); margin-right: 5px;">ABS</button>
+                .file-item-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                }
+
+                .file-item-sub {
+                    display: flex;
+                    gap: 5px;
+                    margin-top: 5px;
+                }
+
+                .sub-btn {
+                    background: #444;
+                    border: 1px solid #555;
+                    color: #ccc;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 10px;
+                }
+
+                .sub-btn.active {
+                    background: #0078d4;
+                    color: white;
+                    border-color: #0078d4;
+                }
+
+                .file-status {
+                    font-size: 12px;
+                    margin-left: 5px;
+                    opacity: 0.7;
+                }
+
+                .file-footer-actions {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                    margin-top: 10px;
+                    border-top: 1px solid #444;
+                    padding-top: 10px;
+                }
+
+                .file-action-btn {
+                    background: #3c3c3c;
+                    border: 1px solid #555;
+                    color: #fff;
+                    padding: 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+
+                .file-action-btn:active {
+                    background: #0078d4;
+                }
+
+                /* Basic Mode Hiding */
+                body.basic-mode .adv-only-wrapper {
+                    display: none;
+                }
+            </style>
+
+            <!-- 4. ロガービュー (削除/非表示) -->
+            <div id="logger-view" class="view-section"
+                style="display:none; padding: 20px; text-align: center; color: #888; justify-content: center; align-items: center;">
+                <h2>💾 Data Logger</h2>
+                <p>未実装 (Coming Soon)</p>
             </div>
+
         </div>
+    </div>
 
-        <!-- Edit Popup (v2) -->
-        <!-- ... -->
+    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation moved to end of body -->
 
-        <!-- RESTORED BOTTOM NAVIGATION -->
-        <div id="bottom-nav"
-            style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d2d30; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3c3c3c; z-index: 10000; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box;">
-            <button class="nav-item" id="nav-file" onclick="switchTab('file')"
-                style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                <span style="font-size:20px; margin-bottom:2px;">📁</span>
-                <span>ファイル</span>
-            </button>
-            <button class="nav-item active" id="nav-editor" onclick="switchTab('editor')"
-                style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                <span style="font-size:20px; margin-bottom:2px;">📝</span>
-                <span>編集</span>
-            </button>
-            <button class="nav-item" id="nav-graph" onclick="switchTab('graph')"
-                style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                <span style="font-size:20px; margin-bottom:2px;">📊</span>
-                <span>グラフ</span>
-            </button>
-            <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')"
-                style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                <span style="font-size:20px; margin-bottom:2px;">⏱️</span>
-                <span>モニター</span>
-            </button>
-            <button class="nav-item" id="nav-menu" onclick="toggleSettings()"
-                style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                <span style="font-size:20px; margin-bottom:2px;">☰</span>
-                <span>その他</span>
-            </button>
+    <!-- Scripts -->
+    <!-- Scripts -->
+
+    <div id="settings-menu" class="settings-menu">
+        <div class="settings-content">
+            <span class="file-view-title">ECU Map Studio <span
+                    style="font-size:10px; color:#888; margin-left:5px;">(debug_92)</span></span>
+            <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
+            <hr style="border-color: #444; margin: 10px 0;">
+            <div class="menu-item" style="cursor: default; background: transparent;">
+                <label>Color Mode:</label>
+                <select id="cell-color-mode" onchange="updateCellColorMode()"
+                    style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
+                    <option value="diff">Diff</option>
+                    <option value="absolute">Absolute</option>
+                </select>
+            </div>
+            <button class="menu-item" onclick="openFile()">Open File...</button>
+            <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
         </div>
+    </div>
 
-        <script src="js/monitor.js?v=debug_93"></script>
-        <script src="js/app.js?v=debug_93"></script>
-        <script src="js/ui.js?v=debug_93"></script>
-        <script src="js/map.js?v=debug_93"></script>
-        <script src="js/graph.js?v=debug_93"></script>
+
+
+    <div id="graph-overlay">
+        <div id="graph-header">
+            <span>Graph View</span>
+            <select id="graph-type" onchange="updateGraph()"
+                style="background: #444; color: white; border: none; margin: 0 10px;">
+                <option value="3d">3D Surface</option>
+                <option value="rpm">RPM Axis</option>
+                <option value="tps">TPS Axis</option>
+            </select>
+            <button id="graph-close" onclick="toggleGraph()"
+                style="background:none; border:none; color:white; font-size:16px;">×</button>
+        </div>
+        <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
+        <!-- Resize Handles -->
+        <div class="resize-handle resize-n"></div>
+        <div class="resize-handle resize-s"></div>
+        <div class="resize-handle resize-e"></div>
+        <div class="resize-handle resize-w"></div>
+        <div class="resize-handle resize-ne"></div>
+        <div class="resize-handle resize-nw"></div>
+        <div class="resize-handle resize-se"></div>
+        <div class="resize-handle resize-sw"></div>
+    </div>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
+    <input type="file" id="base-file-input" style="display:none;" accept=".csv" onchange="importBaseFromCSV(this)">
+
+    <style>
+        /* Emergency Styles for Restored Components */
+        /* Emergency Styles for Restored Components */
+        #settings-menu {
+            position: fixed;
+            top: 40px;
+            right: -250px;
+            width: 250px;
+            height: calc(100% - 40px);
+            background: #252526;
+            border-left: 1px solid #3c3c3c;
+            z-index: 25000;
+            /* Above Popup (20000) and Nav (10000) */
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #settings-menu.active {
+            right: 0;
+        }
+
+        .settings-content h3 {
+            margin-top: 0;
+            color: #ccc;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            margin-bottom: 5px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .menu-item:hover {
+            background: #444;
+        }
+
+        /* Popup Buttons */
+        .mode-btn {
+            flex: 1;
+            padding: 5px;
+            background: #333;
+            color: #888;
+            border: 1px solid #555;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+
+        /* Resize Handles */
+        .resize-handle {
+            position: absolute;
+            background: transparent;
+            z-index: 100;
+        }
+
+        .resize-n {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
+
+        .resize-s {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            cursor: ns-resize;
+        }
+
+        .resize-e {
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+
+        .resize-w {
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+    </style>
+
+    <script>
+        // --- IMPROVED DEBUGGER ---
+        // Capture resource loading errors (which use addEventListener) and runtime errors
+        window.addEventListener('error', function (event) {
+            let msg = '';
+            let line = '';
+
+            if (event instanceof ErrorEvent) {
+                msg = event.message;
+                line = event.lineno;
+            } else if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                msg = "Resource Not Found: " + (event.target.src || event.target.href);
+                line = 'N/A';
+            } else {
+                msg = event.toString();
+            }
+
+            console.error("Global Error Caught:", event);
+
+            const errDiv = document.createElement('div');
+            errDiv.style.position = 'fixed';
+            errDiv.style.bottom = '10px';
+            errDiv.style.right = '10px';
+            errDiv.style.maxWidth = '300px';
+            errDiv.style.background = 'rgba(200, 0, 0, 0.9)';
+            errDiv.style.color = 'white';
+            errDiv.style.zIndex = '1000000';
+            // Alert for visibility
+            alert("JS Error: " + msg + " (L" + line + ")");
+            return false; // Let default handler run if needed
+        }, true); // Capture phase
+
+        // Click Inspector (Modified to be less intrusive)
+        window.addEventListener('click', function (e) {
+            // Visual Feedback - Small fading dot
+            const dot = document.createElement('div');
+            dot.style.position = 'fixed';
+            dot.style.left = (e.clientX - 2) + 'px';
+            dot.style.top = (e.clientY - 2) + 'px';
+            dot.style.width = '4px';
+            dot.style.height = '4px';
+            dot.style.background = 'red';
+            dot.style.borderRadius = '50%';
+            dot.style.zIndex = '999999';
+            dot.style.pointerEvents = 'none';
+            document.body.appendChild(dot);
+            setTimeout(() => dot.remove(), 500);
+        }, true);
+    </script>
+
+
+
+
+    <!-- EDIT POPUP (v2) - Moved to Body Root for Positioning independent of Transforms -->
+    <div id="edit-popup-v2"
+        style="position: fixed; bottom: 60px !important; top: auto !important; left: 50% !important; transform: translateX(-50%) !important; width: 95%; height: 58px; z-index: 20000; display: none; background: #222; border: 2px solid #0078d4; border-radius: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); align-items: center; justify-content: center; touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; box-sizing: border-box;">
+        <div class="popup-controls"
+            style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
+            <!-- 1. Reset Button -->
+            <button class="popup-btn" onclick="resetToOriginal()"
+                style="width: 40px; height: 50px; font-size: 18px; color: #ccc; margin-left: 5px;">↺</button>
+
+            <!-- 2. Apply Minus -->
+            <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
+                ontouchend="stopApply(event)"
+                style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">-</button>
+
+            <!-- 3. Spinner Group -->
+            <div class="delta-spinner-group"
+                style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 50px; margin: 0 4px; flex: 1; justify-content: space-between;">
+                <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)" onmouseup="stopSpinner(event)"
+                    onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(-1, event)"
+                    ontouchend="stopSpinner(event)"
+                    style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
+
+                <input type="number" id="popup-delta" class="popup-input" value="10" readonly
+                    style="width: 30px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0; user-select: none; pointer-events: none;">
+
+                <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)" onmouseup="stopSpinner(event)"
+                    onmouseleave="stopSpinner(event)" ontouchstart="startSpinner(1, event)"
+                    ontouchend="stopSpinner(event)"
+                    style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
+            </div>
+
+            <!-- 4. Apply Plus -->
+            <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
+                onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
+                ontouchend="stopApply(event)"
+                style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">+</button>
+
+            <!-- 5. Mode Toggle -->
+            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()"
+                style="width: 40px; height: 50px; font-size: 14px; font-weight:bold; color: var(--accent); margin-right: 5px;">ABS</button>
+        </div>
+    </div>
+
+    <!-- Edit Popup (v2) -->
+    <!-- ... -->
+
+    <!-- RESTORED BOTTOM NAVIGATION -->
+    <div id="bottom-nav"
+        style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d2d30; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3c3c3c; z-index: 10000; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box;">
+        <button class="nav-item" id="nav-file" onclick="switchTab('file')"
+            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+            <span style="font-size:20px; margin-bottom:2px;">📁</span>
+            <span>ファイル</span>
+        </button>
+        <button class="nav-item active" id="nav-editor" onclick="switchTab('editor')"
+            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+            <span style="font-size:20px; margin-bottom:2px;">📝</span>
+            <span>編集</span>
+        </button>
+        <button class="nav-item" id="nav-graph" onclick="switchTab('graph')"
+            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+            <span style="font-size:20px; margin-bottom:2px;">📊</span>
+            <span>グラフ</span>
+        </button>
+        <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')"
+            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+            <span style="font-size:20px; margin-bottom:2px;">⏱️</span>
+            <span>モニター</span>
+        </button>
+        <button class="nav-item" id="nav-menu" onclick="toggleSettings()"
+            style="background:transparent; border:none; color:#ccc; display:flex; flex-direction:column; align-items:center; font-size:10px;">
+            <span style="font-size:20px; margin-bottom:2px;">☰</span>
+            <span>その他</span>
+        </button>
+    </div>
+
+    <script src="js/monitor.js?v=debug_93"></script>
+    <script src="js/app.js?v=debug_93"></script>
+    <script src="js/ui.js?v=debug_93"></script>
+    <script src="js/map.js?v=debug_93"></script>
+    <script src="js/graph.js?v=debug_93"></script>
 
 </body>
 
