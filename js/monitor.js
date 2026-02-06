@@ -265,6 +265,13 @@ class Monitor {
                 this.timerInterval = setInterval(() => {
                     try {
                         const diff = Date.now() - this.startTime;
+
+                        // 37. Auto-stop at 3 minutes (180000 ms)
+                        if (diff >= 180000) {
+                            this.toggleRecording(); // Stop
+                            return; // Exit
+                        }
+
                         // Calculate components
                         const mm = String(Math.floor(diff / 60000)).padStart(2, '0');
                         const ss = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
@@ -387,7 +394,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_129)");
+console.log("Monitor Module Loaded (debug_130)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
