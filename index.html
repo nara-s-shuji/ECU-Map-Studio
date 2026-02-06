@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_141">
+    <link rel="stylesheet" href="css/style.css?v=debug_142">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -242,7 +242,7 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_141)</span>
+                        (debug_142)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
@@ -252,9 +252,9 @@
 
                 <div id="map-section">
                     <div id="table-wrapper">
-                        <div id="headerRow" class="header-row"></div>
+                        <div id="headerRow" class="header-row" style="margin-top: 0 !important;"></div>
                         <!-- 正しいクラス名: grid-container -->
-                        <div id="mapGrid" class="grid-container"></div>
+                        <div id="mapGrid" class="grid-container" style="margin-top: 0 !important;"></div>
                     </div>
                     <!-- SCROLL SPACER: Matches Menu Height (60px) -->
                     <div id="scroll-spacer" style="height: 60px; width: 100%; flex-shrink: 0;"></div>
@@ -455,10 +455,11 @@
             </div>
 
             <!-- 3. ファイルビュー -->
-            <div id="file-view" class="view-section" style="display:none; flex-direction: column; height: 100%;">
+            <div id="file-view" class="view-section"
+                style="display:none; flex-direction: column; height: 100%; padding-top: 80px; box-sizing: border-box;">
 
                 <div class="file-list-header"
-                    style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 0 10px 10px 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 0; margin-top: 0; user-select: none; -webkit-user-select: none; position: sticky; top: 0; z-index: 500; background: #2d2d30; padding-top: max(10px, env(safe-area-inset-top));">
+                    style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 0 10px 10px 10px; border-bottom: 1px solid #3c3c3c; margin-bottom: 0; margin-top: 0; user-select: none; -webkit-user-select: none; position: fixed; top: 0; left: 0; width: 100%; z-index: 500; background: #2d2d30; padding-top: max(10px, env(safe-area-inset-top)); box-sizing: border-box;">
                     <!-- Top Row: Title + Connect (Restored) -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div class="file-view-title" style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
@@ -1149,11 +1150,11 @@
         }
     </style>
 
-    <script src="js/monitor.js?v=debug_141"></script>
-    <script src="js/app.js?v=debug_141"></script>
-    <script src="js/ui.js?v=debug_141"></script>
-    <script src="js/map.js?v=debug_141"></script>
-    <script src="js/graph.js?v=debug_141"></script>
+    <script src="js/monitor.js?v=debug_142"></script>
+    <script src="js/app.js?v=debug_142"></script>
+    <script src="js/ui.js?v=debug_142"></script>
+    <script src="js/map.js?v=debug_142"></script>
+    <script src="js/graph.js?v=debug_142"></script>
 
 </body>
 
