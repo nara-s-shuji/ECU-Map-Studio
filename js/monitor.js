@@ -305,91 +305,89 @@ class Monitor {
             vol: 13.5,
             ap: 1013
         };
-        ap: 1013
-    };
         this.logData.push(demoData);
-this.appendLog(demoData);
+        this.appendLog(demoData);
 
-// Loop
-setTimeout(() => this.simulateRecording(), 100);
+        // Loop
+        setTimeout(() => this.simulateRecording(), 100);
     }
 
-recordData(data) {
-    if (!this.isRecording) return;
-    // If real data comes in
-    const logEntry = { ...data };
-    logEntry.timestamp = ((Date.now() - this.startTime) / 1000).toFixed(1); // Match 0.1s resolution
-    this.logData.push(logEntry);
+    recordData(data) {
+        if (!this.isRecording) return;
+        // If real data comes in
+        const logEntry = { ...data };
+        logEntry.timestamp = ((Date.now() - this.startTime) / 1000).toFixed(1); // Match 0.1s resolution
+        this.logData.push(logEntry);
 
-    this.appendLog(logEntry);
-}
-
-appendLog(entry) {
-    const logDisplay = document.getElementById('monitor-log-display');
-    if (!logDisplay) return;
-
-    // Determine active headers if not cached? 
-    // For performance, we should ideally cache this on start, but let's re-calculate to be safe or store in instance
-    if (!this.activeLogHeaders) return;
-
-    const line = this.activeLogHeaders.map(h => entry[h] !== undefined ? entry[h] : "").join(",");
-
-    // Append
-    logDisplay.innerText += line + "\n";
-
-    // Auto Scroll
-    logDisplay.scrollTop = logDisplay.scrollHeight;
-}
-
-saveLog() {
-    if (this.logData.length === 0) {
-        alert("保存するデータがありません (記録バッファが空です)");
-        return;
+        this.appendLog(logEntry);
     }
 
-    const defaultName = "ecu_log_" + new Date().toISOString().slice(0, 19).replace(/[-T:]/g, "") + ".csv";
-    const fileName = prompt("ファイル名を入力して保存:", defaultName);
+    appendLog(entry) {
+        const logDisplay = document.getElementById('monitor-log-display');
+        if (!logDisplay) return;
 
-    if (!fileName) return; // Cancelled
+        // Determine active headers if not cached? 
+        // For performance, we should ideally cache this on start, but let's re-calculate to be safe or store in instance
+        if (!this.activeLogHeaders) return;
 
-    // Convert Buffer to CSV
-    // Dynamic Headers based on Checkboxes
-    const activeHeaders = ["timestamp"]; // Always include timestamp
-    const toggles = document.querySelectorAll('.monitor-toggle');
-    toggles.forEach(toggle => {
-        if (toggle.checked) {
-            // Ensure data-key matches the logData property names
-            activeHeaders.push(toggle.dataset.key);
+        const line = this.activeLogHeaders.map(h => entry[h] !== undefined ? entry[h] : "").join(",");
+
+        // Append
+        logDisplay.innerText += line + "\n";
+
+        // Auto Scroll
+        logDisplay.scrollTop = logDisplay.scrollHeight;
+    }
+
+    saveLog() {
+        if (this.logData.length === 0) {
+            alert("保存するデータがありません (記録バッファが空です)");
+            return;
         }
-    });
 
-    // Debug: Ensure we have headers
-    if (activeHeaders.length === 1) {
-        // Warn if nothing checked? Or just save timestamp?
-        // Let's just allow it, maybe they only want timestamp.
+        const defaultName = "ecu_log_" + new Date().toISOString().slice(0, 19).replace(/[-T:]/g, "") + ".csv";
+        const fileName = prompt("ファイル名を入力して保存:", defaultName);
+
+        if (!fileName) return; // Cancelled
+
+        // Convert Buffer to CSV
+        // Dynamic Headers based on Checkboxes
+        const activeHeaders = ["timestamp"]; // Always include timestamp
+        const toggles = document.querySelectorAll('.monitor-toggle');
+        toggles.forEach(toggle => {
+            if (toggle.checked) {
+                // Ensure data-key matches the logData property names
+                activeHeaders.push(toggle.dataset.key);
+            }
+        });
+
+        // Debug: Ensure we have headers
+        if (activeHeaders.length === 1) {
+            // Warn if nothing checked? Or just save timestamp?
+            // Let's just allow it, maybe they only want timestamp.
+        }
+
+        let csvContent = activeHeaders.join(",") + "\n";
+
+        this.logData.forEach(row => {
+            const line = activeHeaders.map(h => row[h] !== undefined ? row[h] : "").join(",");
+            csvContent += line + "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", fileName.endsWith('.csv') ? fileName : fileName + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
-
-    let csvContent = activeHeaders.join(",") + "\n";
-
-    this.logData.forEach(row => {
-        const line = activeHeaders.map(h => row[h] !== undefined ? row[h] : "").join(",");
-        csvContent += line + "\n";
-    });
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", fileName.endsWith('.csv') ? fileName : fileName + ".csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
 }
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_106)");
+console.log("Monitor Module Loaded (debug_107)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
