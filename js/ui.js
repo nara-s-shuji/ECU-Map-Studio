@@ -113,7 +113,7 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_151)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_152)';
     const headerDisplay = document.querySelector('.file-view-title');
     // if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_145)</span>`;
 
@@ -153,6 +153,7 @@ let currentIgnMapIndex = 1;
 window.addEventListener('DOMContentLoaded', () => {
     updatePriorityMapUI();
     updateNextMapUI();
+    initInfoBarDrag();
 });
 
 // Select File Item (Highlight & Load)
@@ -1022,7 +1023,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_151)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_152)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
@@ -1535,3 +1536,63 @@ document.addEventListener('DOMContentLoaded', () => {
         switchTab('editor');
     }
 });
+
+// Info Bar Drag Logic
+function initInfoBarDrag() {
+    const bar = document.getElementById('mobile-info-bar');
+    const drawer = document.getElementById('file-info-drawer');
+    if (!bar || !drawer) return;
+
+    let startY = 0;
+    let isDragging = false;
+    let isDrawerOpen = false;
+
+    bar.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+    }, { passive: true });
+
+    bar.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        // Optional: Live delta visuals could go here
+    }, { passive: true });
+
+    bar.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const endY = e.changedTouches[0].clientY;
+        const deltaY = endY - startY;
+
+        if (deltaY > 50) {
+            openDrawer();
+        } else if (deltaY < -20) {
+            closeDrawer();
+        }
+    });
+
+    drawer.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    drawer.addEventListener('touchend', (e) => {
+        const endY = e.changedTouches[0].clientY;
+        if (startY - endY > 30) {
+            closeDrawer();
+        }
+    });
+
+    function openDrawer() {
+        drawer.style.height = '140px';
+        isDrawerOpen = true;
+
+        const fName = (typeof currentFileName !== 'undefined' ? currentFileName : 'New_Map.csv');
+        const elName = document.getElementById('drawer-filename');
+        if (elName) elName.innerText = fName;
+    }
+
+    function closeDrawer() {
+        drawer.style.height = '0';
+        isDrawerOpen = false;
+    }
+}

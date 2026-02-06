@@ -13,7 +13,7 @@
     <script src="lib/plotly.min.js"></script>
     <!-- Custom Styles -->
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css?v=debug_151">
+    <link rel="stylesheet" href="css/style.css?v=debug_152">
     <style>
         /* CRITICAL FALLBACK FOR BOTTOM NAV - INLINE FLEX ARCHITECTURE */
         #bottom-nav {
@@ -243,13 +243,34 @@
                     style="display: flex !important; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0;">
                     <span id="info-filename"
                         style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv
-                        (debug_151)</span>
+                        (debug_152)</span>
                     <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr:
                         -</span>
                 </div>
 
                 <!-- Info Section REMOVED to fix gap (User Request) -->
-                <!-- <div id="info-section">...</div> -->
+                <!-- Info Drawer (Swipe Down) -->
+                <div id="file-info-drawer"
+                    style="position: fixed; top: 30px; left: 0; width: 100%; height: 0; background: #252526; border-bottom: 1px solid #3c3c3c; z-index: 50000; overflow: hidden; transition: height 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                    <div
+                        style="padding: 15px; font-size: 13px; color: #eee; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color:#888;">File:</span>
+                            <span id="drawer-filename">Example_Map.csv</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color:#888;">Date:</span>
+                            <span id="drawer-date">2026/02/06 23:30</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color:#888;">Size:</span>
+                            <span id="drawer-size">12 KB</span>
+                        </div>
+                        <div style="text-align: center; margin-top: 5px; color: #555; font-size: 10px;">
+                            (Swipe up to close)
+                        </div>
+                    </div>
+                </div>
 
                 <div id="map-section" style="margin-top: 0 !important; height: 100%;">
                     <div id="table-wrapper">
@@ -1159,11 +1180,11 @@
             }
         </style>
 
-        <script src="js/monitor.js?v=debug_151"></script>
-        <script src="js/app.js?v=debug_151"></script>
-        <script src="js/ui.js?v=debug_151"></script>
-        <script src="js/map.js?v=debug_151"></script>
-        <script src="js/graph.js?v=debug_151"></script>
+        <script src="js/monitor.js?v=debug_152"></script>
+        <script src="js/app.js?v=debug_152"></script>
+        <script src="js/ui.js?v=debug_152"></script>
+        <script src="js/map.js?v=debug_152"></script>
+        <script src="js/graph.js?v=debug_152"></script>
 
 </body>
 
