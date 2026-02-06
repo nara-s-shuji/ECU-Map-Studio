@@ -87,11 +87,20 @@ function switchTab(tabId) {
     const navBtn = document.getElementById('nav-' + tabId);
     if (navBtn) navBtn.classList.add('active');
 
-    // 6. Force Popup Hiding if not editor
+    // 6. Force Popup Hiding if not editor, Restore if editor
     const popup = document.getElementById('edit-popup-v2');
     if (popup) {
         if (tabId === 'editor') {
-            // Allow popup (don't force show, just allow logic)
+            // Restore visibility if we have a selection
+            // We can try calling updatePopupPosition() if defined
+            if (typeof updatePopupPosition === 'function' &&
+                (typeof selectedCells !== 'undefined' && selectedCells.size > 0)) {
+
+                // Allow a small delay for layout to settle (display:flex takes effect)
+                setTimeout(() => {
+                    updatePopupPosition();
+                }, 50);
+            }
         } else {
             popup.style.display = 'none';
             popup.classList.remove('active');
@@ -104,13 +113,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_133)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_134)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_133)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_134)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_133)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_134)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1013,7 +1022,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_133)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_134)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
