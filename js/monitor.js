@@ -194,12 +194,9 @@ class Monitor {
 
     // --- Recording Logic ---
     toggleRecording() {
-        alert("DEBUG: toggleRecording() ENTRY"); // Verify click
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
         const timerEl = document.getElementById('recording-timer');
-
-        alert(`DEBUG Elements: btnRecord=${!!btnRecord}, timerEl=${!!timerEl}`); // Verify elements
 
         if (this.isRecording) {
             // Stop
@@ -214,7 +211,7 @@ class Monitor {
 
             // Stop Timer
             if (this.timerInterval) clearInterval(this.timerInterval);
-            if (timerEl) timerEl.style.display = 'none';
+            // if (timerEl) timerEl.style.display = 'none'; // KEEP VISIBLE FOR DEBUGGING
 
         } else {
             // Start
@@ -222,13 +219,8 @@ class Monitor {
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
-            // Debug Timer Element
-            if (!timerEl) {
-                alert("Debug Error: Timer Element (#recording-timer) NOT found in DOM!");
-            } else {
-                // Force visibility
-                timerEl.style.display = 'block';
-                timerEl.style.visibility = 'visible';
+            // Timer Visibility handled by CSS for now (Debug)
+            if (timerEl) {
                 timerEl.innerText = '00:00';
             }
 
@@ -323,8 +315,8 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_95)");
-alert("Monitor Module Loaded (debug_95)"); // Force alert on load to confirm file update
+console.log("Monitor Module Loaded (debug_96)");
+// alert("Monitor Module Loaded (debug_96)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
