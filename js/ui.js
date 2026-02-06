@@ -22,68 +22,7 @@ window.toggleSettings = function (forceState) {
 };
 
 
-window.switchTab = function (tabName) {
-    console.log('switchTab called:', tabName);
-    // Nav Items Update
-    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-    // Find button that calls this tab (simplified matching index)
-    // Find button that calls this tab (simplified matching index)
-    const navContainer = document.getElementById('main-nav');
-    if (!navContainer) {
-        console.error('Navbar not found!');
-        return;
-    }
-    const navBtns = navContainer.children;
-
-    // New Order: File, Edit, Graph, Monitor, Menu
-    if (tabName === 'file') navBtns[0].classList.add('active');
-    if (tabName === 'editor') navBtns[1].classList.add('active');
-    if (tabName === 'graph') navBtns[2].classList.add('active');
-    if (tabName === 'monitor') navBtns[3].classList.add('active');
-    // Menu (4) is toggle
-
-    // View Sections Update
-    const views = ['editor-view', 'monitor-view', 'logger-view', 'file-view'];
-    views.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.style.display = 'none';
-            el.classList.remove('active');
-        }
-    });
-
-    // Graph Overlay Handling
-    const graphOverlay = document.getElementById('graph-overlay');
-    if (tabName === 'graph') {
-        graphOverlay.classList.add('active');
-        document.getElementById('graph-type').value = '3d';
-        setTimeout(() => {
-            if (typeof updateGraph === 'function') updateGraph();
-            window.dispatchEvent(new Event('resize'));
-        }, 50);
-    } else {
-        graphOverlay.classList.remove('active');
-    }
-
-    if (tabName === 'editor') {
-        const v = document.getElementById('editor-view');
-        v.style.display = 'block';
-        v.classList.add('active'); // CSS hook
-        document.body.classList.add('mode-editor');
-        setTimeout(renderTable, 10);
-    } else {
-        document.body.classList.remove('mode-editor');
-        if (tabName === 'monitor') {
-            const v = document.getElementById('monitor-view');
-            v.style.display = 'flex';
-            v.classList.add('active');
-        } else if (tabName === 'file') {
-            const v = document.getElementById('file-view');
-            v.style.display = 'flex';
-            v.classList.add('active');
-        }
-    }
-};
+// (Legacy switchTab removed)
 
 window.toggleExplorer = function () {
     const exp = document.getElementById('explorer');
@@ -147,13 +86,13 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_124)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_125)';
     const headerDisplay = document.querySelector('.file-view-title');
-    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_124)</span>`;
+    if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_125)</span>`;
 
     // Ensure settings menu title also updates
     const menuTitle = document.querySelector('#settings-menu .file-view-title');
-    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_124)</span>`;
+    if (menuTitle) menuTitle.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_125)</span>`;
     // Reset values display on tab switch
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
@@ -1056,7 +995,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_124)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_125)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
