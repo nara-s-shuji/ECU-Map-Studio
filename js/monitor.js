@@ -219,9 +219,14 @@ class Monitor {
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
-            // Timer Visibility handled by CSS for now (Debug)
+            // Set Initial Display
             if (timerEl) {
+                timerEl.style.display = 'block';
+                // Force visibility with direct attribute if needed
+                timerEl.style.setProperty('display', 'block', 'important');
                 timerEl.innerText = '00:00';
+                // temp debug
+                // alert("Timer Should Be Visible Now");
             }
 
             // Visual Pulse
@@ -315,7 +320,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_97)");
+console.log("Monitor Module Loaded (debug_98)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
