@@ -219,6 +219,16 @@ class Monitor {
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
+            // Debug Timer Element
+            if (!timerEl) {
+                alert("Debug Error: Timer Element (#recording-timer) NOT found in DOM!");
+            } else {
+                // Force visibility
+                timerEl.style.display = 'block';
+                timerEl.style.visibility = 'visible';
+                timerEl.innerText = '00:00';
+            }
+
             // Visual Pulse
             if (btnRecord) {
                 btnRecord.innerHTML = '<span style="color:white; font-size:18px;">⏹</span> <span>停止</span>';
@@ -228,8 +238,6 @@ class Monitor {
 
             // Start Timer
             if (timerEl) {
-                timerEl.style.display = 'block';
-                timerEl.innerText = '00:00';
                 this.timerInterval = setInterval(() => {
                     const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
                     const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
