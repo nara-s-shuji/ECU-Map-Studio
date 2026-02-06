@@ -7,6 +7,39 @@ class Monitor {
         this.isRecording = false;
         this.logData = [];
         this.startTime = 0;
+        this.logData = [];
+        this.startTime = 0;
+
+        // Wait for DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.initToggles());
+        } else {
+            this.initToggles();
+        }
+    }
+
+    initToggles() {
+        const toggles = document.querySelectorAll('.monitor-toggle');
+        toggles.forEach(toggle => {
+            // Initial State
+            this.updateCardState(toggle);
+
+            // Change Listener
+            toggle.addEventListener('change', (e) => {
+                this.updateCardState(e.target);
+            });
+        });
+    }
+
+    updateCardState(checkbox) {
+        const card = checkbox.closest('.monitor-card');
+        if (card) {
+            if (checkbox.checked) {
+                card.classList.remove('compact');
+            } else {
+                card.classList.add('compact');
+            }
+        }
     }
 
     toggleConnection() {

@@ -1334,6 +1334,27 @@ body {
     margin-right: 5px;
 }
 
+/* Compact Monitor Card */
+.monitor-card.compact {
+    padding: 5px 10px;
+    flex-direction: row;
+    height: auto;
+    justify-content: space-between;
+}
+
+.monitor-card.compact .monitor-label {
+    margin-bottom: 0;
+}
+
+.monitor-card.compact .monitor-value,
+.monitor-card.compact .monitor-unit {
+    display: none;
+}
+
+.monitor-card.compact .monitor-toggle {
+    margin: 0;
+}
+
 /* Ensure #file-view is hidden if not active class */
 #file-view:not(.active) {
     display: none !important;
