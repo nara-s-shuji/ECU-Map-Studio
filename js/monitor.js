@@ -209,8 +209,12 @@ class Monitor {
             // Enable Save if we have data
             if (btnSave) btnSave.disabled = false;
 
-            // Stop Timer
+            // Stop Timer -> Ready State
             if (this.timerInterval) clearInterval(this.timerInterval);
+            if (timerEl) {
+                timerEl.innerText = "Ready";
+                timerEl.style.color = "#666";
+            }
             // if (timerEl) timerEl.style.display = 'none'; // KEEP VISIBLE FOR DEBUGGING
 
         } else {
@@ -219,14 +223,10 @@ class Monitor {
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
-            // Set Initial Display
+            // Timer -> Active State
             if (timerEl) {
-                timerEl.style.display = 'block';
-                // Force visibility with direct attribute if needed
-                timerEl.style.setProperty('display', 'block', 'important');
+                timerEl.style.color = "#ff4444"; // Red for recording
                 timerEl.innerText = '00:00';
-                // temp debug
-                // alert("Timer Should Be Visible Now");
             }
 
             // Visual Pulse
@@ -320,7 +320,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_98)");
+console.log("Monitor Module Loaded (debug_99)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
