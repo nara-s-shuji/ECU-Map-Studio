@@ -113,7 +113,7 @@ function switchTab(tabId) {
     }
     // 7. Update Info Bar & Close Menu (Restored Logic)
     // Mobile Info Bar Update
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_147)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_148)';
     const headerDisplay = document.querySelector('.file-view-title');
     // if (headerDisplay) headerDisplay.innerHTML = `ECU Map Studio <span style="font-size:10px; color:#888; margin-left:5px;">(debug_145)</span>`;
 
@@ -1022,7 +1022,7 @@ function updateUISelection() {
     if (elOriginal) elOriginal.innerText = originalValue;
 
     // --- Update Mobile Info Bar ---
-    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_147)';
+    document.getElementById('info-filename').innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_148)';
     // Use the focused cell values
     document.getElementById('info-values').innerText = `Curr:${currentValue} / Orig:${originalValue}`;
     // -----------------------------
