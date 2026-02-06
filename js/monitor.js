@@ -196,10 +196,10 @@ class Monitor {
     toggleRecording() {
         const btnRecord = document.getElementById('btn-record-all');
         const btnSave = document.getElementById('btn-save-all');
-        const timerEl = document.getElementById('recording-timer');
-        const timerCount = document.querySelectorAll('#recording-timer').length;
+        // Update all elements with this ID to handle duplicates safely
+        const timerEls = document.querySelectorAll('#recording-timer');
 
-        alert(`DEBUG: toggleRecording. isRecording=${this.isRecording}, timerEl=${!!timerEl}, Count=${timerCount}`);
+        // alert(`DEBUG: toggleRecording. isRecording=${this.isRecording}, timerEl=${!!timerEl}, Count=${timerCount}`);
 
         if (this.isRecording) {
             // Stop
@@ -214,27 +214,24 @@ class Monitor {
 
             // Stop Timer -> Ready State
             if (this.timerInterval) clearInterval(this.timerInterval);
-            if (timerEl) {
-                timerEl.innerText = "Ready";
-                timerEl.style.color = "#666";
-            }
-            // if (timerEl) timerEl.style.display = 'none'; // KEEP VISIBLE FOR DEBUGGING
+
+            timerEls.forEach(el => {
+                el.innerText = "Ready";
+                el.style.color = "#666";
+            });
 
         } else {
             // Start
-            alert("DEBUG: Flow -> Start Block");
+            // alert("DEBUG: Flow -> Start Block");
             this.isRecording = true;
             this.logData = []; // Reset Buffer
             this.startTime = Date.now();
 
             // Timer -> Active State
-            if (timerEl) {
-                alert(`DEBUG: updating timer text to 00:00 on element: ${timerEl.tagName}`);
-                timerEl.style.color = "#ff4444"; // Red for recording
-                timerEl.innerText = '00:00';
-            } else {
-                alert("DEBUG: Timer El Missing in Start Block!");
-            }
+            timerEls.forEach(el => {
+                el.style.color = "#ff4444"; // Red for recording
+                el.innerText = '00:00';
+            });
 
             // Visual Pulse
             if (btnRecord) {
@@ -244,20 +241,22 @@ class Monitor {
             if (btnSave) btnSave.disabled = true;
 
             // Start Timer
-            if (timerEl) {
-                alert("DEBUG: Setting Interval");
+            if (timerEls.length > 0) {
+                // alert("DEBUG: Setting Interval");
                 this.timerInterval = setInterval(() => {
                     try {
                         const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
                         const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
                         const ss = String(elapsed % 60).padStart(2, '0');
-                        timerEl.innerText = `${mm}:${ss}`;
+
+                        timerEls.forEach(el => {
+                            el.innerText = `${mm}:${ss}`;
+                        });
                     } catch (e) {
                         console.error("Timer Error", e);
                     }
                 }, 1000);
             }
-
             // Generate some dummy data immediately for visual feedback/demo if not connected
             if (!this.isConnected) {
                 this.simulateRecording();
@@ -332,7 +331,7 @@ class Monitor {
 // Singleton Instance
 const monitor = new Monitor();
 window.monitor = monitor;
-console.log("Monitor Module Loaded (debug_101)");
+console.log("Monitor Module Loaded (debug_102)");
 
 window.saveDummy = function () {
     alert("Monitor Data Saved (Dummy)");
