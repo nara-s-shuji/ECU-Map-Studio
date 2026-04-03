@@ -10,162 +10,18 @@
     <title>ECU Map Studio 2026</title>
     <!-- Offline Plotly Library -->
     <script src="lib/plotly.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=2026.2">
     <style>
-        :root {
-            --bg: #1e1e1e;
-            --surface: #252526;
-            --nav-bg: #2d2d30;
-            --border: #3c3c3c;
-            --accent: #0078d4;
-            --text: #cccccc;
-            --text-bright: #ffffff;
-            --danger: #ff4444;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Toolbar (Top) */
-        #toolbar {
-            height: 40px;
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            gap: 10px;
-            z-index: 1000;
-        }
-
-        .toolbar-btn {
-            background: transparent;
-            border: none;
-            color: var(--text);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .toolbar-btn:hover { background: #3e3e42; }
-        .toolbar-btn:active { background: var(--accent); color: white; }
-
-        /* Main Container & Views */
-        #main-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .view-section {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: none;
-            flex-direction: column;
-        }
-
-        .view-section.active { display: flex; }
-
-        /* Editor View */
-        #mobile-info-bar {
-            height: 30px;
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
-            font-size: 11px;
-            color: #888;
-        }
-
-        #map-section {
-            flex: 1;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #table-wrapper { position: relative; }
-        .header-row {
-            display: flex;
-            position: sticky;
-            top: 0;
-            background: var(--nav-bg);
-            z-index: 10;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: 60px repeat(20, 70px);
-        }
-
-        .cell {
-            width: 70px;
-            height: 35px;
-            border: 0.5px solid rgba(255,255,255,0.05); /* Very thin border */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            position: relative;
-        }
-
-        .label-cell {
-            width: 60px !important;
-            background: var(--nav-bg);
-            position: sticky;
-            left: 0;
-            z-index: 5;
-            font-size: 11px;
-            color: #888;
-        }
-
-        .header-cell {
-            width: 70px;
-            height: 30px;
-            background: var(--nav-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: #888;
-            border: 0.5px solid var(--border);
-        }
-
-        .cell input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            text-align: center;
-            font-family: 'Consolas', monospace;
-            padding: 0;
-            outline: none;
-        }
-
-        .selected-cell { border: 2px solid var(--accent) !important; z-index: 20; }
-        .multi-selected-cell { background: rgba(0, 120, 212, 0.3) !important; }
-
-        /* UI COMPONENTS (Root Position) */
+        /* MINIMAL OVERRIDES FOR MOBILE POPUP & NAV */
         #edit-popup-v2 {
             position: fixed;
-            bottom: 75px; /* Above Bottom Nav */
+            bottom: 75px;
             left: 50%;
             transform: translateX(-50%);
             width: 95%;
             max-width: 500px;
-            height: 60px;
-            background: var(--surface);
+            height: 62px;
+            background: #252526;
             border: 1px solid var(--accent);
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.8);
@@ -174,224 +30,106 @@
             align-items: center;
             justify-content: center;
             touch-action: none;
-        }
-
-        #edit-popup-v2.active { display: flex !important; }
-
-        .popup-controls {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            align-items: center;
-            justify-content: space-around;
             padding: 0 10px;
             box-sizing: border-box;
         }
+        #edit-popup-v2.active { display: flex !important; }
 
+        .popup-controls { display: flex; width: 100%; height: 100%; align-items: center; gap: 8px; justify-content: space-around; }
         .popup-btn {
-            background: #333;
-            border: 1px solid #444;
-            color: white;
-            height: 45px;
-            border-radius: 8px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
+            background: #333; border: 1px solid #444; color: white;
+            height: 48px; min-width: 44px; border-radius: 8px;
+            font-size: 20px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; user-select: none;
         }
-
-        #btn-apply-minus, #btn-apply-plus { width: 70px; font-size: 24px; font-weight: bold; }
+        #btn-apply-minus, #btn-apply-plus { flex: 1; max-width: 80px; font-weight: bold; font-size: 24px; }
+        
         .delta-spinner-group {
-            display: flex;
-            align-items: center;
-            background: #000;
-            border-radius: 8px;
-            height: 45px;
-            flex: 1;
-            margin: 0 10px;
-            border: 1px solid #444;
+            display: flex; align-items: center; background: #000;
+            border-radius: 8px; height: 48px; flex: 1; max-width: 120px; border: 1px solid #444;
         }
+        .spinner-adjust-btn { flex: 1; height: 100%; background: transparent; border: none; color: #888; font-size: 14px; }
+        #popup-delta { width: 50px; background: transparent; border: none; color: white; text-align: center; font-size: 16px; font-family: 'Consolas', monospace; }
 
-        .spinner-adjust-btn {
-            flex: 1;
-            height: 100%;
-            background: transparent;
-            border: none;
-            color: #888;
-            font-size: 14px;
-        }
-
-        #popup-delta {
-            width: 50px;
-            background: transparent;
-            border: none;
-            color: white;
-            text-align: center;
-            font-size: 16px;
-            font-family: 'Consolas', monospace;
-        }
-
-        /* Bottom Nav */
+        /* Bottom Nav Fix */
         #bottom-nav {
-            height: 60px;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: #2d2d30; border-top: 1px solid #3c3c3c;
+            display: flex; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom);
             z-index: 10000;
         }
-
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            text-decoration: none;
-            font-size: 10px;
-            background: transparent;
-            border: none;
-            padding: 0;
-            width: 20%;
-            height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #888; font-size: 10px; background: transparent; border: none; width: 20%; height: 100%;
         }
-
         .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+        .nav-i-icon { font-size: 20px; margin-bottom: 2px; }
 
-        /* Settings Menu */
-        #settings-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            z-index: 24000;
+        /* Fix Header Spacing (Conflicted in previous turn) */
+        .header-row, .grid-container {
+            grid-template-columns: 80px repeat(11, 70px) !important; /* Adjust if data has more cols */
+            width: max-content !important;
+        }
+        @media (min-width: 1024px) {
+            .header-row, .grid-container { grid-template-columns: 80px repeat(27, 60px) !important; }
         }
 
-        #settings-menu {
-            position: fixed;
-            top: 0; right: -300px; width: 300px; height: 100%;
-            background: var(--surface);
-            border-left: 1px solid var(--border);
-            transition: right 0.3s ease;
-            z-index: 25000;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        #settings-menu.active { right: 0; }
-        #settings-overlay.active { display: block; }
-
-        .settings-content h3 { border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; }
-        .menu-item {
-            width: 100%;
-            padding: 12px;
-            background: #333;
-            border: none;
-            color: white;
-            margin-bottom: 8px;
-            text-align: left;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        /* Monitor Cards */
-        .monitor-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            padding: 15px;
-        }
-
-        .monitor-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .monitor-value { font-size: 28px; font-weight: bold; font-family: 'Consolas', monospace; margin: 5px 0; }
-        .monitor-label { font-size: 11px; color: #888; text-transform: uppercase; }
-
-        @media (max-width: 768px) {
-            #edit-popup-v2 { width: 98%; bottom: 65px; border-radius: 0; border: none; border-top: 1px solid var(--accent); }
-            .grid-container { grid-template-columns: 50px repeat(20, 65px) !important; }
-            .cell { width: 65px !important; }
+        /* Mobile Info Bar */
+        #mobile-info-bar {
+            height: 32px; background: #2d2d30; border-bottom: 1px solid #3c3c3c;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 10px; font-size: 11px; z-index: 1000;
         }
     </style>
 </head>
 
-<body>
+<body style="overflow: hidden; height: 100vh; width: 100vw; display: flex; flex-direction: column; background: #1e1e1e;">
     <!-- 1. Toolbar -->
     <div id="toolbar">
-        <button class="toolbar-btn" id="btn-save-top">💾</button>
-        <button class="toolbar-btn" id="btn-undo-top">↶</button>
-        <button class="toolbar-btn" id="btn-redo-top">↷</button>
+        <button class="toolbar-btn" data-tooltip="保存" id="btn-save-top">💾</button>
+        <button class="toolbar-btn" id="btn-undo" data-tooltip="元に戻す">↶</button>
+        <button class="toolbar-btn" id="btn-redo" data-tooltip="やり直し">↷</button>
         <div style="flex:1"></div>
-        <button class="toolbar-btn" id="btn-settings-top">⚙️</button>
+        <button class="toolbar-btn" id="btn-settings" data-tooltip="設定">⚙️</button>
     </div>
 
     <!-- 2. Main Container -->
     <div id="main-container">
         <!-- Editor View -->
-        <div id="editor-view" class="view-section active">
+        <div id="editor-view" class="view-section active" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
             <div id="mobile-info-bar">
                 <span id="info-filename">New_Map.csv</span>
-                <span id="debug-info" style="font-size:9px; color:#555; background:#000; padding:2px 4px; border-radius:3px;">v2026.2_POPUP_FIX</span>
+                <span id="debug-info" style="font-size:9px; color:#555; background:#000; padding:2px 4px; border-radius:3px;">v2026.3_LAYOUT_FIX</span>
                 <span id="info-values">Curr: - / Orig: -</span>
             </div>
-            <div id="map-section">
+            <div id="map-section" style="flex:1; overflow:auto; -webkit-overflow-scrolling: touch; background:#000;">
                 <div id="table-wrapper">
                     <div id="headerRow" class="header-row"></div>
                     <div id="mapGrid" class="grid-container"></div>
                 </div>
-                <div style="height: 100px;"></div> <!-- Spacer -->
+                <div style="height: 120px;"></div> <!-- Spacer -->
             </div>
         </div>
 
-        <!-- File View -->
-        <div id="file-view" class="view-section">
-            <div style="padding:20px;">
-                <h3>Project Files</h3>
-                <div id="explorer-list">
-                    <!-- Dynamic -->
-                </div>
-                <button class="menu-item" id="btn-import">📂 Import Local CSV</button>
-            </div>
+        <!-- Other Views (Managed by navigation.js) -->
+        <div id="file-view" class="view-section" style="display:none; padding:20px; overflow-y:auto;">
+            <h3>Project Files</h3>
+            <div id="explorer-list" class="file-list"></div>
         </div>
-
-        <!-- Graph View -->
-        <div id="graph-view" class="view-section">
-            <div id="graph-header" style="padding:10px; border-bottom:1px solid var(--border); display:flex; gap:10px;">
-                <select id="graph-type" style="background:#333; color:white; border:none; padding:5px; border-radius:4px;">
-                    <option value="3d">3D Surface</option>
-                    <option value="rpm">RPM Slice</option>
-                    <option value="tps">TPS Slice</option>
-                </select>
-            </div>
+        <div id="graph-view" class="view-section" style="display:none; flex-direction:column; height:100%;">
+            <div style="padding:10px; border-bottom:1px solid #3c3c3c;">Graph View</div>
             <div id="chart-container" style="flex:1;"></div>
         </div>
-
-        <!-- Monitor View -->
-        <div id="monitor-view" class="view-section">
-            <div class="monitor-grid" id="monitor-grid">
-                <!-- Monitor Cards -->
-            </div>
-            <div style="padding:20px; text-align:center;">
-                <button class="menu-item" style="background:var(--accent); text-align:center; max-width:200px; margin: 0 auto;">Connect to ECU</button>
-            </div>
+        <div id="monitor-view" class="view-section" style="display:none; overflow-y:auto;">
+            <div class="monitor-grid" id="monitor-grid"></div>
         </div>
     </div>
 
     <!-- 3. Edit Popup (v2) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <button class="popup-btn" style="width:40px;" title="Reset">↺</button>
+            <button class="popup-btn" style="width:40px;" title="Reset" onclick="resetToOriginal()">↺</button>
             <button class="popup-btn" id="btn-apply-minus">-</button>
             <div class="delta-spinner-group">
                 <button class="spinner-adjust-btn">▽</button>
@@ -399,64 +137,55 @@
                 <button class="spinner-adjust-btn">△</button>
             </div>
             <button class="popup-btn" id="btn-apply-plus">+</button>
-            <button class="popup-btn" id="btn-mode-toggle" style="font-size:12px; width:45px;">ABS</button>
+            <button class="popup-btn" id="btn-mode-toggle" style="font-size:12px; width:45px;" onclick="togglePopupMode()">ABS</button>
         </div>
     </div>
 
     <!-- 4. Bottom Navigation -->
     <div id="bottom-nav">
         <button class="nav-item" id="nav-file">
-            <span class="nav-icon">📁</span>
+            <span class="nav-i-icon">📁</span>
             <span>ファイル</span>
         </button>
         <button class="nav-item active" id="nav-editor">
-            <span class="nav-icon">📝</span>
+            <span class="nav-i-icon">📝</span>
             <span>編集</span>
         </button>
         <button class="nav-item" id="nav-graph">
-            <span class="nav-icon">📊</span>
+            <span class="nav-i-icon">📊</span>
             <span>グラフ</span>
         </button>
         <button class="nav-item" id="nav-monitor">
-            <span class="nav-icon">⏱️</span>
+            <span class="nav-i-icon">⏱️</span>
             <span>モニター</span>
         </button>
         <button class="nav-item" id="nav-menu">
-            <span class="nav-icon">☰</span>
+            <span class="nav-i-icon">☰</span>
             <span>設定</span>
         </button>
     </div>
 
     <!-- 5. Overlays -->
     <div id="settings-overlay"></div>
-    <div id="settings-menu">
+    <div id="settings-menu" style="display:none; position:fixed; top:40px; right:0; width:280px; height:calc(100% - 40px); background:#252526; z-index:25000; padding:20px; border-left:1px solid #3c3c3c;">
         <div class="settings-content">
-            <h3>Settings <button class="menu-close-btn" onclick="toggleSettings(false)">×</button></h3>
-            <div class="menu-item">
-                <label>Theme: </label>
-                <select style="background:#444; color:white; border:none; margin-left:10px;">
-                    <option>Dark Mode</option>
-                </select>
-            </div>
-            <div class="menu-item">
+            <h3>Settings <button style="float:right; background:none; border:none; color:#888; font-size:20px;" onclick="toggleSettings(false)">×</button></h3>
+            <div class="setting-item">
                 <label>Coloring: </label>
-                <select id="cell-color-mode" style="background:#444; color:white; border:none; margin-left:10px;">
+                <select id="cell-color-mode" style="width:100%; background:#3c3c3c; color:white; border:1px solid #555; padding:5px;">
                     <option value="diff">Diff (差分)</option>
                     <option value="absolute">Absolute (絶対値)</option>
                 </select>
             </div>
-            <hr style="border-color:var(--border)">
-            <button class="menu-item" id="btn-menu-open">Open CSV File</button>
-            <button class="menu-item" id="btn-menu-undo">Undo Change</button>
-            <button class="menu-item" onclick="location.reload()">Reload App</button>
+            <hr style="border-color:#444; margin:15px 0;">
+            <button class="menu-item" style="width:100%; padding:10px; margin-bottom:5px;" id="btn-menu-open">📂 Open File</button>
+            <button class="menu-item" style="width:100%; padding:10px;" onclick="location.reload()">🔄 Reload</button>
         </div>
     </div>
 
-    <!-- Hidden Hooks -->
     <input type="file" id="file-input" style="display:none;" accept=".csv">
     <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 
     <script src="js/app.js" type="module"></script>
 </body>
-
 </html>
