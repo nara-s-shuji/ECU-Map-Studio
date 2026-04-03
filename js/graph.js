@@ -1,36 +1,40 @@
-window.toggleGraph = function () {
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { updatePopupPosition } from './popup.js';
+
+let graphResizeInitialized = false;
+
+export function toggleGraph() {
     try {
         const overlay = document.getElementById('graph-overlay');
         const btn = document.getElementById('btn-graph');
+        if (!overlay || !btn) return;
+
         overlay.classList.toggle('active');
         const isActive = overlay.classList.contains('active');
-        document.body.classList.toggle('overlay-active', isActive); // ADD
+        document.body.classList.toggle('overlay-active', isActive);
         btn.classList.toggle('active');
-        // Mobile Nav Update
+
         const navBtn = document.getElementById('nav-graph');
-        if (navBtn) navBtn.classList.toggle('active', overlay.classList.contains('active'));
+        if (navBtn) navBtn.classList.toggle('active', isActive);
 
-        // Force Popup Update
-        if (typeof window.updatePopupPosition === 'function') window.updatePopupPosition();
+        updatePopupPosition();
 
-        if (overlay.classList.contains('active')) {
+        if (isActive) {
             updateGraph();
-            // グラフ表示時にリサイズハンドルを初期化
-            setTimeout(() => {
-                initGraphResizeHandles();
-            }, 100);
+            setTimeout(() => initGraphResizeHandles(), 100);
         }
     } catch (e) {
-        alert('Graph Toggle Error: ' + e.message);
-        console.error(e);
+        console.error('Graph Toggle Error:', e);
     }
-};
+}
 
-window.updateGraph = function () {
+export function updateGraph() {
     const overlay = document.getElementById('graph-overlay');
-    if (!overlay.classList.contains('active')) return;
+    if (!overlay || !overlay.classList.contains('active')) return;
 
-    const mode = document.getElementById('graph-type').value;
+    const typeEl = document.getElementById('graph-type');
+    const mode = typeEl ? typeEl.value : '3d';
+    
     let traces = [];
     const layout = {
         paper_bgcolor: '#1e1e1e', plot_bgcolor: '#1e1e1e',
@@ -42,7 +46,7 @@ window.updateGraph = function () {
 
     if (mode === '3d') {
         traces = [{
-            z: fuelMap, x: RPM_AXIS, y: TPS_AXIS, type: 'surface',
+            z: state.fuelMap, x: RPM_AXIS, y: TPS_AXIS, type: 'surface',
             colorscale: [[0, 'blue'], [0.5, 'green'], [1, 'red']], showscale: false
         }];
         layout.scene = {
@@ -54,7 +58,7 @@ window.updateGraph = function () {
         layout.margin = { t: 5, l: 5, r: 5, b: 15 };
     } else if (mode === 'tps') {
         traces = [{
-            x: TPS_AXIS, y: fuelMap.map(row => row[selR]),
+            x: TPS_AXIS, y: state.fuelMap.map(row => row[state.selR]),
             type: 'scatter', mode: 'lines+markers',
             line: { color: '#0078d4', shape: 'linear' }
         }];
@@ -62,7 +66,7 @@ window.updateGraph = function () {
         layout.yaxis.title = "Fuel (μs)";
     } else {
         traces = [{
-            x: RPM_AXIS, y: fuelMap[selT],
+            x: RPM_AXIS, y: state.fuelMap[state.selT],
             type: 'scatter', mode: 'lines+markers',
             line: { color: '#0078d4', shape: 'linear' }
         }];
@@ -70,91 +74,79 @@ window.updateGraph = function () {
         layout.yaxis.title = "Fuel (μs)";
     }
 
-    Plotly.newPlot('chart-container', traces, layout, { responsive: true, displayModeBar: false, scrollZoom: true });
+    if (window.Plotly) {
+        Plotly.newPlot('chart-container', traces, layout, { responsive: true, displayModeBar: false, scrollZoom: true });
+    }
 }
 
-let graphResizeInitialized = false;
+let isResizing = false;
+let resizeDirection = '';
+let resizeStartX, resizeStartY, resizeStartWidth, resizeStartHeight, resizeStartLeft, resizeStartTop;
 
 function initGraphResizeHandles() {
     if (graphResizeInitialized) return;
-
     const graphOverlay = document.getElementById('graph-overlay');
+    if (!graphOverlay) return;
 
-    // リサイズハンドル
     const handles = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
     handles.forEach(dir => {
         const handle = graphOverlay.querySelector(`.resize-${dir}`);
         if (handle) {
-            handle.onmousedown = function (e) {
+            handle.addEventListener('mousedown', (e) => {
                 e.preventDefault();
-
                 isResizing = true;
                 resizeDirection = dir;
                 resizeStartX = e.clientX;
                 resizeStartY = e.clientY;
-                const overlay = document.getElementById('graph-overlay');
-                resizeStartWidth = overlay.offsetWidth;
-                resizeStartHeight = overlay.offsetHeight;
-                resizeStartLeft = overlay.offsetLeft;
-                resizeStartTop = overlay.offsetTop;
+                resizeStartWidth = graphOverlay.offsetWidth;
+                resizeStartHeight = graphOverlay.offsetHeight;
+                resizeStartLeft = graphOverlay.offsetLeft;
+                resizeStartTop = graphOverlay.offsetTop;
 
-                // ドキュメント全体でmousemoveとmouseupを監視
-                const onMouseMove = function (e) {
+                const onMouseMove = (e) => {
                     if (!isResizing) return;
-                    e.preventDefault();
-
                     const deltaX = e.clientX - resizeStartX;
                     const deltaY = e.clientY - resizeStartY;
-                    const overlay = document.getElementById('graph-overlay');
 
                     let newWidth = resizeStartWidth;
                     let newHeight = resizeStartHeight;
                     let newLeft = resizeStartLeft;
                     let newTop = resizeStartTop;
 
-                    if (resizeDirection.includes('e')) {
-                        newWidth = Math.max(300, resizeStartWidth + deltaX);
-                    }
+                    if (resizeDirection.includes('e')) newWidth = Math.max(300, resizeStartWidth + deltaX);
                     if (resizeDirection.includes('w')) {
-                        const potentialWidth = resizeStartWidth - deltaX;
-                        if (potentialWidth >= 300) {
-                            newWidth = potentialWidth;
-                            newLeft = resizeStartLeft + deltaX;
-                        }
+                        const potWidth = resizeStartWidth - deltaX;
+                        if (potWidth >= 300) { newWidth = potWidth; newLeft = resizeStartLeft + deltaX; }
                     }
-                    if (resizeDirection.includes('s')) {
-                        newHeight = Math.max(200, resizeStartHeight + deltaY);
-                    }
+                    if (resizeDirection.includes('s')) newHeight = Math.max(200, resizeStartHeight + deltaY);
                     if (resizeDirection.includes('n')) {
-                        const potentialHeight = resizeStartHeight - deltaY;
-                        if (potentialHeight >= 200) {
-                            newHeight = potentialHeight;
-                            newTop = resizeStartTop + deltaY;
-                        }
+                        const potHeight = resizeStartHeight - deltaY;
+                        if (potHeight >= 200) { newHeight = potHeight; newTop = resizeStartTop + deltaY; }
                     }
 
-                    overlay.style.width = newWidth + 'px';
-                    overlay.style.height = newHeight + 'px';
-                    overlay.style.left = newLeft + 'px';
-                    overlay.style.top = newTop + 'px';
-                    overlay.style.right = 'auto';
-                    overlay.style.bottom = 'auto';
-
+                    graphOverlay.style.width = newWidth + 'px';
+                    graphOverlay.style.height = newHeight + 'px';
+                    graphOverlay.style.left = newLeft + 'px';
+                    graphOverlay.style.top = newTop + 'px';
+                    graphOverlay.style.right = 'auto';
+                    graphOverlay.style.bottom = 'auto';
                     updateGraph();
                 };
 
-                const onMouseUp = function (e) {
+                const onMouseUp = () => {
                     isResizing = false;
-                    resizeDirection = '';
                     document.removeEventListener('mousemove', onMouseMove);
                     document.removeEventListener('mouseup', onMouseUp);
                 };
 
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
-            };
+            });
         }
     });
-
     graphResizeInitialized = true;
 }
+
+// Global exposure
+window.toggleGraph = toggleGraph;
+window.updateGraph = updateGraph;

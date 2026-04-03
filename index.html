@@ -107,20 +107,18 @@
 <body style="box-sizing: border-box; background: #1e1e1e; padding-top: 0 !important; overflow: hidden;">
 
     <div id="toolbar">
-        <button class="toolbar-btn" data-tooltip="ファイルを開く (Ctrl+O)" onclick="openFile()">📁</button>
-        <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)" onclick="openBaseFile()">📋</button>
-        <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)" onclick="saveFile()">💾</button>
-
-
+        <button class="toolbar-btn" data-tooltip="ファイルを開く (Ctrl+O)">📁</button>
+        <button class="toolbar-btn" data-tooltip="基準ファイルを開く (Ctrl+Shift+O)">📋</button>
+        <button class="toolbar-btn" data-tooltip="保存 (Ctrl+S)">💾</button>
 
         <div class="toolbar-separator"></div>
 
-        <button class="toolbar-btn" data-tooltip="元に戻す (Ctrl+Z)" onclick="undo()" id="btn-undo">↶</button>
-        <button class="toolbar-btn" data-tooltip="やり直し (Ctrl+Y)" onclick="redo()" id="btn-redo">↷</button>
+        <button class="toolbar-btn" data-tooltip="元に戻す (Ctrl+Z)" id="btn-undo">↶</button>
+        <button class="toolbar-btn" data-tooltip="やり直し (Ctrl+Y)" id="btn-redo">↷</button>
 
         <div class="toolbar-separator"></div>
 
-        <button class="toolbar-btn ecu-disconnected" data-tooltip="ECUに接続" onclick="toggleECUConnection()"
+        <button class="toolbar-btn ecu-disconnected" data-tooltip="ECUに接続"
             id="btn-ecu-connect">
             <!-- WiFi + ECU Icon -->
             <svg viewBox="0 0 24 24" class="icon-svg">
@@ -140,21 +138,21 @@
                 <rect x="15" y="18" width="2" height="1" fill="var(--bg)" />
             </svg>
         </button>
-        <button class="toolbar-btn" data-tooltip="ECUに書き込み (Ctrl+W)" onclick="writeToECU()" id="btn-write"
+        <button class="toolbar-btn" data-tooltip="ECUに書き込み (Ctrl+W)" id="btn-write"
             disabled>📤</button>
-        <button class="toolbar-btn" data-tooltip="ECUから読み取り (Ctrl+R)" onclick="readFromECU()" id="btn-read"
+        <button class="toolbar-btn" data-tooltip="ECUから読み取り (Ctrl+R)" id="btn-read"
             disabled>📥</button>
 
         <div class="toolbar-separator"></div>
 
-        <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" onclick="toggleGraph()" id="btn-graph">📊</button>
-        <button class="toolbar-btn" data-tooltip="設定 (Ctrl+,)" onclick="toggleSettings()" id="btn-settings">⚙️</button>
+        <button class="toolbar-btn" data-tooltip="グラフ表示 (Ctrl+G)" id="btn-graph">📊</button>
+        <button class="toolbar-btn" data-tooltip="設定 (Ctrl+,)" id="btn-settings">⚙️</button>
 
         <!-- Debug Info -->
         <span id="debug-info" style="font-size:10px; color:#555; margin-left: auto; margin-right: 5px;">v2026.1</span>
 
         <!-- Hamburger for Mobile -->
-        <button id="hamburger-btn" onclick="toggleExplorer()">☰</button>
+        <button id="hamburger-btn">☰</button>
     </div>
 
 
@@ -163,23 +161,23 @@
     <!-- MOVED NAVIGATION TO TOP OF DOM (BUT VISUALLY FIXED) -->
     <div id="main-nav"
         style="touch-action: none; display: flex !important; z-index: 2147483647 !important; position: fixed !important; top: auto !important; bottom: 0 !important; left: 0 !important; width: 100% !important; min-height: 60px !important; background: #2d2d30 !important; border-top: 1px solid #444 !important; align-items: center; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom);">
-        <button class="nav-item" onclick="switchTab('file')" id="nav-file">
+        <button class="nav-item" id="nav-file">
             <span class="nav-icon">📁</span>
             <span>ファイル</span>
         </button>
-        <button class="nav-item active" onclick="switchTab('editor')" id="nav-editor">
+        <button class="nav-item active" id="nav-editor">
             <span class="nav-icon">▤</span>
             <span>編集</span>
         </button>
-        <button class="nav-item" onclick="switchTab('graph')" id="nav-graph">
+        <button class="nav-item" id="nav-graph">
             <span class="nav-icon">📉</span>
             <span>グラフ</span>
         </button>
-        <button class="nav-item" onclick="switchTab('monitor')" id="nav-monitor">
+        <button class="nav-item" id="nav-monitor">
             <span class="nav-icon">📊</span>
             <span>モニター</span>
         </button>
-        <button class="nav-item" onclick="toggleSettings()" id="nav-menu">
+        <button class="nav-item" id="nav-menu">
             <span class="nav-icon">≡</span>
             <span>その他</span>
         </button>
@@ -291,7 +289,7 @@
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px 10px 10px; border-bottom: 1px solid #3c3c3c; margin-top: 0;">
                     <h2 style="color: #ccc; margin: 0; font-size: 18px;">モニター</h2>
-                    <button onclick="monitor.toggleConnection()" class="btn-connect"
+                    <button class="btn-connect"
                         style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">未接続</button>
                 </div>
 
@@ -413,12 +411,12 @@
                         </div>
                         <div style="display: flex; gap: 10px; width: 100%;">
                             <!-- Record Button (Left) -->
-                            <button id="btn-record-all" class="btn-monitor-global" onclick="monitor.toggleRecording()"
+                            <button id="btn-record-all" class="btn-monitor-global"
                                 style="flex:1; display:flex; gap:8px; justify-content:center; align-items:center; font-weight:bold;">
                                 <span style="color:#ff4444; font-size:18px;">⏺</span> <span>記録</span>
                             </button>
                             <!-- Save Button (Right) -->
-                            <button id="btn-save-all" class="btn-monitor-global" onclick="monitor.saveLog()" disabled
+                            <button id="btn-save-all" class="btn-monitor-global" disabled
                                 style="flex:1; display:flex; gap:8px; justify-content:center; align-items:center; font-weight:bold;">
                                 <span style="font-size:18px;">💾</span> <span>保存</span>
                             </button>
@@ -487,7 +485,7 @@
                     <!-- Top Row: Title + Connect (Restored) -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div class="file-view-title" style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
-                        <button onclick="monitor.toggleConnection()" class="btn-connect"
+                        <button class="btn-connect"
                             style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px;">未接続</button>
                     </div>
 
@@ -496,7 +494,7 @@
                         style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
                         <span style="font-size: 11px; color: #888; margin-right: 5px;">BASIC</span>
                         <label class="switch">
-                            <input type="checkbox" id="mode-toggle" onchange="toggleFileMode()">
+                            <input type="checkbox" id="mode-toggle">
                             <span class="slider round"></span>
                         </label>
                         <span
@@ -506,7 +504,7 @@
 
                 <div class="file-list" style="flex: 1; overflow-y: auto; padding: 0 10px; padding-bottom: 80px;">
                     <!-- Fuel Map (Existing) -->
-                    <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
+                    <div class="file-item active" id="file-item-fuel">
                         <div class="file-item-header">
                             <span>燃料マップ</span>
                             <div class="file-item-actions">
@@ -515,19 +513,15 @@
                             </div>
                         </div>
                         <div class="file-item-sub">
-                            <button class="sub-btn active"
-                                onclick="event.stopPropagation(); selectMapSlot('fuel', 1)">1</button>
-                            <button class="sub-btn"
-                                onclick="event.stopPropagation(); selectMapSlot('fuel', 2)">2</button>
-                            <button class="sub-btn"
-                                onclick="event.stopPropagation(); selectMapSlot('fuel', 3)">3</button>
-                            <button class="sub-btn"
-                                onclick="event.stopPropagation(); selectMapSlot('fuel', 4)">4</button>
+                            <button class="sub-btn active" data-map="fuel" data-slot="1">1</button>
+                            <button class="sub-btn" data-map="fuel" data-slot="2">2</button>
+                            <button class="sub-btn" data-map="fuel" data-slot="3">3</button>
+                            <button class="sub-btn" data-map="fuel" data-slot="4">4</button>
                         </div>
                     </div>
 
                     <!-- Map Selection Group (Updated: Selectable + Badges on Right) -->
-                    <div class="file-item" onclick="selectFileItem(this, 'map_sel')">
+                    <div class="file-item" id="file-item-map-sel">
                         <div class="file-item-header">
                             <span>マップ選択</span>
                             <div class="file-item-actions">
@@ -540,27 +534,19 @@
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <span style="font-size:10px; color:#888; width:30px;">優先</span>
                                 <div style="flex:1; display:flex; gap:2px;">
-                                    <button id="btn-prio-1" class="sub-btn active"
-                                        onclick="event.stopPropagation(); selectPriorityMap(1)">1</button>
-                                    <button id="btn-prio-2" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectPriorityMap(2)">2</button>
-                                    <button id="btn-prio-3" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectPriorityMap(3)">3</button>
-                                    <button id="btn-prio-4" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectPriorityMap(4)">4</button>
+                                    <button id="btn-prio-1" class="sub-btn active" data-prio="1">1</button>
+                                    <button id="btn-prio-2" class="sub-btn" data-prio="2">2</button>
+                                    <button id="btn-prio-3" class="sub-btn" data-prio="3">3</button>
+                                    <button id="btn-prio-4" class="sub-btn" data-prio="4">4</button>
                                 </div>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <span style="font-size:10px; color:#888; width:30px;">次点</span>
                                 <div style="flex:1; display:flex; gap:2px;">
-                                    <button id="btn-next-1" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectNextMap(1)">1</button>
-                                    <button id="btn-next-2" class="sub-btn active"
-                                        onclick="event.stopPropagation(); selectNextMap(2)">2</button>
-                                    <button id="btn-next-3" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectNextMap(3)">3</button>
-                                    <button id="btn-next-4" class="sub-btn"
-                                        onclick="event.stopPropagation(); selectNextMap(4)">4</button>
+                                    <button id="btn-next-1" class="sub-btn" data-next="1">1</button>
+                                    <button id="btn-next-2" class="sub-btn active" data-next="2">2</button>
+                                    <button id="btn-next-3" class="sub-btn" data-next="3">3</button>
+                                    <button id="btn-next-4" class="sub-btn" data-next="4">4</button>
                                 </div>
                             </div>
                         </div>
@@ -569,7 +555,7 @@
                     <!-- ADVANCE Group (Wrapped for Toggle) -->
                     <div class="adv-only-wrapper">
                         <!-- Advanced Items -->
-                        <div class="file-item" onclick="selectFileItem(this, 'fuel_idle')">
+                        <div class="file-item" id="file-item-fuel-idle">
                             <div class="file-item-header">
                                 <span>アイドリング時燃料マップ</span>
                                 <div class="file-item-actions">
@@ -578,7 +564,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'start_inj')">
+                        <div class="file-item" id="file-item-start-inj">
                             <div class="file-item-header">
                                 <span>始動時噴射</span>
                                 <div class="file-item-actions">
@@ -587,7 +573,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'async_inj')">
+                        <div class="file-item" id="file-item-async-inj">
                             <div class="file-item-header">
                                 <span>非同期噴射</span>
                                 <div class="file-item-actions">
@@ -596,7 +582,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'accel')">
+                        <div class="file-item" id="file-item-accel">
                             <div class="file-item-header">
                                 <span>加速増量</span>
                                 <div class="file-item-actions">
@@ -605,7 +591,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'rpm_corr')">
+                        <div class="file-item" id="file-item-rpm-corr">
                             <div class="file-item-header">
                                 <span>回転数補正</span>
                                 <div class="file-item-actions">
@@ -614,7 +600,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'oil_corr')">
+                        <div class="file-item" id="file-item-oil-corr">
                             <div class="file-item-header">
                                 <span>油温補正</span>
                                 <div class="file-item-actions">
@@ -623,7 +609,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'dwell')">
+                        <div class="file-item" id="file-item-dwell">
                             <div class="file-item-header">
                                 <span>ドエル時間</span>
                                 <div class="file-item-actions">
@@ -632,7 +618,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="file-item" onclick="selectFileItem(this, 'ign_map')">
+                        <div class="file-item" id="file-item-ign-map">
                             <div class="file-item-header">
                                 <span>点火マップ</span>
                                 <div class="file-item-actions">
@@ -641,10 +627,8 @@
                                 </div>
                             </div>
                             <div class="file-item-sub">
-                                <button class="sub-btn active"
-                                    onclick="event.stopPropagation(); selectMapSlot('ign', 1)">1</button>
-                                <button class="sub-btn"
-                                    onclick="event.stopPropagation(); selectMapSlot('ign', 2)">2</button>
+                                <button class="sub-btn active" data-map="ign" data-slot="1">1</button>
+                                <button class="sub-btn" data-map="ign" data-slot="2">2</button>
                             </div>
                         </div>
                     </div>
@@ -655,14 +639,10 @@
                     style="position: fixed; bottom: calc(60px + env(safe-area-inset-bottom)); left: 0; width: 100%; z-index: 10005; background: #2d2d30; border-top: 1px solid #3c3c3c;">
                     <div class="file-footer-actions"
                         style="grid-template-columns: repeat(4, 1fr) !important; padding: 10px; margin: 0;">
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="readFromECU()">Read</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="writeToECU()">Write</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="window.openFile()">Open</button>
-                        <button class="file-action-btn" style="padding: 5px; font-size: 11px;"
-                            onclick="window.saveFile()">Save</button>
+                        <button class="file-action-btn" id="btn-file-read" style="padding: 5px; font-size: 11px;">Read</button>
+                        <button class="file-action-btn" id="btn-file-write" style="padding: 5px; font-size: 11px;">Write</button>
+                        <button class="file-action-btn" id="btn-file-open" style="padding: 5px; font-size: 11px;">Open</button>
+                        <button class="file-action-btn" id="btn-file-save" style="padding: 5px; font-size: 11px;">Save</button>
                     </div>
                 </div>
             </div>
@@ -845,18 +825,18 @@
             <div class="settings-content">
                 <span class="file-view-title">ECU Map Studio <span
                         style="font-size:10px; color:#888; margin-left:5px;">(debug_92)</span></span>
-                <button class="menu-item" onclick="toggleExplorer()">📁 Project Explorer</button>
+                <button class="menu-item" id="btn-menu-explorer">📁 Project Explorer</button>
                 <hr style="border-color: #444; margin: 10px 0;">
                 <div class="menu-item" style="cursor: default; background: transparent;">
                     <label>Color Mode:</label>
-                    <select id="cell-color-mode" onchange="updateCellColorMode()"
+                    <select id="cell-color-mode"
                         style="background: #444; color: white; border: 1px solid #555; margin-left: 10px;">
                         <option value="diff">Diff</option>
                         <option value="absolute">Absolute</option>
                     </select>
                 </div>
-                <button class="menu-item" onclick="openFile()">Open File...</button>
-                <button class="menu-item" onclick="openBaseFile()">Open Base File...</button>
+                <button class="menu-item" id="btn-menu-open">Open File...</button>
+                <button class="menu-item" id="btn-menu-base">Open Base File...</button>
             </div>
         </div>
 
@@ -865,13 +845,13 @@
         <div id="graph-overlay">
             <div id="graph-header">
                 <span>Graph View</span>
-                <select id="graph-type" onchange="updateGraph()"
+                <select id="graph-type"
                     style="background: #444; color: white; border: none; margin: 0 10px;">
                     <option value="3d">3D Surface</option>
                     <option value="rpm">RPM Axis</option>
                     <option value="tps">TPS Axis</option>
                 </select>
-                <button id="graph-close" onclick="toggleGraph()"
+                <button id="graph-close"
                     style="background:none; border:none; color:white; font-size:16px;">×</button>
             </div>
             <div id="chart-container" style="width:100%; height:100%; flex:1;"></div>
@@ -887,8 +867,8 @@
         </div>
 
         <!-- Hidden File Inputs -->
-        <input type="file" id="file-input" style="display:none;" accept=".csv" onchange="importFromCSV(this)">
-        <input type="file" id="base-file-input" style="display:none;" accept=".csv" onchange="importBaseFromCSV(this)">
+        <input type="file" id="file-input" style="display:none;" accept=".csv">
+        <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 
         <style>
             /* Emergency Styles for Restored Components */
@@ -1086,46 +1066,38 @@
 
 
         <!-- EDIT POPUP (v2) - Moved to Body Root for Positioning independent of Transforms -->
-        <div id="settings-overlay" onclick="toggleSettings(false)"></div>
+        <div id="settings-overlay"></div>
         <div id="edit-popup-v2"
             style="position: fixed; bottom: 60px !important; top: auto !important; left: 50% !important; transform: translateX(-50%) !important; width: 95%; height: 58px; z-index: 20000; display: none; background: #222; border: 2px solid #0078d4; border-radius: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); align-items: center; justify-content: center; touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; box-sizing: border-box;">
             <div class="popup-controls"
                 style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
                 <!-- 1. Reset Button -->
-                <button class="popup-btn" onclick="resetToOriginal()"
+                <button class="popup-btn"
                     style="width: 40px; height: 50px; font-size: 18px; color: #ccc; margin-left: 5px;">↺</button>
 
                 <!-- 2. Apply Minus -->
-                <button class="popup-btn" id="btn-apply-minus" onmousedown="startApply(-1, event)"
-                    onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(-1, event)"
-                    ontouchend="stopApply(event)"
+                <button class="popup-btn" id="btn-apply-minus"
                     style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">-</button>
 
                 <!-- 3. Spinner Group -->
                 <div class="delta-spinner-group"
                     style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 50px; margin: 0 4px; flex: 1; justify-content: space-between;">
-                    <button class="spinner-adjust-btn" onmousedown="startSpinner(-1, event)"
-                        onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                        ontouchstart="startSpinner(-1, event)" ontouchend="stopSpinner(event)"
+                    <button class="spinner-adjust-btn"
                         style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
 
                     <input type="number" id="popup-delta" class="popup-input" value="10" readonly
                         style="width: 30px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0; user-select: none; pointer-events: none;">
 
-                    <button class="spinner-adjust-btn" onmousedown="startSpinner(1, event)"
-                        onmouseup="stopSpinner(event)" onmouseleave="stopSpinner(event)"
-                        ontouchstart="startSpinner(1, event)" ontouchend="stopSpinner(event)"
+                    <button class="spinner-adjust-btn"
                         style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
                 </div>
 
                 <!-- 4. Apply Plus -->
-                <button class="popup-btn" id="btn-apply-plus" onmousedown="startApply(1, event)"
-                    onmouseup="stopApply(event)" onmouseleave="stopApply(event)" ontouchstart="startApply(1, event)"
-                    ontouchend="stopApply(event)"
+                <button class="popup-btn" id="btn-apply-plus"
                     style="width: 65px; height: 50px; font-size: 24px; font-weight: bold;">+</button>
 
                 <!-- 5. Mode Toggle -->
-                <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()"
+                <button class="popup-btn" id="btn-mode-toggle"
                     style="width: 40px; height: 50px; font-size: 14px; font-weight:bold; color: var(--accent); margin-right: 5px;">ABS</button>
             </div>
         </div>
@@ -1136,23 +1108,23 @@
         <!-- RESTORED BOTTOM NAVIGATION -->
         <div id="bottom-nav"
             style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #2d2d30; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3c3c3c; z-index: 10000; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box;">
-            <button class="nav-item" id="nav-file" onclick="switchTab('file')">
+            <button class="nav-item" id="nav-file">
                 <span>📁</span>
                 <span>ファイル</span>
             </button>
-            <button class="nav-item active" id="nav-editor" onclick="switchTab('editor')">
+            <button class="nav-item active" id="nav-editor">
                 <span>📝</span>
                 <span>編集</span>
             </button>
-            <button class="nav-item" id="nav-graph" onclick="switchTab('graph')">
+            <button class="nav-item" id="nav-graph">
                 <span>📊</span>
                 <span>グラフ</span>
             </button>
-            <button class="nav-item" id="nav-monitor" onclick="switchTab('monitor')">
+            <button class="nav-item" id="nav-monitor">
                 <span>⏱️</span>
                 <span>モニター</span>
             </button>
-            <button class="nav-item" id="nav-menu" onclick="toggleSettings()">
+            <button class="nav-item" id="nav-menu">
                 <span>☰</span>
                 <span>その他</span>
             </button>
@@ -1181,11 +1153,7 @@
             }
         </style>
 
-        <script src="js/monitor.js?v=debug_152"></script>
-        <script src="js/app.js?v=debug_152"></script>
-        <script src="js/ui.js?v=debug_152"></script>
-        <script src="js/map.js?v=debug_152"></script>
-        <script src="js/graph.js?v=debug_152"></script>
+        <script src="js/app.js" type="module"></script>
 
 </body>
 

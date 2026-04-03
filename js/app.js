@@ -1,156 +1,298 @@
-// 2000 to 15000, step 500 -> 27 columns
-window.RPM_AXIS = Array.from({ length: 27 }, (_, i) => 2000 + (i * 500));
-window.TPS_AXIS = Array.from({ length: 21 }, (_, i) => i * 5);
-window.fuelMap = [];
-window.originalFuelMap = [];
-window.selT = 0;
-window.selR = 0;
-window.cellColorMode = 'diff';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { 
+    initData, 
+    undo, 
+    redo, 
+    importFromCSV, 
+    importBaseFromCSV, 
+    saveFileToCSV, 
+    saveHistory 
+} from './data.js';
+import { renderTable, updateData } from './editor.js';
+import { 
+    switchTab, 
+    toggleSettings, 
+    toggleExplorer, 
+    updateCellColorMode,
+    selectMapSlot,
+    selectPriorityMap,
+    selectNextMap
+} from './navigation.js';
+import { 
+    updatePopupPosition, 
+    startApply, 
+    stopApply, 
+    startSpinner, 
+    stopSpinner, 
+    togglePopupMode,
+    adjustCellValue,
+    resetToOriginal
+} from './popup.js';
+import { initPinchZoom, updateViewportLayout } from './gestures.js';
+import { toggleGraph, updateGraph } from './graph.js';
+import { monitor } from './monitor.js';
 
-// 複数セル選択
-window.selectedCells = new Set(); // "t-r"形式で保存
-window.selectionStart = null; // {t, r}
-window.selectionStartMode = null; // 'cell', 'row', 'col'
-window.isSelecting = false;
-window.isShiftSelecting = false; // Shift+矢印キーでの範囲選択
-
-// 履歴管理
-window.historyStack = [];
-window.historyIndex = -1;
-const MAX_HISTORY = 50; // Const is fine
-
-// ポップアップモード
-window.popupMode = 'abs'; // 'abs' or 'pct'
-window.popupDeltaAbs = 10; // 絶対値モードの値を保存
-window.popupDeltaPct = 1.0; // %モードの値を保存
-
-// ECU接続状態
-window.ecuConnected = false;
-
-// Toggle Settings Menu
-function toggleSettings() {
-    const menu = document.getElementById('settings-menu');
-    const overlay = document.getElementById('menu-overlay');
-    const navBtn = document.getElementById('nav-menu'); // Bottom nav button
-
-    if (menu.classList.contains('active')) {
-        menu.classList.remove('active');
-        overlay.classList.remove('active');
-        if (navBtn) navBtn.classList.remove('active');
-    } else {
-        menu.classList.add('active');
-        overlay.classList.add('active');
-        if (navBtn) navBtn.classList.add('active');
-    }
-}
-
-// Global Event Listeners setup
-document.addEventListener('DOMContentLoaded', function () {
-    // Other initializations attached to DOMContentLoaded
-    const graphHeader = document.getElementById('graph-header');
-    const graphOverlay = document.getElementById('graph-overlay');
-
-    if (graphHeader && graphOverlay) {
-        graphHeader.addEventListener('mousedown', function (e) {
-            if (e.target.id === 'graph-close' || e.target.id === 'graph-type') return;
-            isDragging = true;
-            initialX = e.clientX - graphOverlay.offsetLeft;
-            initialY = e.clientY - graphOverlay.offsetTop;
-        });
-    }
-
-    document.addEventListener('mousemove', function (e) {
-        if (typeof isDragging !== 'undefined' && isDragging) {
-            e.preventDefault();
-            const graphOverlay = document.getElementById('graph-overlay');
-            if (graphOverlay) {
-                graphOverlay.style.left = (e.clientX - initialX) + 'px';
-                graphOverlay.style.top = (e.clientY - initialY) + 'px';
-                graphOverlay.style.right = 'auto';
-            }
-        }
-    });
-
-    document.addEventListener('mouseup', function () {
-        if (typeof isDragging !== 'undefined') isDragging = false;
-        isSelecting = false;
-    });
-
-    const resizeObserver = new ResizeObserver(() => {
-        const graphOverlay = document.getElementById('graph-overlay');
-        if (graphOverlay && graphOverlay.classList.contains('active')) {
-            setTimeout(() => {
-                if (typeof updateGraph === 'function') updateGraph();
-            }, 100);
-        }
-    });
-    if (graphOverlay) resizeObserver.observe(graphOverlay);
-
-    // スクロール時にポップアップ位置を更新
-    const mapSection = document.getElementById('map-section');
-    if (mapSection) mapSection.addEventListener('scroll', updatePopupPosition);
-});
-
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initial Data & UI
     initData();
     renderTable();
-    // ensure popup visibility if default is editor
-    if (document.getElementById('nav-editor').classList.contains('active')) {
-        document.body.classList.add('mode-editor');
-        // Force select first cell to show popup
-        setTimeout(() => {
-            if (window.startSelection) window.startSelection(0, 0);
-        }, 100);
-    }
-};
+    initPinchZoom();
 
-let isDragging = false;
-let initialX, initialY;
+    // 2. Toolbar Event Listeners
+    setupToolbar();
 
-// グローバルキーボードショートカット
-document.addEventListener('keydown', function (e) {
-    // input要素にフォーカスがある場合、一部のショートカットをスキップ
-    const activeElement = document.activeElement;
-    const isInputFocused = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'SELECT');
+    // 3. Navigation Event Listeners
+    setupNavigation();
 
-    // Ctrl+O: ファイルを開く
-    if (e.ctrlKey && !e.shiftKey && e.key === 'o') {
-        e.preventDefault();
-        openFile();
-    }
-    // Ctrl+Shift+O: 基準ファイルを開く
-    else if (e.ctrlKey && e.shiftKey && e.key === 'O') {
-        e.preventDefault();
-        openBaseFile();
-    }
-    // Ctrl+S: 保存
-    else if (e.ctrlKey && e.key === 's') {
-        e.preventDefault();
-        saveFile();
-    }
-    // Ctrl+Z: 元に戻す（input以外）
-    else if (e.ctrlKey && e.key === 'z' && !isInputFocused) {
-        e.preventDefault();
-        undo();
-    }
-    // Ctrl+Y: やり直し（input以外）
-    else if (e.ctrlKey && e.key === 'y' && !isInputFocused) {
-        e.preventDefault();
-        redo();
-    }
-    // Ctrl+W: ECUに書き込み
-    else if (e.ctrlKey && e.key === 'w') {
-        e.preventDefault();
-        if (ecuConnected) writeToECU();
-    }
-    // Ctrl+R: ECUから読み取り
-    else if (e.ctrlKey && e.key === 'r') {
-        e.preventDefault();
-        if (ecuConnected) readFromECU();
-    }
-    // Ctrl+G: グラフ表示
-    else if (e.ctrlKey && e.key === 'g') {
-        e.preventDefault();
-        toggleGraph();
-    }
+    // 4. Popup Event Listeners
+    setupPopup();
+
+    // 5. File View & Settings Listeners
+    setupFileView();
+    setupFileItems();
+
+    // 6. Monitor View Listeners
+    setupMonitorView();
+
+    // 7. Graph View Listeners
+    setupGraphView();
+
+    // 8. Global State Sync
+    window.addEventListener('resize', () => {
+        updateViewportLayout();
+        updatePopupPosition();
+    });
 });
+
+function setupToolbar() {
+    const actions = {
+        'open': () => document.getElementById('file-input').click(),
+        'base-open': () => document.getElementById('base-file-input').click(),
+        'save': () => saveFileToCSV(),
+        'undo': () => undo(),
+        'redo': () => redo(),
+        'ecu-connect': () => toggleECUConnection(),
+        'write': () => writeToECU(),
+        'read': () => readFromECU(),
+        'graph': () => toggleGraph(),
+        'settings': () => toggleSettings(),
+        'explorer': () => toggleExplorer()
+    };
+
+    document.querySelectorAll('.toolbar-btn').forEach(btn => {
+        const tooltip = btn.dataset.tooltip || '';
+        if (tooltip.includes('ファイルを開く')) btn.onclick = actions.open;
+        else if (tooltip.includes('基準ファイル')) btn.onclick = actions['base-open'];
+        else if (tooltip.includes('保存')) btn.onclick = actions.save;
+        else if (btn.id === 'btn-undo') btn.onclick = actions.undo;
+        else if (btn.id === 'btn-redo') btn.onclick = actions.redo;
+        else if (btn.id === 'btn-ecu-connect') btn.onclick = actions['ecu-connect'];
+        else if (btn.id === 'btn-write') btn.onclick = actions.write;
+        else if (btn.id === 'btn-read') btn.onclick = actions.read;
+        else if (btn.id === 'btn-graph') btn.onclick = actions.graph;
+        else if (btn.id === 'btn-settings') btn.onclick = actions.settings;
+    });
+
+    const hamburger = document.getElementById('hamburger-btn');
+    if (hamburger) hamburger.onclick = actions.explorer;
+}
+
+function setupNavigation() {
+    const navMapping = [
+        { selector: '#nav-file', tab: 'file' },
+        { selector: '#nav-editor', tab: 'editor' },
+        { selector: '#nav-graph', tab: 'graph' },
+        { selector: '#nav-monitor', tab: 'monitor' },
+        { selector: '#nav-menu', action: () => toggleSettings() }
+    ];
+
+    navMapping.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+            el.onclick = () => {
+                if (item.tab) switchTab(item.tab);
+                else if (item.action) item.action();
+            };
+        });
+    });
+}
+
+function setupPopup() {
+    const popup = document.getElementById('edit-popup-v2');
+    if (!popup) return;
+
+    const btnReset = popup.querySelector('.popup-btn:first-child');
+    if (btnReset) btnReset.onclick = () => resetToOriginal();
+
+    const btnMinus = document.getElementById('btn-apply-minus');
+    if (btnMinus) {
+        btnMinus.onmousedown = (e) => startApply(-1, e);
+        btnMinus.onmouseup = stopApply;
+        btnMinus.onmouseleave = stopApply;
+        btnMinus.ontouchstart = (e) => startApply(-1, e);
+        btnMinus.ontouchend = stopApply;
+    }
+
+    const btnPlus = document.getElementById('btn-apply-plus');
+    if (btnPlus) {
+        btnPlus.onmousedown = (e) => startApply(1, e);
+        btnPlus.onmouseup = stopApply;
+        btnPlus.onmouseleave = stopApply;
+        btnPlus.ontouchstart = (e) => startApply(1, e);
+        btnPlus.ontouchend = stopApply;
+    }
+
+    const spinnerDown = popup.querySelector('.spinner-adjust-btn:first-child');
+    if (spinnerDown) {
+        spinnerDown.onmousedown = (e) => startSpinner(-1, e);
+        spinnerDown.onmouseup = stopSpinner;
+        spinnerDown.onmouseleave = stopSpinner;
+        spinnerDown.ontouchstart = (e) => startSpinner(-1, e);
+        spinnerDown.ontouchend = stopSpinner;
+    }
+
+    const spinnerUp = popup.querySelector('.spinner-adjust-btn:last-child');
+    if (spinnerUp) {
+        spinnerUp.onmousedown = (e) => startSpinner(1, e);
+        spinnerUp.onmouseup = stopSpinner;
+        spinnerUp.onmouseleave = stopSpinner;
+        spinnerUp.ontouchstart = (e) => startSpinner(1, e);
+        spinnerUp.ontouchend = stopSpinner;
+    }
+
+    const btnMode = document.getElementById('btn-mode-toggle');
+    if (btnMode) btnMode.onclick = () => togglePopupMode();
+    
+    const settingsOverlay = document.getElementById('settings-overlay');
+    if (settingsOverlay) settingsOverlay.onclick = () => toggleSettings(false);
+}
+
+function setupFileView() {
+    const modeToggle = document.getElementById('mode-toggle');
+    if (modeToggle) {
+        modeToggle.onchange = () => {
+            document.body.classList.toggle('basic-mode', !modeToggle.checked);
+        };
+    }
+
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) fileInput.onchange = (e) => importFromCSV(e.target);
+
+    const baseInput = document.getElementById('base-file-input');
+    if (baseInput) baseInput.onchange = (e) => importBaseFromCSV(e.target);
+
+    const btnExplorer = document.getElementById('btn-menu-explorer');
+    if (btnExplorer) btnExplorer.onclick = () => toggleExplorer();
+
+    const btnOpen = document.getElementById('btn-menu-open');
+    if (btnOpen) btnOpen.onclick = () => document.getElementById('file-input').click();
+
+    const btnBase = document.getElementById('btn-menu-base');
+    if (btnBase) btnBase.onclick = () => document.getElementById('base-file-input').click();
+
+    const colorMode = document.getElementById('cell-color-mode');
+    if (colorMode) colorMode.onchange = () => updateCellColorMode();
+
+    const btnFileRead = document.getElementById('btn-file-read');
+    if (btnFileRead) btnFileRead.onclick = () => readFromECU();
+
+    const btnFileWrite = document.getElementById('btn-file-write');
+    if (btnFileWrite) btnFileWrite.onclick = () => writeToECU();
+
+    const btnFileOpen = document.getElementById('btn-file-open');
+    if (btnFileOpen) btnFileOpen.onclick = () => document.getElementById('file-input').click();
+
+    const btnFileSave = document.getElementById('btn-file-save');
+    if (btnFileSave) btnFileSave.onclick = () => saveFileToCSV();
+}
+
+function setupFileItems() {
+    document.querySelectorAll('.file-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            const idMap = {
+                'file-item-fuel': 'fuel',
+                'file-item-map-sel': 'map_sel',
+                'file-item-fuel-idle': 'fuel_idle',
+                'file-item-start-inj': 'start_inj',
+                'file-item-async-inj': 'async_inj',
+                'file-item-accel': 'accel',
+                'file-item-rpm-corr': 'rpm_corr',
+                'file-item-oil-corr': 'oil_corr',
+                'file-item-dwell': 'dwell',
+                'file-item-ign-map': 'ign'
+            };
+            
+            const mapKey = idMap[this.id];
+            if (mapKey) state.currentMap = mapKey;
+        });
+    });
+
+    document.querySelectorAll('.sub-btn[data-map]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectMapSlot(btn.dataset.map, parseInt(btn.dataset.slot));
+        });
+    });
+
+    document.querySelectorAll('.sub-btn[data-prio]').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            selectPriorityMap(parseInt(btn.dataset.prio));
+        };
+    });
+
+    document.querySelectorAll('.sub-btn[data-next]').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            selectNextMap(parseInt(btn.dataset.next));
+        };
+    });
+}
+
+function setupMonitorView() {
+    const btnRecord = document.getElementById('btn-record-all');
+    if (btnRecord) btnRecord.onclick = () => monitor.toggleRecording();
+
+    const btnSave = document.getElementById('btn-save-all');
+    if (btnSave) btnSave.onclick = () => monitor.saveLog();
+
+    const btnConnects = document.querySelectorAll('.btn-connect');
+    btnConnects.forEach(btn => {
+        btn.onclick = () => monitor.toggleConnection();
+    });
+}
+
+function setupGraphView() {
+    const graphType = document.getElementById('graph-type');
+    if (graphType) graphType.onchange = () => updateGraph();
+
+    const graphClose = document.getElementById('graph-close');
+    if (graphClose) graphClose.onclick = () => toggleGraph();
+}
+
+// ECU Communication Stubs (to be implemented)
+function toggleECUConnection() { alert("ECU接続機能: 未実装"); }
+function writeToECU() { alert("ECU書き込み機能: 未実装"); }
+function readFromECU() { alert("ECU読み取り機能: 未実装"); }
+
+// Global Exports for backwards compatibility if needed
+window.openFile = () => document.getElementById('file-input').click();
+window.openBaseFile = () => document.getElementById('base-file-input').click();
+window.saveFile = saveFileToCSV;
+window.undo = undo;
+window.redo = redo;
+window.toggleECUConnection = toggleECUConnection;
+window.writeToECU = writeToECU;
+window.readFromECU = readFromECU;
+window.toggleGraph = toggleGraph;
+window.toggleSettings = toggleSettings;
+window.toggleExplorer = toggleExplorer;
+window.switchTab = switchTab;
+window.resetToOriginal = resetToOriginal;
+window.togglePopupMode = togglePopupMode;
+window.updateCellColorMode = updateCellColorMode;
+window.selectMapSlot = selectMapSlot;
+window.selectPriorityMap = selectPriorityMap;
+window.selectNextMap = selectNextMap;
