@@ -94,12 +94,16 @@ export function switchTab(tabId) {
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 }
 
-let drawerTimeout = null;
+// Global drawer timer reference
+window.drawerTimeout = null;
 
 export function closeDrawer() {
     const drawer = document.getElementById('file-info-drawer');
-    if (drawer) drawer.style.height = '0';
-    if (drawerTimeout) clearTimeout(drawerTimeout);
+    if (drawer) {
+        drawer.style.height = '0';
+        clearTimeout(window.drawerTimeout);
+        window.drawerTimeout = null;
+    }
 }
 
 export function openDrawer() {
@@ -110,8 +114,8 @@ export function openDrawer() {
     if (elName) elName.innerText = state.currentFileName;
     
     // Auto-close after 5 seconds
-    if (drawerTimeout) clearTimeout(drawerTimeout);
-    drawerTimeout = setTimeout(closeDrawer, 5000);
+    clearTimeout(window.drawerTimeout);
+    window.drawerTimeout = setTimeout(closeDrawer, 5000);
 }
 
 export function initInfoBarDrag() {
@@ -135,11 +139,10 @@ export function initInfoBarDrag() {
         else if (deltaY < -20) closeDrawer();
     });
 
-    // Tap Grid to close
-    const grid = document.getElementById('mapGrid');
-    if (grid) {
-        grid.addEventListener('touchstart', () => closeDrawer(), { passive: true });
-        grid.addEventListener('mousedown', () => closeDrawer());
+    // We'll also close the drawer if the footer or settings are touched
+    const bottomNav = document.getElementById('bottom-nav');
+    if (bottomNav) {
+        bottomNav.addEventListener('touchstart', () => closeDrawer(), { passive: true });
     }
 
     drawer.addEventListener('touchstart', (e) => {

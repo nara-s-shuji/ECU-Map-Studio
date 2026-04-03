@@ -1,4 +1,4 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.32';
 import { 
     initData, 
     undo, 
@@ -7,8 +7,8 @@ import {
     importBaseFromCSV, 
     saveFileToCSV, 
     saveHistory 
-} from './data.js';
-import { renderTable, updateData } from './editor.js';
+} from './data.js?v=2026.32';
+import { renderTable, updateData } from './editor.js?v=2026.32';
 import { 
     switchTab, 
     toggleSettings, 
@@ -18,7 +18,7 @@ import {
     selectPriorityMap,
     selectNextMap,
     initInfoBarDrag
-} from './navigation.js';
+} from './navigation.js?v=2026.32';
 import { 
     updateUISelection, 
     handleCellMouseDown, 
@@ -29,7 +29,7 @@ import {
     selectRow, 
     isColumnSelected, 
     isRowSelected 
-} from './selection.js';
+} from './selection.js?v=2026.32';
 import { 
     updatePopupPosition, 
     startApply, 
@@ -39,10 +39,10 @@ import {
     togglePopupMode,
     adjustCellValue,
     resetToOriginal
-} from './popup.js';
-import { initPinchZoom, updateViewportLayout } from './gestures.js';
-import { toggleGraph, updateGraph } from './graph.js';
-import { monitor } from './monitor.js';
+} from './popup.js?v=2026.32';
+import { initPinchZoom, updateViewportLayout } from './gestures.js?v=2026.32';
+import { toggleGraph, updateGraph } from './graph.js?v=2026.32';
+import { monitor } from './monitor.js?v=2026.32';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initial Data & UI
@@ -66,13 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFileView();
     setupFileItems();
 
-    // 6. Monitor View Listeners
+    // 7. Monitor View Listeners
     setupMonitorView();
 
-    // 7. Graph View Listeners
+    // 8. Graph View Listeners
     setupGraphView();
 
-    // 8. Global State Sync
+    // 9. Global State Sync
     window.addEventListener('resize', () => {
         updateViewportLayout();
         updatePopupPosition();
@@ -304,7 +304,7 @@ function toggleECUConnection() { alert("ECU接続機能: 未実装"); }
 function writeToECU() { alert("ECU書き込み機能: 未実装"); }
 function readFromECU() { alert("ECU読み取り機能: 未実装"); }
 
-// Global Exports for backwards compatibility if needed
+// Global Exports
 window.openFile = () => document.getElementById('file-input').click();
 window.openBaseFile = () => document.getElementById('base-file-input').click();
 window.saveFile = saveFileToCSV;

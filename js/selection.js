@@ -1,6 +1,11 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.32';
+import { closeDrawer } from './navigation.js?v=2026.32';
 
 export function updateUISelection() {
+    // Robust Fix: Force drawer to close on any selection change (Tap/Select)
+    if (typeof closeDrawer === 'function') closeDrawer();
+    else if (window.closeDrawer) window.closeDrawer();
+
     if (state.currentTabId !== 'editor') {
         const popup = document.getElementById('edit-popup-v2');
         if (popup) {
