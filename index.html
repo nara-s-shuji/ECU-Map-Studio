@@ -81,18 +81,72 @@
         }
 
         /* CRITICAL: Force Cell Popup Visibility when active */
-        #cell-popup.active {
+        #edit-popup-v2.active {
             display: flex !important;
             visibility: visible !important;
             opacity: 1 !important;
             z-index: 20000 !important;
-            /* Higher than Bottom Nav (9990) */
             bottom: 70px !important;
-            /* Above bottom nav */
             position: fixed !important;
             background: #252526 !important;
             border: 1px solid #0078d4 !important;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) !important;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8) !important;
+        }
+
+        #settings-menu {
+            position: fixed;
+            top: 40px;
+            right: -250px;
+            width: 250px;
+            height: calc(100% - 40px);
+            background: #2d2d30;
+            border-left: 1px solid #3c3c3c;
+            z-index: 250000;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #settings-menu.active {
+            right: 0;
+        }
+
+        #settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 24000;
+        }
+
+        #settings-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            margin-bottom: 5px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .menu-item:hover {
+            background: #444;
+        }
+
+        .popup-btn:active {
+            background: #444 !important;
+            transform: scale(0.95);
         }
     </style>
     <script>
@@ -185,8 +239,45 @@
 
 
     <!-- Main Views -->
-    <!-- EDIT POPUP (v2) - Restored Full Features -->
+    <!-- EDIT POPUP (v2) - Fixed Bottom Strategy -->
+    <div id="settings-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 10004;"></div>
+    <div id="edit-popup-v2"
+        style="position: fixed; bottom: 70px !important; left: 50% !important; transform: translateX(-50%) !important; width: 95%; max-width: 500px; height: 58px; z-index: 10006; display: none; background: #222; border: 2px solid #0078d4; border-radius: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); align-items: center; justify-content: center; touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; box-sizing: border-box;">
+        <div class="popup-controls" style="display:flex; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 4px;">
+            <button class="popup-btn" style="width: 40px; height: 50px; font-size: 18px; color: #ccc; margin-left: 5px; background: #333; border: 1px solid #555; border-radius: 4px;">↺</button>
+            <button class="popup-btn" id="btn-apply-minus" style="width: 65px; height: 50px; font-size: 24px; font-weight: bold; background: #333; border: 1px solid #555; border-radius: 4px; color: #fff;">-</button>
+            
+            <div class="delta-spinner-group" style="display: flex; align-items: center; background: #000; border: 1px solid #555; border-radius: 4px; height: 50px; margin: 0 4px; flex: 1; justify-content: space-between;">
+                <button class="spinner-adjust-btn" style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">▽</button>
+                <input type="number" id="popup-delta" class="popup-input" value="10" readonly style="width: 30px; height: 100%; text-align: center; border:none; background: transparent; color: white; font-size: 13px; padding: 0; user-select: none; pointer-events: none;">
+                <button class="spinner-adjust-btn" style="width: 25px; height: 100%; font-size: 12px; border:none; background: transparent; color: #ccc;">△</button>
+            </div>
 
+            <button class="popup-btn" id="btn-apply-plus" style="width: 65px; height: 50px; font-size: 24px; font-weight: bold; background: #333; border: 1px solid #555; border-radius: 4px; color: #fff;">+</button>
+            <button class="popup-btn" id="btn-mode-toggle" style="width: 40px; height: 50px; font-size: 11px; font-weight:bold; color: #0078d4; background: #333; border: 1px solid #555; border-radius: 4px;">ABS</button>
+        </div>
+    </div>
+
+    <!-- SETTINGS MENU -->
+    <div id="settings-menu">
+        <div class="settings-content">
+            <h3 style="color: #ccc; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0;">Settings</h3>
+            <div class="menu-item" style="cursor: default; background: transparent; padding: 10px 0;">
+                <label style="color: #888; font-size: 12px;">Color Mode:</label>
+                <select id="cell-color-mode" style="background: #444; color: white; border: 1px solid #555; margin-left: 10px; border-radius: 4px; padding: 2px 5px;">
+                    <option value="diff">Diff (差分)</option>
+                    <option value="absolute">Absolute (絶対値)</option>
+                </select>
+            </div>
+            <button class="menu-item" id="btn-menu-explorer">📁 Project Explorer</button>
+            <button class="menu-item" id="btn-menu-open">📂 Open File...</button>
+            <button class="menu-item" id="btn-menu-base">📋 Open Base File...</button>
+        </div>
+    </div>
+
+    <!-- HIDDEN FILE INPUTS -->
+    <input type="file" id="file-input" style="display:none;" accept=".csv">
+    <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 
     <!-- メインコンテナ: サイドバーとコンテンツ部分 -->
     <div id="main-container">
