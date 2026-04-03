@@ -1,5 +1,5 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.33';
-import { renderTable } from './editor.js?v=2026.33';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.34';
+import { renderTable } from './editor.js?v=2026.34';
 
 // Global references for reliability
 window.drawerTimeout = null;
@@ -8,7 +8,7 @@ export function closeDrawer() {
     const drawer = document.getElementById('file-info-drawer');
     if (drawer) {
         drawer.classList.remove('open');
-        console.log("Drawer Closed (CLASS REMOVED)");
+        console.log("Drawer HARD CLOSED");
     }
     if (window.drawerTimeout) {
         clearTimeout(window.drawerTimeout);
@@ -21,7 +21,7 @@ export function openDrawer() {
     if (!drawer) return;
     
     drawer.classList.add('open');
-    console.log("Drawer Opened (CLASS ADDED)");
+    console.log("Drawer HARD OPENED");
 
     const elName = document.getElementById('drawer-filename');
     if (elName) elName.innerText = state.currentFileName;
@@ -57,16 +57,14 @@ export function initInfoBarDrag() {
 
     // Global "Touch Anywhere" Listener (Capture Phase)
     window.addEventListener('touchstart', (e) => {
-        // If drawer is open AND touch is not on the bar/drawer itself, close it
         if (drawer.classList.contains('open')) {
             const isClickInside = bar.contains(e.target) || drawer.contains(e.target);
             if (!isClickInside) {
                 closeDrawer();
             }
         }
-    }, true); // Use capture phase to ensure it runs even if bubbles are stopped
+    }, true);
 
-    // Manual slide up on drawer to close
     drawer.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
     }, { passive: true });

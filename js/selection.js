@@ -1,5 +1,5 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.33';
-import { closeDrawer } from './navigation.js?v=2026.33';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.34';
+import { closeDrawer } from './navigation.js?v=2026.34';
 
 export function updateUISelection() {
     // Robust Fix: Force drawer to close on any selection change (Tap/Select)
