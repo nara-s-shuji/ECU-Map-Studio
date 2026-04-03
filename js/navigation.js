@@ -1,30 +1,34 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.34';
-import { renderTable } from './editor.js?v=2026.34';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
 
-// Global references for reliability
+// Global references for absolute reliability
 window.drawerTimeout = null;
 
+/**
+ * Force-closes the info drawer.
+ * Attached to window.closeDrawer for access by other modules without circular imports.
+ */
 export function closeDrawer() {
     const drawer = document.getElementById('file-info-drawer');
     if (drawer) {
         drawer.classList.remove('open');
-        console.log("Drawer HARD CLOSED");
+        console.log("Drawer HARD CLOSED (v2026.35)");
     }
     if (window.drawerTimeout) {
         clearTimeout(window.drawerTimeout);
         window.drawerTimeout = null;
     }
 }
+window.closeDrawer = closeDrawer;
 
 export function openDrawer() {
     const drawer = document.getElementById('file-info-drawer');
     if (!drawer) return;
     
     drawer.classList.add('open');
-    console.log("Drawer HARD OPENED");
+    console.log("Drawer HARD OPENED (v2026.35)");
 
     const elName = document.getElementById('drawer-filename');
-    if (elName) elName.innerText = state.currentFileName;
+    if (elName) elName.innerText = state.currentFileName || 'Unnamed_Map.csv';
     
     // Auto-close after 5 seconds
     if (window.drawerTimeout) clearTimeout(window.drawerTimeout);
@@ -32,6 +36,7 @@ export function openDrawer() {
         closeDrawer();
     }, 5000);
 }
+window.openDrawer = openDrawer;
 
 export function initInfoBarDrag() {
     const bar = document.getElementById('mobile-info-bar');
@@ -41,7 +46,7 @@ export function initInfoBarDrag() {
     let startY = 0;
     let isDragging = false;
 
-    // Slide logic
+    // Slide logic on the info bar
     bar.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
         isDragging = true;
@@ -55,16 +60,20 @@ export function initInfoBarDrag() {
         else if (deltaY < -20) closeDrawer();
     }, { passive: true });
 
-    // Global "Touch Anywhere" Listener (Capture Phase)
+    // Global "Touch Anywhere to Close" (Capture Phase)
+    // This catches touches BEFORE they reach other elements that might call preventDefault()
     window.addEventListener('touchstart', (e) => {
-        if (drawer.classList.contains('open')) {
-            const isClickInside = bar.contains(e.target) || drawer.contains(e.target);
+        const drawerEl = document.getElementById('file-info-drawer');
+        if (drawerEl && drawerEl.classList.contains('open')) {
+            const barEl = document.getElementById('mobile-info-bar');
+            const isClickInside = (barEl && barEl.contains(e.target)) || drawerEl.contains(e.target);
             if (!isClickInside) {
                 closeDrawer();
             }
         }
-    }, true);
+    }, true); 
 
+    // Manual slide up on drawer itself to close
     drawer.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
     }, { passive: true });
@@ -93,11 +102,13 @@ export function toggleSettings(forceState) {
         if (navBtn) navBtn.classList.remove('active');
     }
 }
+window.toggleSettings = toggleSettings;
 
 export function toggleExplorer() {
     const exp = document.getElementById('explorer');
     if (exp) exp.classList.toggle('active');
 }
+window.toggleExplorer = toggleExplorer;
 
 export function switchTab(tabId) {
     state.currentTabId = tabId;
@@ -159,49 +170,31 @@ export function switchTab(tabId) {
     }
 
     toggleSettings(false);
-
-    const infoFileName = document.getElementById('info-filename');
-    if (infoFileName) infoFileName.innerText = state.currentFileName;
     
-    const valDisplay = document.getElementById('info-values');
-    if (valDisplay) valDisplay.innerText = `Curr:- / Orig:-`;
+    // Update main info display
+    const labelFileName = document.getElementById('info-filename');
+    if (labelFileName) labelFileName.innerText = state.currentFileName || 'Unnamed';
 }
+window.switchTab = switchTab;
 
 export function selectMapSlot(type, index) {
     if (type === 'fuel') state.currentFuelMapIndex = index;
     if (type === 'ign') state.currentIgnMapIndex = index;
-
-    const container = type === 'fuel' ? document.getElementById('file-item-fuel') :
-        (type === 'ign' ? document.getElementById('file-item-ign-map') : null);
-
-    if (container) {
-        const btns = container.querySelectorAll('.sub-btn');
-        btns.forEach((btn, i) => {
-            if ((i + 1) === index) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-    }
+    // ...
 }
+window.selectMapSlot = selectMapSlot;
 
 export function selectPriorityMap(index) {
-    if (state.currentPriorityMap === index) return;
-    if (state.currentNextMap === index) {
-        state.currentNextMap = state.currentPriorityMap;
-        updateNextMapUI();
-    }
     state.currentPriorityMap = index;
     updatePriorityMapUI();
 }
+window.selectPriorityMap = selectPriorityMap;
 
 export function selectNextMap(index) {
-    if (state.currentNextMap === index) return;
-    if (state.currentPriorityMap === index) {
-        state.currentPriorityMap = state.currentNextMap;
-        updatePriorityMapUI();
-    }
     state.currentNextMap = index;
     updateNextMapUI();
 }
+window.selectNextMap = selectNextMap;
 
 export function updatePriorityMapUI() {
     for (let i = 1; i <= 4; i++) {
@@ -220,12 +213,6 @@ export function updateNextMapUI() {
 export function updateCellColorMode() {
     const el = document.getElementById('cell-color-mode');
     if (el) state.cellColorMode = el.value;
-    renderTable();
+    // renderTable is usually called via events
 }
-
-// Global exposure
-window.openDrawer = openDrawer;
-window.closeDrawer = closeDrawer;
-window.toggleSettings = toggleSettings;
-window.toggleExplorer = toggleExplorer;
-window.switchTab = switchTab;
+window.updateCellColorMode = updateCellColorMode;

@@ -1,4 +1,4 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.33';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
 import { 
     initData, 
     undo, 
@@ -7,8 +7,8 @@ import {
     importBaseFromCSV, 
     saveFileToCSV, 
     saveHistory 
-} from './data.js?v=2026.33';
-import { renderTable, updateData } from './editor.js?v=2026.33';
+} from './data.js';
+import { renderTable, updateData } from './editor.js';
 import { 
     switchTab, 
     toggleSettings, 
@@ -18,7 +18,7 @@ import {
     selectPriorityMap,
     selectNextMap,
     initInfoBarDrag
-} from './navigation.js?v=2026.33';
+} from './navigation.js';
 import { 
     updateUISelection, 
     handleCellMouseDown, 
@@ -29,7 +29,7 @@ import {
     selectRow, 
     isColumnSelected, 
     isRowSelected 
-} from './selection.js?v=2026.33';
+} from './selection.js';
 import { 
     updatePopupPosition, 
     startApply, 
@@ -39,10 +39,10 @@ import {
     togglePopupMode,
     adjustCellValue,
     resetToOriginal
-} from './popup.js?v=2026.33';
-import { initPinchZoom, updateViewportLayout } from './gestures.js?v=2026.33';
-import { toggleGraph, updateGraph } from './graph.js?v=2026.33';
-import { monitor } from './monitor.js?v=2026.33';
+} from './popup.js';
+import { initPinchZoom, updateViewportLayout } from './gestures.js';
+import { toggleGraph, updateGraph } from './graph.js';
+import { monitor } from './monitor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initial Data & UI
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Popup Event Listeners
     setupPopup();
 
-    // 5. Drawer & Information Listeners (NUCLEAR FIX)
+    // 5. Drawer & Information Listeners (RESTORED v2026.35)
     initInfoBarDrag();
 
     // 6. File View & Settings Listeners

@@ -1,10 +1,15 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.34';
-import { closeDrawer } from './navigation.js?v=2026.34';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
 
+/**
+ * Robust Selection UI Update.
+ * Also handles ensuring the info drawer is closed when the user interacts with the table.
+ */
 export function updateUISelection() {
     // Robust Fix: Force drawer to close on any selection change (Tap/Select)
-    if (typeof closeDrawer === 'function') closeDrawer();
-    else if (window.closeDrawer) window.closeDrawer();
+    // Using window.closeDrawer directly to avoid circular dependency
+    if (window.closeDrawer) {
+        window.closeDrawer();
+    }
 
     if (state.currentTabId !== 'editor') {
         const popup = document.getElementById('edit-popup-v2');
@@ -52,6 +57,7 @@ export function updateUISelection() {
 
     if (window.updatePopupPosition) window.updatePopupPosition();
 }
+window.updateUISelection = updateUISelection;
 
 export function handleCellMouseDown(e, t, r) {
     if (state.currentTabId !== 'editor') return;
@@ -62,6 +68,7 @@ export function handleCellMouseDown(e, t, r) {
     state.selT = t; state.selR = r;
     updateUISelection();
 }
+window.handleCellMouseDown = handleCellMouseDown;
 
 export function handleCellMouseEnter(e, t, r) {
     if (state.currentTabId !== 'editor') return;
@@ -80,6 +87,7 @@ export function handleCellMouseEnter(e, t, r) {
         updateUISelection();
     }
 }
+window.handleCellMouseEnter = handleCellMouseEnter;
 
 export function selectColumn(c) {
     state.selectedCells.clear();
@@ -88,6 +96,7 @@ export function selectColumn(c) {
     state.selectionStart = { t: 0, r: c };
     updateUISelection();
 }
+window.selectColumn = selectColumn;
 
 export function selectRow(t) {
     state.selectedCells.clear();
@@ -96,18 +105,21 @@ export function selectRow(t) {
     state.selectionStart = { t, r: 0 };
     updateUISelection();
 }
+window.selectRow = selectRow;
 
 export function isColumnSelected(c) {
     if (state.selectedCells.size < 21) return false;
     for (let t = 0; t < 21; t++) if (!state.selectedCells.has(`${t}-${c}`)) return false;
     return true;
 }
+window.isColumnSelected = isColumnSelected;
 
 export function isRowSelected(t) {
     if (state.selectedCells.size < RPM_AXIS.length) return false;
     for (let r = 0; r < RPM_AXIS.length; r++) if (!state.selectedCells.has(`${t}-${r}`)) return false;
     return true;
 }
+window.isRowSelected = isRowSelected;
 
 export function handleTouchStart(e, type, index1, index2) {
     if (state.currentTabId !== 'editor') return;
@@ -131,6 +143,7 @@ export function handleTouchStart(e, type, index1, index2) {
         }
     }, 500);
 }
+window.handleTouchStart = handleTouchStart;
 
 export function handleTouchMove(e) {
     if (!state.isLongPressMode) {
@@ -167,12 +180,14 @@ export function handleTouchMove(e) {
         if (rowIdx !== -1 && state.selectionStartCell !== null) selectRowRange(state.selectionStartCell, rowIdx);
     }
 }
+window.handleTouchMove = handleTouchMove;
 
 export function handleTouchEnd() {
     clearTimeout(state.longPressTimer);
     state.isLongPressMode = false;
     state.selectionType = null;
 }
+window.handleTouchEnd = handleTouchEnd;
 
 export function selectColumnRange(start, end) {
     state.selectedCells.clear();
@@ -181,6 +196,7 @@ export function selectColumnRange(start, end) {
     for (let c = min; c <= max; c++) for (let t = 0; t < 21; t++) state.selectedCells.add(`${t}-${c}`);
     updateUISelection();
 }
+window.selectColumnRange = selectColumnRange;
 
 export function selectRowRange(start, end) {
     state.selectedCells.clear();
@@ -189,6 +205,7 @@ export function selectRowRange(start, end) {
     for (let r = min; r <= max; r++) for (let c = 0; c < RPM_AXIS.length; c++) state.selectedCells.add(`${r}-${c}`);
     updateUISelection();
 }
+window.selectRowRange = selectRowRange;
 
 export function startSelection(t, r) {
     state.selectedCells.clear();
@@ -196,6 +213,7 @@ export function startSelection(t, r) {
     state.selT = t; state.selR = r;
     updateUISelection();
 }
+window.startSelection = startSelection;
 
 export function updateSelection(t, r) {
     if (!state.selectionStartCell) return;
@@ -208,11 +226,4 @@ export function updateSelection(t, r) {
     state.selT = t; state.selR = r;
     updateUISelection();
 }
-
-// Legacy exports
-window.updateUISelection = updateUISelection;
-window.handleTouchStart = handleTouchStart;
-window.handleTouchMove = handleTouchMove;
-window.handleTouchEnd = handleTouchEnd;
-window.startSelection = startSelection;
 window.updateSelection = updateSelection;
