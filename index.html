@@ -10,17 +10,43 @@
     <title>ECU Map Studio 2026</title>
     <!-- Offline Plotly Library -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.2">
+    <link rel="stylesheet" href="css/style.css?v=2026.4">
     <style>
-        /* MINIMAL OVERRIDES FOR MOBILE POPUP & NAV */
+        /* MOBILE OPTIMIZATIONS & FIXES */
+        :root {
+            --accent: #0078d4;
+            --border: #3c3c3c;
+            --nav-bg: #2d2d30;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+
+        /* Essential Grid Fix: Match state.js (27 columns) */
+        .header-row, .grid-container {
+            display: grid !important;
+            grid-template-columns: 80px repeat(27, 60px) !important;
+            width: max-content !important;
+            background: #333 !important;
+            gap: 1px !important;
+        }
+
+        /* Popup Styles */
         #edit-popup-v2 {
             position: fixed;
             bottom: 75px;
             left: 50%;
             transform: translateX(-50%);
-            width: 95%;
+            width: 96%;
             max-width: 500px;
-            height: 62px;
+            height: 64px;
             background: #252526;
             border: 1px solid var(--accent);
             border-radius: 12px;
@@ -29,9 +55,9 @@
             display: none;
             align-items: center;
             justify-content: center;
-            touch-action: none;
             padding: 0 10px;
             box-sizing: border-box;
+            touch-action: none;
         }
         #edit-popup-v2.active { display: flex !important; }
 
@@ -40,18 +66,18 @@
             background: #333; border: 1px solid #444; color: white;
             height: 48px; min-width: 44px; border-radius: 8px;
             font-size: 20px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; user-select: none;
+            cursor: pointer; user-select: none; flex: 1;
         }
-        #btn-apply-minus, #btn-apply-plus { flex: 1; max-width: 80px; font-weight: bold; font-size: 24px; }
+        #btn-apply-minus, #btn-apply-plus { max-width: 80px; font-weight: bold; font-size: 24px; color: #fff; }
         
         .delta-spinner-group {
             display: flex; align-items: center; background: #000;
-            border-radius: 8px; height: 48px; flex: 1; max-width: 120px; border: 1px solid #444;
+            border-radius: 8px; height: 48px; flex: 1.5; max-width: 140px; border: 1px solid #444;
         }
         .spinner-adjust-btn { flex: 1; height: 100%; background: transparent; border: none; color: #888; font-size: 14px; }
-        #popup-delta { width: 50px; background: transparent; border: none; color: white; text-align: center; font-size: 16px; font-family: 'Consolas', monospace; }
+        #popup-delta { width: 40px; background: transparent; border: none; color: white; text-align: center; font-size: 16px; font-family: 'Consolas', monospace; }
 
-        /* Bottom Nav Fix */
+        /* Navigation Fixes */
         #bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
             background: #2d2d30; border-top: 1px solid #3c3c3c;
@@ -64,29 +90,25 @@
             color: #888; font-size: 10px; background: transparent; border: none; width: 20%; height: 100%;
         }
         .nav-item.active { color: var(--accent); }
-        .nav-i-icon { font-size: 20px; margin-bottom: 2px; }
+        .nav-font-icon { font-size: 20px; margin-bottom: 2px; }
 
-        /* Fix Header Spacing (Conflicted in previous turn) */
-        .header-row, .grid-container {
-            grid-template-columns: 80px repeat(11, 70px) !important; /* Adjust if data has more cols */
-            width: max-content !important;
-        }
-        @media (min-width: 1024px) {
-            .header-row, .grid-container { grid-template-columns: 80px repeat(27, 60px) !important; }
-        }
-
-        /* Mobile Info Bar */
+        /* Table & Spacing */
         #mobile-info-bar {
-            height: 32px; background: #2d2d30; border-bottom: 1px solid #3c3c3c;
+            height: 34px; background: #2d2d30; border-bottom: 1px solid #3c3c3c;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 10px; font-size: 11px; z-index: 1000;
+            padding: 0 10px; font-size: 11px; flex-shrink: 0;
         }
+        #map-section { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; background: #000; }
+        
+        /* Ensure cells look right */
+        .cell { min-height: 30px !important; }
+        .header-cell, .label-cell { background: #2d2d2d !important; font-weight: bold; }
     </style>
 </head>
 
-<body style="overflow: hidden; height: 100vh; width: 100vw; display: flex; flex-direction: column; background: #1e1e1e;">
+<body>
     <!-- 1. Toolbar -->
-    <div id="toolbar">
+    <div id="toolbar" style="height:44px; flex-shrink:0;">
         <button class="toolbar-btn" data-tooltip="保存" id="btn-save-top">💾</button>
         <button class="toolbar-btn" id="btn-undo" data-tooltip="元に戻す">↶</button>
         <button class="toolbar-btn" id="btn-redo" data-tooltip="やり直し">↷</button>
@@ -95,15 +117,15 @@
     </div>
 
     <!-- 2. Main Container -->
-    <div id="main-container">
+    <div id="main-container" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
         <!-- Editor View -->
         <div id="editor-view" class="view-section active" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
             <div id="mobile-info-bar">
                 <span id="info-filename">New_Map.csv</span>
-                <span id="debug-info" style="font-size:9px; color:#555; background:#000; padding:2px 4px; border-radius:3px;">v2026.3_LAYOUT_FIX</span>
+                <span id="debug-info" style="font-size:9px; color:#555; background:#000; padding:2px 4px; border-radius:3px;">v2026.4_FINAL_LAYOUT</span>
                 <span id="info-values">Curr: - / Orig: -</span>
             </div>
-            <div id="map-section" style="flex:1; overflow:auto; -webkit-overflow-scrolling: touch; background:#000;">
+            <div id="map-section">
                 <div id="table-wrapper">
                     <div id="headerRow" class="header-row"></div>
                     <div id="mapGrid" class="grid-container"></div>
@@ -112,15 +134,18 @@
             </div>
         </div>
 
-        <!-- Other Views (Managed by navigation.js) -->
+        <!-- File View -->
         <div id="file-view" class="view-section" style="display:none; padding:20px; overflow-y:auto;">
-            <h3>Project Files</h3>
+            <h3>Project Explorer</h3>
             <div id="explorer-list" class="file-list"></div>
         </div>
+
+        <!-- Graph View -->
         <div id="graph-view" class="view-section" style="display:none; flex-direction:column; height:100%;">
-            <div style="padding:10px; border-bottom:1px solid #3c3c3c;">Graph View</div>
             <div id="chart-container" style="flex:1;"></div>
         </div>
+
+        <!-- Monitor View -->
         <div id="monitor-view" class="view-section" style="display:none; overflow-y:auto;">
             <div class="monitor-grid" id="monitor-grid"></div>
         </div>
@@ -129,7 +154,7 @@
     <!-- 3. Edit Popup (v2) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <button class="popup-btn" style="width:40px;" title="Reset" onclick="resetToOriginal()">↺</button>
+            <button class="popup-btn" style="flex:0.5; min-width:40px;" title="Reset" onclick="resetToOriginal()">↺</button>
             <button class="popup-btn" id="btn-apply-minus">-</button>
             <div class="delta-spinner-group">
                 <button class="spinner-adjust-btn">▽</button>
@@ -137,49 +162,49 @@
                 <button class="spinner-adjust-btn">△</button>
             </div>
             <button class="popup-btn" id="btn-apply-plus">+</button>
-            <button class="popup-btn" id="btn-mode-toggle" style="font-size:12px; width:45px;" onclick="togglePopupMode()">ABS</button>
+            <button class="popup-btn" id="btn-mode-toggle" style="flex:0.6; font-size:12px; color:var(--accent);" onclick="togglePopupMode()">ABS</button>
         </div>
     </div>
 
     <!-- 4. Bottom Navigation -->
     <div id="bottom-nav">
         <button class="nav-item" id="nav-file">
-            <span class="nav-i-icon">📁</span>
+            <span class="nav-font-icon">📁</span>
             <span>ファイル</span>
         </button>
         <button class="nav-item active" id="nav-editor">
-            <span class="nav-i-icon">📝</span>
+            <span class="nav-font-icon">📝</span>
             <span>編集</span>
         </button>
         <button class="nav-item" id="nav-graph">
-            <span class="nav-i-icon">📊</span>
+            <span class="nav-icon nav-font-icon">📊</span>
             <span>グラフ</span>
         </button>
         <button class="nav-item" id="nav-monitor">
-            <span class="nav-i-icon">⏱️</span>
+            <span class="nav-icon nav-font-icon">⏱️</span>
             <span>モニター</span>
         </button>
         <button class="nav-item" id="nav-menu">
-            <span class="nav-i-icon">☰</span>
+            <span class="nav-icon nav-font-icon">☰</span>
             <span>設定</span>
         </button>
     </div>
 
     <!-- 5. Overlays -->
-    <div id="settings-overlay"></div>
-    <div id="settings-menu" style="display:none; position:fixed; top:40px; right:0; width:280px; height:calc(100% - 40px); background:#252526; z-index:25000; padding:20px; border-left:1px solid #3c3c3c;">
+    <div id="settings-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; z-index:24000;"></div>
+    <div id="settings-menu" style="display:none; position:fixed; top:44px; right:0; width:300px; height:calc(100% - 44px); background:#252526; z-index:25000; padding:20px; border-left:1px solid #3c3c3c;">
         <div class="settings-content">
-            <h3>Settings <button style="float:right; background:none; border:none; color:#888; font-size:20px;" onclick="toggleSettings(false)">×</button></h3>
+            <h3>Settings <button style="float:right; background:none; border:none; color:#888; font-size:24px;" onclick="toggleSettings(false)">×</button></h3>
             <div class="setting-item">
-                <label>Coloring: </label>
-                <select id="cell-color-mode" style="width:100%; background:#3c3c3c; color:white; border:1px solid #555; padding:5px;">
-                    <option value="diff">Diff (差分)</option>
+                <label style="display:block; margin-bottom:5px; font-size:12px; color:#888;">Cell Coloring Mode:</label>
+                <select id="cell-color-mode" style="width:100%; background:#333; color:white; border:1px solid #555; padding:8px;">
+                    <option value="diff">Diff (比較/差分)</option>
                     <option value="absolute">Absolute (絶対値)</option>
                 </select>
             </div>
-            <hr style="border-color:#444; margin:15px 0;">
-            <button class="menu-item" style="width:100%; padding:10px; margin-bottom:5px;" id="btn-menu-open">📂 Open File</button>
-            <button class="menu-item" style="width:100%; padding:10px;" onclick="location.reload()">🔄 Reload</button>
+            <hr style="border-color:#444; margin:20px 0;">
+            <button class="menu-item" style="width:100%; padding:12px; margin-bottom:10px;" id="btn-menu-open">📂 Open CSV File...</button>
+            <button class="menu-item" style="width:100%; padding:12px;" onclick="location.reload()">🔄 Reload App</button>
         </div>
     </div>
 
