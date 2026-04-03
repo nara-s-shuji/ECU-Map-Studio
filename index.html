@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.18">
+    <link rel="stylesheet" href="css/style.css?v=2026.19">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -44,41 +44,40 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* SYMMETRICAL POPUP (v2026.18) */
+        /* POPUP OPTIMIZED (v2026.19) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 400px; height: 60px;
+            width: 96%; max-width: 460px; height: 60px;
             background: #111; border: 2.5px solid var(--accent);
-            border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,1);
+            border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,1);
             z-index: 999999 !important; display: none; align-items: center; justify-content: center;
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        /* Symmetrical Layout logic: (Left 1.7) + (Center 3) + (Right 1.7) = 6.4 total */
-        .popup-controls { display: flex; width: 100%; gap: 10px; padding: 0 25px; align-items: center; height: 100%; justify-content: center; }
+        /* Tightened gaps and optimized padding */
+        .popup-controls { display: flex; width: 100%; gap: 6px; padding: 0 12px; align-items: center; height: 100%; justify-content: center; }
         
         .popup-btn { 
-            background: #333; border: 1px solid #444; color: #fff; height: 42px; border-radius: 8px; font-weight: bold;
+            background: #333; border: 1px solid #444; color: #fff; height: 44px; border-radius: 8px; font-weight: bold;
             outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
         }
         .popup-btn:active { background: #555 !important; }
         .popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
-        .popup-btn:active svg { fill: #fff; }
 
-        #btn-reset { flex: 0.7; } 
-        #btn-apply-minus { flex: 1.0; color: var(--accent); font-size: 24px; }
+        #btn-reset { flex: 0.4; } 
+        #btn-apply-minus { flex: 0.7; color: var(--accent); font-size: 24px; }
         .delta-ui { 
-            flex: 3.0; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
+            flex: 2.6; height: 44px; background: #000; border-radius: 8px; border: 1px solid #555; 
             display: flex; align-items: center; overflow: hidden; 
         }
-        #btn-apply-plus { flex: 1.0; color: var(--accent); font-size: 24px; }
-        #btn-mode-toggle { flex: 0.7; font-size: 11px; color: var(--accent); }
+        #btn-apply-plus { flex: 0.7; color: var(--accent); font-size: 24px; }
+        #btn-mode-toggle { flex: 0.6; font-size: 11px; color: var(--accent); }
         
-        /* Spinner Spacing */
+        /* Spinner Buttons MUST BE NARROWER to let the number breathe */
         .spinner-btn { 
-            width: 45px; height: 100%; background: transparent; border: none; color: #888; font-size: 20px; cursor: pointer; outline: none !important; 
+            width: 32px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; cursor: pointer; outline: none !important; 
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .spinner-btn:active { background: #333 !important; color: #fff !important; }
@@ -101,7 +100,7 @@
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.18</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.19</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -116,10 +115,8 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup (Mathematical Symmetry & SVG Icon) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <!-- Reset with SVG for a professional, clean rotation arrow -->
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
                 <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
             </button>
@@ -160,10 +157,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.18_SYMMETRY_FINAL</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.19_SPACE_OPTIMIZED</p>
     </div>
 
-    <script src="js/app.js?v=2026.18" type="module"></script>
+    <script src="js/app.js?v=2026.19" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
