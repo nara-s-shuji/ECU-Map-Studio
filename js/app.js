@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Popup Event Listeners
     setupPopup();
 
-    // 4. Drawer & Information Listeners (v2026.38)
+    // 4. Drawer & Information Listeners (v2026.40)
     initInfoBarDrag();
 
     // 5. File View & Settings Listeners
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Graph View Listeners
     setupGraphView();
 
-    // 8. Initial Label Update (Fix "Loading..." persistent text)
+    // 8. Initial Label Update
     const labelFileName = document.getElementById('info-filename');
     if (labelFileName) {
         labelFileName.innerText = state.currentFileName || '入力待ち...';
@@ -161,7 +161,6 @@ function setupFileView() {
 }
 
 function setupFileItems() {
-    // Map Slots
     document.querySelectorAll('.sub-btn[data-map]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll(`.sub-btn[data-map="${btn.dataset.map}"]`).forEach(b => b.classList.remove('active'));
@@ -170,14 +169,8 @@ function setupFileItems() {
         });
     });
 
-    // Priority Buttons
     document.querySelectorAll('.sub-btn[data-prio]').forEach(btn => {
         btn.onclick = (e) => selectPriorityMap(parseInt(btn.dataset.prio));
-    });
-
-    // Next Map (If any)
-    document.querySelectorAll('.sub-btn[data-next]').forEach(btn => {
-        btn.onclick = (e) => selectNextMap(parseInt(btn.dataset.next));
     });
 }
 
@@ -187,7 +180,7 @@ function setupMonitorView() {
         btnRecord.onclick = () => {
             const active = monitor.toggleRecording();
             btnRecord.innerText = active ? "⏹️ ログ記録停止" : "⏺️ ログ記録開始";
-            btnRecord.style.background = active ? "#ff4444" : "transparent";
+            btnRecord.style.background = active ? "#ff4444" : "#3c3c3c";
         };
     }
 
@@ -200,7 +193,6 @@ function setupGraphView() {
     if (graphType) graphType.onchange = () => updateGraph();
 }
 
-// Global Exports for HTML inline compatibility where needed
 window.saveFileToCSV = saveFileToCSV;
 window.undo = undo;
 window.redo = redo;

@@ -10,12 +10,12 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.39">
+    <link rel="stylesheet" href="css/style.css?v=2026.40">
 </head>
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.39</span> <span id="info-filename">読み込み中...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.40</span> <span id="info-filename">読み込み中...</span></span>
         <span id="info-values">現在:- / 元:-</span>
     </div>
 
@@ -24,7 +24,7 @@
         <div class="drawer-content">
             <p><b>実行ファイル:</b> <span id="drawer-filename">ファイルが読み込まれていません</span></p>
             <p><b>エンジン形式:</b> 4気筒ターボ (Project-S)</p>
-            <p><b>システムVer:</b> 2026.39 (レイアウト修正版)</p>
+            <p><b>システムVer:</b> 2026.40 (完全復元版サポート)</p>
             <p style="font-size:10px; color:#666; margin-top:10px;">ヒント: インフォバーを下にスライドすると開きます。</p>
         </div>
     </div>
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <!-- ファイル/設定画面 (v2026.39: 安定した構造への復元) -->
+        <!-- ファイル/設定画面 (v2026.40: 2カラム配置復元) -->
         <div id="file-view" class="view-section">
             <div class="file-grid">
                 <div class="file-item">
@@ -85,13 +85,13 @@
 
                 <div class="file-footer-actions">
                     <button class="file-action-btn" onclick="document.getElementById('file-input').click()">
-                        📁 ファイルを開く (.csv)
+                        📁 ファイルを開く
                     </button>
                     <button class="file-action-btn" onclick="document.getElementById('base-file-input').click()">
-                        📊 比較ファイルを読み込む
+                        📊 比較読み込み
                     </button>
-                    <button class="file-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32;">
-                        💾 保存する
+                    <button class="file-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">
+                        💾 ファイルを保存する
                     </button>
                 </div>
             </div>
@@ -100,22 +100,10 @@
         <!-- モニター画面 -->
         <div id="monitor-view" class="view-section">
             <div class="monitor-grid">
-                <div class="monitor-card">
-                    <span class="monitor-label">回転数</span>
-                    <span id="mon-rpm" class="monitor-value">0</span>
-                </div>
-                <div class="monitor-card">
-                    <span class="monitor-label">負荷 (TPS)</span>
-                    <span id="mon-tps" class="monitor-value">0.0</span>
-                </div>
-                <div class="monitor-card">
-                    <span class="monitor-label">空燃比 (AFR)</span>
-                    <span id="mon-afr" class="monitor-value">14.7</span>
-                </div>
-                <div class="monitor-card">
-                    <span class="monitor-label">点火時期</span>
-                    <span id="mon-ign" class="monitor-value">15.0</span>
-                </div>
+                <div class="monitor-card"><span class="monitor-label">回転数</span><span id="mon-rpm" class="monitor-value">0</span></div>
+                <div class="monitor-card"><span class="monitor-label">負荷 (TPS)</span><span id="mon-tps" class="monitor-value">0.0</span></div>
+                <div class="monitor-card"><span class="monitor-label">空燃比 (AFR)</span><span id="mon-afr" class="monitor-value">14.7</span></div>
+                <div class="monitor-card"><span class="monitor-label">点火時期</span><span id="mon-ign" class="monitor-value">15.0</span></div>
             </div>
             <div style="padding:15px; display:flex; gap:10px;">
                 <button id="btn-record-all" class="file-action-btn" style="flex:1;">⏺️ ログ記録開始</button>
@@ -136,11 +124,11 @@
         <div id="chart-container"></div>
     </div>
 
-    <!-- 編集ポップアップ (v2026.37 正確な復元) -->
+    <!-- 編集ポップアップ (v2026.37 EXACT RESTORE) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
-                <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:#ccc;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
             </button>
             <button class="popup-btn" id="btn-apply-minus">-</button>
             <div class="delta-ui">
@@ -176,13 +164,12 @@
                 <option value="none">色付けなし</option>
             </select>
         </div>
-        
         <div style="margin-top:40px; text-align:center; font-size:10px; color:#444;">
-            Version: 2026.39_LAYOUT_FIX
+            Version: 2026.40_TOTAL_RESTORE
         </div>
     </div>
 
-    <script src="js/app.js?v=2026.39" type="module"></script>
+    <script src="js/app.js?v=2026.40" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
     <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 </body>

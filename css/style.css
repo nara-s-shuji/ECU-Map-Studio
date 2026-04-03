@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     margin: 0;
@@ -27,6 +27,7 @@ body {
     flex: 1;
     overflow: hidden;
     position: relative;
+    width: 100%;
 }
 
 #explorer {
@@ -49,6 +50,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     height: 100%;
+    width: 100%;
 }
 .view-section.active { display: flex !important; }
 
@@ -91,7 +93,7 @@ body {
 .label-cell { position: sticky; left: 0; z-index: 4000 !important; border-right: 2px solid #444; }
 .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 6000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-/* --- Edit Popup (v2026.37 Restore) --- */
+/* --- Edit Popup (v2026.37 EXACT RESTORE) --- */
 #edit-popup-v2 {
     position: fixed;
     bottom: calc(75px + env(safe-area-inset-bottom));
@@ -115,16 +117,24 @@ body {
     flex-shrink: 0;
 }
 .popup-btn:active { background: #555 !important; color: #fff !important; }
+.popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
+.popup-btn:active svg { fill: #fff; }
+
+/* Specific button widths from v2026.37 */
+#btn-reset { width: 52px; margin-left: 15px !important; } 
+#btn-apply-minus { width: 52px; font-size: 24px; }
+#btn-apply-plus { width: 52px; font-size: 24px; }
+#btn-mode-toggle { width: 52px; margin-right: 15px !important; font-size: 15px; color: var(--accent); }
 
 .delta-ui { 
     flex: 1.2; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
     display: flex; align-items: center; overflow: hidden; min-width: 100px;
 }
-.spinner-btn { width: 34px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.spinner-btn { width: 34px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .spinner-btn:active { background: #333 !important; color: #fff !important; }
-#popup-delta { flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; text-align: center; outline: none !important; pointer-events: none; }
+#popup-delta { flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; text-align: center; outline: none !important; pointer-events: none; width: 100%; }
 
-/* --- File View (Stable Restore) --- */
+/* --- File View (Stable Grid Restore) --- */
 .file-grid {
     padding: 15px;
     display: flex;
@@ -166,6 +176,7 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    font-size: 14px;
 }
 
 .sub-btn.active {
@@ -176,10 +187,10 @@ body {
 
 .file-footer-actions {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     padding: 15px;
-    padding-bottom: calc(75px + env(safe-area-inset-bottom));
+    padding-bottom: calc(85px + env(safe-area-inset-bottom));
 }
 
 .file-action-btn {
@@ -188,12 +199,13 @@ body {
     color: #fff;
     padding: 12px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    text-align: center;
 }
 
 .file-action-btn:active {
@@ -233,7 +245,7 @@ body {
     z-index: 500000;
 }
 
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; border: none; background: transparent; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; border: none; background: transparent; outline: none; }
 .nav-item.active { color: var(--accent); }
 .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
