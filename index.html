@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.23">
+    <link rel="stylesheet" href="css/style.css?v=2026.24">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -26,7 +26,10 @@
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; }
         
         #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 120px; }
+        
+        /* REGRESSION FIX: Reduced padding-bottom to minimize the black gap below 100% row */
+        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 75px; }
+        
         #table-wrapper { position: relative; display: block; width: max-content; }
 
         .header-row, .grid-container {
@@ -44,7 +47,7 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* FIXED DIMENSION POPUP (v2026.23) */
+        /* POPUP REFINED (v2026.24) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
@@ -69,16 +72,17 @@
         .popup-btn:active { background: #555 !important; }
         .popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
 
-        /* Stable Side Buttons: FIXED WIDTH ensures switching text doesn't resize them */
-        #btn-reset { width: 44px; flex-shrink: 0; margin-left: 20px !important; } 
-        #btn-mode-toggle { width: 44px; flex-shrink: 0; margin-right: 20px !important; font-size: 15px; color: var(--accent); }
+        /* REDUCED GAPS TO 15px TO EXPAND CENTRAL UNIT */
+        #btn-reset { width: 44px; flex-shrink: 0; margin-left: 15px !important; } 
+        #btn-mode-toggle { width: 44px; flex-shrink: 0; margin-right: 15px !important; font-size: 15px; color: var(--accent); }
 
-        #btn-apply-minus { flex: 1; color: var(--accent); font-size: 24px; max-width: 60px; }
-        #btn-apply-plus { flex: 1; color: var(--accent); font-size: 24px; max-width: 60px; }
+        #btn-apply-minus { flex: 0.7; color: var(--accent); font-size: 24px; max-width: 50px; }
+        #btn-apply-plus { flex: 0.7; color: var(--accent); font-size: 24px; max-width: 50px; }
         
+        /* Expanded Delta Area */
         .delta-ui { 
-            flex: 2.5; height: 44px; background: #000; border-radius: 8px; border: 1px solid #555; 
-            display: flex; align-items: center; overflow: hidden; max-width: 140px;
+            flex: 3.2; height: 44px; background: #000; border-radius: 8px; border: 1px solid #555; 
+            display: flex; align-items: center; overflow: hidden;
         }
         
         .spinner-btn { 
@@ -105,10 +109,11 @@
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.23</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.24</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
+    <!-- 2. Main -->
     <div id="main-container">
         <div id="editor-view" class="view-section active">
             <div id="map-section">
@@ -120,11 +125,12 @@
         </div>
     </div>
 
+    <!-- 3. Edit Popup (Expanded Delta & Reduced Margins) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
                 <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-            </button>
+                </button>
             <button class="popup-btn" id="btn-apply-minus" 
                     onmousedown="startApply(-1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
                     ontouchstart="startApply(-1, event)" ontouchend="stopApply()">-</button>
@@ -144,7 +150,6 @@
         </div>
     </div>
 
-    <!-- Navigation -->
     <div id="bottom-nav">
         <button class="nav-item" onclick="switchTab('file')"><span class="nav-icon">📁</span><span>ファイル</span></button>
         <button class="nav-item active" onclick="switchTab('editor')"><span class="nav-icon">📝</span><span>編集</span></button>
@@ -164,10 +169,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.23_FIXED_BUTTON_SIZE</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.24_REDUCED_MARGINS_EXPANDED_DELTA</p>
     </div>
 
-    <script src="js/app.js?v=2026.23" type="module"></script>
+    <script src="js/app.js?v=2026.24" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
