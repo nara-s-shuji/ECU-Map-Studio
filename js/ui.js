@@ -1041,9 +1041,7 @@ window.resetToOriginal = function () {
 };
 
 window.updateFileInfo = function () {
-    // Helper to just update the filename independent of selection
-    const el = document.getElementById('info-filename');
-    if (el) el.innerText = (typeof currentFileName !== 'undefined' ? currentFileName : 'No File') + ' (debug_83)';
+    // Prevent overwriting the debug version string in index.html
 };
 
 // Expose closePopup globally
