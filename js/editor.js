@@ -4,6 +4,7 @@ import {
     updateUISelection, 
     handleCellMouseDown, 
     handleCellMouseEnter, 
+    handleTouchStart,
     selectColumn, 
     selectRow, 
     isColumnSelected, 
@@ -66,6 +67,10 @@ export function renderTable() {
             }
         });
 
+        h.addEventListener('touchstart', (e) => {
+            handleTouchStart(e, 'col', c);
+        }, { passive: true });
+
         h.addEventListener('mouseenter', (e) => {
             if (state.isHeaderDragging && state.headerDragType === 'col') {
                 const start = Math.min(state.headerDragStart, c);
@@ -113,6 +118,10 @@ export function renderTable() {
                 state.lastSelectedRow = t;
             }
         });
+
+        label.addEventListener('touchstart', (e) => {
+            handleTouchStart(e, 'row', t);
+        }, { passive: true });
 
         label.addEventListener('mouseenter', (e) => {
             if (state.isHeaderDragging && state.headerDragType === 'row') {
@@ -186,6 +195,10 @@ export function renderTable() {
             cell.addEventListener('mouseenter', (e) => {
                 if (window.innerWidth > 1024) handleCellMouseEnter(e, t, r);
             });
+
+            cell.addEventListener('touchstart', (e) => {
+                handleTouchStart(e, 'cell', t, r);
+            }, { passive: true });
 
             cell.appendChild(input);
             grid.appendChild(cell);

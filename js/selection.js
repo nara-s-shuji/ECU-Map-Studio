@@ -154,5 +154,146 @@ export function isRowSelected(t) {
     return true;
 }
 
+export function handleTouchStart(e, type, index1, index2) {
+    if (state.currentTabId !== 'editor') return;
+
+    if (type === 'col' || type === 'row') {
+        state.isLongPressMode = true;
+        state.selectionType = type;
+        if (navigator.vibrate) navigator.vibrate(50);
+
+        if (type === 'col') {
+            const c = parseInt(index1);
+            state.selectionStartCell = c;
+            selectColumn(c);
+        } else if (type === 'row') {
+            const r = parseInt(index1);
+            state.selectionStartCell = r;
+            selectRow(r);
+        }
+        return;
+    }
+
+    state.longPressTimer = setTimeout(() => {
+        state.isLongPressMode = true;
+        state.selectionType = type;
+        if (navigator.vibrate) navigator.vibrate(50);
+
+        if (type === 'cell') {
+            const t = parseInt(index1);
+            const r = parseInt(index2);
+            state.selectionStartCell = { t, r };
+            startSelection(t, r);
+        }
+    }, 500);
+}
+
+export function handleTouchMove(e) {
+    if (!state.isLongPressMode) {
+        clearTimeout(state.longPressTimer);
+        return;
+    }
+
+    if (e.cancelable) e.preventDefault();
+
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!target) return;
+
+    if (state.selectionType === 'cell') {
+        const cell = target.closest('.cell');
+        if (cell && cell.id && cell.id.startsWith('c-')) {
+            const parts = cell.id.split('-');
+            updateSelection(parseInt(parts[1]), parseInt(parts[2]));
+        }
+    } else if (state.selectionType === 'col') {
+        const header = target.closest('.header-cell');
+        let c = -1;
+        if (header && header.dataset.col !== undefined) {
+            c = parseInt(header.dataset.col);
+        } else {
+            const cell = target.closest('.cell');
+            if (cell && cell.id && cell.id.startsWith('c-')) {
+                c = parseInt(cell.id.split('-')[2]);
+            }
+        }
+        if (c !== -1 && state.selectionStartCell !== null) {
+            selectColumnRange(state.selectionStartCell, c);
+        }
+    } else if (state.selectionType === 'row') {
+        const label = target.closest('.label-cell');
+        let r = -1;
+        if (label && label.dataset.row !== undefined) {
+            r = parseInt(label.dataset.row);
+        } else {
+            const cell = target.closest('.cell');
+            if (cell && cell.id && cell.id.startsWith('c-')) {
+                r = parseInt(cell.id.split('-')[1]);
+            }
+        }
+        if (r !== -1 && state.selectionStartCell !== null) {
+            selectRowRange(state.selectionStartCell, r);
+        }
+    }
+}
+
+export function handleTouchEnd() {
+    clearTimeout(state.longPressTimer);
+    state.isLongPressMode = false;
+    state.selectionType = null;
+}
+
+export function selectColumnRange(start, end) {
+    state.selectedCells.clear();
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
+    for (let c = min; c <= max; c++) {
+        for (let t = 0; t < 21; t++) {
+            state.selectedCells.add(`${t}-${c}`);
+        }
+    }
+    updateUISelection();
+}
+
+export function selectRowRange(start, end) {
+    state.selectedCells.clear();
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
+    for (let r = min; r <= max; r++) {
+        for (let c = 0; c < RPM_AXIS.length; c++) {
+            state.selectedCells.add(`${r}-${c}`);
+        }
+    }
+    updateUISelection();
+}
+
+export function startSelection(t, r) {
+    state.selectedCells.clear();
+    state.selectedCells.add(`${t}-${r}`);
+    state.selT = t; state.selR = r;
+    updateUISelection();
+}
+
+export function updateSelection(t, r) {
+    if (!state.selectionStartCell) return;
+    state.selectedCells.clear();
+    const startT = Math.min(state.selectionStartCell.t, t);
+    const endT = Math.max(state.selectionStartCell.t, t);
+    const startR = Math.min(state.selectionStartCell.r, r);
+    const endR = Math.max(state.selectionStartCell.r, r);
+    for (let ci = startT; ci <= endT; ci++) {
+        for (let ri = startR; ri <= endR; ri++) {
+            state.selectedCells.add(`${ci}-${ri}`);
+        }
+    }
+    state.selT = t; state.selR = r;
+    updateUISelection();
+}
+
 // Attach to window for legacy support if needed
 window.updateUISelection = updateUISelection;
+window.handleTouchStart = handleTouchStart;
+window.handleTouchMove = handleTouchMove;
+window.handleTouchEnd = handleTouchEnd;
+window.startSelection = startSelection;
+window.updateSelection = updateSelection;

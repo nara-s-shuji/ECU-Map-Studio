@@ -36,12 +36,18 @@ export const state = {
     currentPriorityMap: 1,
     currentNextMap: 2,
 
-    // UI Interaction State
+    // UI Interaction & Selection State
     isHeaderDragging: false,
     headerDragType: null,
     headerDragStart: null,
     lastSelectedCol: -1,
-    lastSelectedRow: -1
+    lastSelectedRow: -1,
+    
+    // Mobile Touch Interaction
+    longPressTimer: null,
+    isLongPressMode: false,
+    selectionStartCell: null, // {t, r} or index
+    selectionType: null       // 'cell', 'col', 'row'
 };
 
 // For backward compatibility during migration, we can also expose them to window if needed

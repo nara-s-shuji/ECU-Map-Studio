@@ -19,6 +19,17 @@ import {
     selectNextMap
 } from './navigation.js';
 import { 
+    updateUISelection, 
+    handleCellMouseDown, 
+    handleCellMouseEnter,
+    handleTouchMove,
+    handleTouchEnd,
+    selectColumn, 
+    selectRow, 
+    isColumnSelected, 
+    isRowSelected 
+} from './selection.js';
+import { 
     updatePopupPosition, 
     startApply, 
     stopApply, 
@@ -61,6 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => {
         updateViewportLayout();
         updatePopupPosition();
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 1) return;
+        handleTouchMove(e);
+    }, { passive: false });
+
+    document.addEventListener('touchend', handleTouchEnd);
+
+    document.addEventListener('mouseup', () => {
+        state.isHeaderDragging = false;
+        state.isSelecting = false;
     });
 });
 
