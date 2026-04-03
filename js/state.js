@@ -28,6 +28,13 @@ export const state = {
     ecuConnected: false,
     currentFileName: "New_Map.csv",
     currentTabId: 'editor',
+    currentMap: 'fuel',
+
+    // Map Selections
+    currentFuelMapIndex: 1,
+    currentIgnMapIndex: 1,
+    currentPriorityMap: 1,
+    currentNextMap: 2,
 
     // UI Interaction State
     isHeaderDragging: false,

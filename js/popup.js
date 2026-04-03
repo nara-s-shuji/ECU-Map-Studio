@@ -214,13 +214,35 @@ export function stopSpinner() {
     clearInterval(spinnerInterval);
 }
 
-// Global exposure
+export function resetToOriginal() {
+    const cellsToUpdate = state.selectedCells.size > 0 ? Array.from(state.selectedCells) : [`${state.selT}-${state.selR}`];
+    cellsToUpdate.forEach(key => {
+        const [t, r] = key.split('-').map(Number);
+        if (state.originalFuelMap[t] && typeof state.originalFuelMap[t][r] !== 'undefined') {
+            state.fuelMap[t][r] = state.originalFuelMap[t][r];
+            const cell = document.getElementById(`c-${t}-${r}`);
+            if (cell) cell.style.background = getColor(state.fuelMap[t][r], t, r);
+            const input = cell ? cell.querySelector('input') : null;
+            if (input) input.value = state.fuelMap[t][r];
+        }
+    });
+    updateUISelection();
+    saveHistory();
+    if (window.updateGraph) window.updateGraph();
+}
+
+export function togglePopupMode() {
+    switchPopupMode(state.popupMode === 'abs' ? 'pct' : 'abs');
+}
+
+// Global exposure for backwards compatibility if needed
 window.updatePopupPosition = updatePopupPosition;
 window.startApply = startApply;
 window.stopApply = stopApply;
 window.startSpinner = startSpinner;
 window.stopSpinner = stopSpinner;
 window.switchPopupMode = switchPopupMode;
-window.togglePopupMode = () => switchPopupMode(state.popupMode === 'abs' ? 'pct' : 'abs');
+window.togglePopupMode = togglePopupMode;
 window.adjustDelta = adjustDelta;
 window.adjustCellValue = adjustCellValue;
+window.resetToOriginal = resetToOriginal;

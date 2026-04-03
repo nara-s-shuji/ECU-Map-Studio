@@ -72,6 +72,27 @@ export function importFromCSV(file) {
     reader.readAsText(file);
 }
 
+export function importBaseFromCSV(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const lines = e.target.result.split('\n').filter(l => l.trim());
+        lines.shift(); // Remove header
+        lines.forEach((line, t) => {
+            const values = line.split(',');
+            values.shift(); // Remove TPS label
+            if (t < 21) {
+                values.forEach((val, r) => {
+                    if (r < RPM_AXIS.length) state.originalFuelMap[t][r] = parseInt(val) || 0;
+                });
+            }
+        });
+        renderTable();
+        updateUISelection();
+    };
+    reader.readAsText(file);
+}
+
 export function saveFileToCSV(fileName) {
     let csv = "TPS\\RPM," + RPM_AXIS.join(",") + "\n";
     state.fuelMap.forEach((row, i) => {

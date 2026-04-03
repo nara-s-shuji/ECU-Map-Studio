@@ -1,4 +1,5 @@
 import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { renderTable } from './editor.js';
 
 export function toggleSettings(forceState) {
     const menu = document.getElementById('settings-menu');
@@ -132,4 +133,75 @@ export function initInfoBarDrag() {
             drawer.style.height = '0';
         }
     });
+}
+
+export function selectMapSlot(type, index) {
+    if (type === 'fuel') state.currentFuelMapIndex = index;
+    if (type === 'ign') state.currentIgnMapIndex = index;
+
+    const container = type === 'fuel' ? document.getElementById('file-item-fuel') :
+        (type === 'ign' ? document.getElementById('file-item-ign-map') : null);
+
+    if (container) {
+        const btns = container.querySelectorAll('.sub-btn');
+        btns.forEach((btn, i) => {
+            if ((i + 1) === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+    console.log(`Selected ${type} map index: ${index}`);
+}
+
+export function selectPriorityMap(index) {
+    if (state.currentPriorityMap === index) return;
+
+    if (state.currentNextMap === index) {
+        state.currentNextMap = state.currentPriorityMap;
+        updateNextMapUI();
+    }
+
+    state.currentPriorityMap = index;
+    updatePriorityMapUI();
+}
+
+export function selectNextMap(index) {
+    if (state.currentNextMap === index) return;
+
+    if (state.currentPriorityMap === index) {
+        state.currentPriorityMap = state.currentNextMap;
+        updatePriorityMapUI();
+    }
+
+    state.currentNextMap = index;
+    updateNextMapUI();
+}
+
+export function updatePriorityMapUI() {
+    for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btn-prio-${i}`);
+        if (btn) {
+            if (i === state.currentPriorityMap) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+    }
+}
+
+export function updateNextMapUI() {
+    for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btn-next-${i}`);
+        if (btn) {
+            if (i === state.currentNextMap) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+    }
+}
+
+export function updateCellColorMode() {
+    const el = document.getElementById('cell-color-mode');
+    if (el) state.cellColorMode = el.value;
+    
+    if (state.originalFuelMap.length === 0 && state.fuelMap.length > 0) {
+        state.originalFuelMap = state.fuelMap.map(row => row.slice());
+    }
+    renderTable();
 }
