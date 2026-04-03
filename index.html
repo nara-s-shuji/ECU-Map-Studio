@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.16">
+    <link rel="stylesheet" href="css/style.css?v=2026.17">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -19,7 +19,7 @@
             background: var(--bg); overflow: hidden;
             color: #fff; font-family: -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
-            user-select: none; -webkit-user-select: none; /* Global selection disable */
+            user-select: none; -webkit-user-select: none;
         }
         body { display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
 
@@ -44,53 +44,50 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* POPUP STYLING (v2026.16) */
+        /* POPUP REFINED (v2026.17) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
-            width: 96%; max-width: 440px; height: 56px;
+            width: 94%; max-width: 420px; height: 56px;
             background: #111; border: 2.5px solid var(--accent);
             border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,1);
             z-index: 999999 !important; display: none; align-items: center; justify-content: center;
-            user-select: none; -webkit-user-select: none;
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        .popup-controls { display: flex; width: 100%; gap: 10px; padding: 0 14px; align-items: center; height: 100%; }
+        /* Increased inner padding to keep buttons away from borders */
+        .popup-controls { display: flex; width: 100%; gap: 10px; padding: 0 16px; align-items: center; height: 100%; }
         
+        /* Unified Button Style */
         .popup-btn { 
-            background: #333; border: 1px solid #444; color: #fff; height: 42px; border-radius: 8px; font-weight: bold;
+            flex: 1; background: #333; border: 1px solid #444; color: #fff; height: 40px; border-radius: 8px; font-weight: bold;
             outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
-            user-select: none; -webkit-user-select: none;
         }
         .popup-btn:active { background: #555 !important; }
         
-        #btn-reset { flex: 0.3; background: transparent; border: none; font-size: 24px; color: #ccc; }
-        #btn-reset:active { color: #fff; background: transparent !important; }
+        #btn-reset { flex: 0.5; font-size: 18px; } /* Now matches Plus/Minus in style */
 
-        #btn-apply-minus { flex: 0.7; color: var(--accent); font-size: 22px; }
-        #btn-apply-plus { flex: 0.7; color: var(--accent); font-size: 22px; }
-        #btn-mode-toggle { flex: 0.6; font-size: 11px; color: var(--accent); }
+        #btn-apply-minus { flex: 0.8; color: var(--accent); font-size: 22px; }
+        #btn-apply-plus { flex: 0.8; color: var(--accent); font-size: 22px; }
+        #btn-mode-toggle { flex: 0.7; font-size: 11px; color: var(--accent); }
         
         .delta-ui { 
-            flex: 2.5; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
+            flex: 2.3; height: 40px; background: #000; border-radius: 8px; border: 1px solid #555; 
             display: flex; align-items: center; overflow: hidden; 
         }
         .spinner-btn { 
             width: 40px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; cursor: pointer; outline: none !important; 
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-            user-select: none; -webkit-user-select: none;
         }
         .spinner-btn:active { background: #333 !important; color: #fff !important; }
         
         #popup-delta { 
             flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; 
             height: 100%; text-align: center; outline: none !important; min-width: 30px; padding: 0;
-            user-select: none; -webkit-user-select: none; pointer-events: none; /* Prevent input selection */
+            pointer-events: none;
         }
 
-        /* BOTTOM NAV */
         #bottom-nav {
             height: 56px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom); z-index: 500000;
@@ -106,7 +103,7 @@
 <body>
     <!-- 1. Info Bar -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.16</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.17</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -122,7 +119,7 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup (Styling Refined) -->
+    <!-- 3. Edit Popup (Final Layout) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">🔄</button>
@@ -165,10 +162,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.16_STYLING_FINAL</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.17_UI_PERFECT</p>
     </div>
 
-    <script src="js/app.js?v=2026.16" type="module"></script>
+    <script src="js/app.js?v=2026.17" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
