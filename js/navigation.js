@@ -96,29 +96,31 @@ export function switchTab(tabId) {
 
 let drawerTimeout = null;
 
+export function closeDrawer() {
+    const drawer = document.getElementById('file-info-drawer');
+    if (drawer) drawer.style.height = '0';
+    if (drawerTimeout) clearTimeout(drawerTimeout);
+}
+
+export function openDrawer() {
+    const drawer = document.getElementById('file-info-drawer');
+    if (!drawer) return;
+    drawer.style.height = '140px';
+    const elName = document.getElementById('drawer-filename');
+    if (elName) elName.innerText = state.currentFileName;
+    
+    // Auto-close after 5 seconds
+    if (drawerTimeout) clearTimeout(drawerTimeout);
+    drawerTimeout = setTimeout(closeDrawer, 5000);
+}
+
 export function initInfoBarDrag() {
     const bar = document.getElementById('mobile-info-bar');
     const drawer = document.getElementById('file-info-drawer');
-    const mapSection = document.getElementById('map-section');
     if (!bar || !drawer) return;
 
     let startY = 0;
     let isDragging = false;
-
-    const openDrawer = () => {
-        drawer.style.height = '140px';
-        const elName = document.getElementById('drawer-filename');
-        if (elName) elName.innerText = state.currentFileName;
-        
-        // Auto-close after 5 seconds
-        clearTimeout(drawerTimeout);
-        drawerTimeout = setTimeout(closeDrawer, 5000);
-    };
-
-    const closeDrawer = () => {
-        drawer.style.height = '0';
-        clearTimeout(drawerTimeout);
-    };
 
     bar.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
@@ -133,10 +135,11 @@ export function initInfoBarDrag() {
         else if (deltaY < -20) closeDrawer();
     });
 
-    // Tap map to close drawer
-    if (mapSection) {
-        mapSection.addEventListener('touchstart', closeDrawer, { passive: true });
-        mapSection.addEventListener('mousedown', closeDrawer);
+    // Tap Grid to close
+    const grid = document.getElementById('mapGrid');
+    if (grid) {
+        grid.addEventListener('touchstart', () => closeDrawer(), { passive: true });
+        grid.addEventListener('mousedown', () => closeDrawer());
     }
 
     drawer.addEventListener('touchstart', (e) => {
@@ -144,8 +147,7 @@ export function initInfoBarDrag() {
     }, { passive: true });
 
     drawer.addEventListener('touchend', (e) => {
-        const endY = e.changedTouches[0].clientY;
-        if (startY - endY > 30) closeDrawer();
+        if (startY - e.changedTouches[0].clientY > 30) closeDrawer();
     });
 }
 
