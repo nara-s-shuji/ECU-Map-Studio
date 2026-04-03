@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Popup Event Listeners
     setupPopup();
 
-    // 5. Drawer & Information Listeners (RESTORED v2026.35)
+    // 5. Drawer & Information Listeners (v2026.36)
     initInfoBarDrag();
 
     // 6. File View & Settings Listeners
@@ -72,7 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 8. Graph View Listeners
     setupGraphView();
 
-    // 9. Global State Sync
+    // 9. Initial Label Update (Fix "Loading..." persistent text)
+    const labelFileName = document.getElementById('info-filename');
+    if (labelFileName) {
+        labelFileName.innerText = state.currentFileName || 'New_Map.csv';
+    }
+
+    // 10. Global State Sync
     window.addEventListener('resize', () => {
         updateViewportLayout();
         updatePopupPosition();
