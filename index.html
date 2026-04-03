@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.14">
+    <link rel="stylesheet" href="css/style.css?v=2026.15">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -28,7 +28,6 @@
         #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
         #table-wrapper { position: relative; display: block; width: max-content; }
 
-        /* GRID */
         .header-row, .grid-container {
             display: grid !important;
             grid-template-columns: 80px repeat(27, 60px) !important;
@@ -44,51 +43,50 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* POPUP FIX (v2026.14) */
+        /* POPUP REFINED (v2026.15) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
-            width: 96%; max-width: 480px; height: 60px;
+            width: 96%; max-width: 440px; height: 56px;
             background: #111; border: 2.5px solid var(--accent);
             border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,1);
-            z-index: 999999 !important;
-            display: none; align-items: center; justify-content: center;
+            z-index: 999999 !important; display: none; align-items: center; justify-content: center;
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        .popup-controls { display: flex; width: 100%; gap: 8px; padding: 0 10px; align-items: center; }
+        .popup-controls { display: flex; width: 100%; gap: 6px; padding: 0 8px; align-items: center; height: 100%; }
         
         .popup-btn { 
-            flex: 1; background: #333; border: 1px solid #444; color: #fff; height: 44px; border-radius: 8px; font-size: 18px; font-weight: bold;
-            outline: none !important; -webkit-appearance: none; 
+            background: #333; border: 1px solid #444; color: #fff; height: 42px; border-radius: 8px; font-size: 18px; font-weight: bold;
+            outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
         }
-        .popup-btn:active { background: #555 !important; color: #fff !important; }
+        .popup-btn:active { background: #555 !important; }
         
-        #btn-apply-minus, #btn-apply-plus { flex: 1.2; color: var(--accent); font-size: 24px; }
+        #btn-reset { flex: 0.45; font-size: 16px; }
+        #btn-apply-minus { flex: 0.8; color: var(--accent); font-size: 22px; }
+        #btn-apply-plus { flex: 0.8; color: var(--accent); font-size: 22px; }
+        #btn-mode-toggle { flex: 0.6; font-size: 11px; color: var(--accent); }
         
-        /* Delta UI Container Fix */
         .delta-ui { 
-            flex: 2; height: 44px; background: #111; border-radius: 8px; border: 1px solid #444; 
+            flex: 2.2; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
             display: flex; align-items: center; overflow: hidden; 
         }
         .spinner-btn { 
-            width: 40px; height: 100%; background: transparent; border: none; color: #888; 
-            font-size: 18px; cursor: pointer; outline: none !important; display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; cursor: pointer; outline: none !important; 
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .spinner-btn:active { background: #333 !important; color: #fff !important; }
         
         #popup-delta { 
-            flex: 1; background: #000; border: none; color: #fff; font-size: 18px; 
-            height: 100%; text-align: center; outline: none !important; width: 0; /* Let flex handle width */
+            flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; 
+            height: 100%; text-align: center; outline: none !important; min-width: 30px; padding: 0;
         }
 
         /* BOTTOM NAV */
         #bottom-nav {
-            height: 56px; background: #1a1a1a; border-top: 1px solid #333;
-            display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom);
-            z-index: 500000;
+            height: 56px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom); z-index: 500000;
         }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; border: none; background: transparent; outline: none; }
         .nav-item.active { color: var(--accent); }
@@ -101,7 +99,7 @@
 <body>
     <!-- 1. Info Bar -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.14</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.15</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -117,10 +115,10 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup -->
+    <!-- 3. Edit Popup (Re-ordered & Narrowed) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <button class="popup-btn" style="flex:0.6; font-size:13px;" onclick="resetToOriginal()">Reset</button>
+            <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">🔄</button>
             <button class="popup-btn" id="btn-apply-minus" 
                     onmousedown="startApply(-1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
                     ontouchstart="startApply(-1, event)" ontouchend="stopApply()">-</button>
@@ -136,7 +134,7 @@
             <button class="popup-btn" id="btn-apply-plus" 
                     onmousedown="startApply(1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
                     ontouchstart="startApply(1, event)" ontouchend="stopApply()">+</button>
-            <button class="popup-btn" id="btn-mode-toggle" style="flex:0.7; font-size:12px; color:var(--accent);" onclick="togglePopupMode()">ABS</button>
+            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()">ABS</button>
         </div>
     </div>
 
@@ -160,10 +158,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.14_POPUP_LAYOUT_FIX</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.15_POPUP_REFINED</p>
     </div>
 
-    <script src="js/app.js?v=2026.14" type="module"></script>
+    <script src="js/app.js?v=2026.15" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
