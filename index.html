@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.30">
+    <link rel="stylesheet" href="css/style.css?v=2026.33">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -28,6 +28,9 @@
         #file-info-drawer {
             height: 0; overflow: hidden; background: #111; border-bottom: 1px solid #333;
             transition: height 0.3s ease-out; position: relative; z-index: 9999;
+        }
+        #file-info-drawer.open {
+            height: 140px !important;
         }
         .drawer-content { padding: 15px; font-size: 12px; color: #ccc; line-height: 1.6; }
         .drawer-content b { color: var(--accent); }
@@ -56,7 +59,7 @@
             bottom: calc(75px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
             width: 98%; max-width: 480px; height: 56px;
-            background: #111; border: 2.5px solid var(--accent);
+            background: #111; border: 2.5 solid var(--accent);
             border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,1);
             z-index: 999999 !important; display: none; align-items: center; justify-content: center;
         }
@@ -111,7 +114,7 @@
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.32</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.33</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -120,8 +123,8 @@
         <div class="drawer-content">
             <p><b>ACTIVE FILE:</b> <span id="drawer-filename">No file loaded</span></p>
             <p><b>ENGINE TYPE:</b> 4-Cylinder Turbo (Project-S)</p>
-            <p><b>STUDIO VER:</b> 2026.32 (Aggressive Cache Busting)</p>
-            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Slide up, wait 5s, or tap any cell to close.</p>
+            <p><b>STUDIO VER:</b> 2026.33 (CSS State & Global Timer)</p>
+            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Slide up, wait 5s, or tap anywhere to close.</p>
         </div>
     </div>
 
@@ -179,10 +182,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.30_EXTREME_ACCEL</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.33_NUCLEAR_FIX</p>
     </div>
 
-    <script src="js/app.js?v=2026.30" type="module"></script>
+    <script src="js/app.js?v=2026.33" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
