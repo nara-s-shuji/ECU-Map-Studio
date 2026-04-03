@@ -1,14 +1,13 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.37';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js';
 import { 
     initData, 
     undo, 
     redo, 
     importFromCSV, 
     importBaseFromCSV, 
-    saveFileToCSV, 
-    saveHistory 
-} from './data.js?v=2026.37';
-import { renderTable, updateData } from './editor.js?v=2026.37';
+    saveFileToCSV 
+} from './data.js';
+import { renderTable } from './editor.js';
 import { 
     switchTab, 
     toggleSettings, 
@@ -18,18 +17,14 @@ import {
     selectPriorityMap,
     selectNextMap,
     initInfoBarDrag
-} from './navigation.js?v=2026.37';
+} from './navigation.js';
 import { 
-    updateUISelection, 
     handleCellMouseDown, 
     handleCellMouseEnter,
     handleTouchMove,
     handleTouchEnd,
-    selectColumn, 
-    selectRow, 
-    isColumnSelected, 
-    isRowSelected 
-} from './selection.js?v=2026.37';
+    handleTouchStart
+} from './selection.js';
 import { 
     updatePopupPosition, 
     startApply, 
@@ -37,12 +32,11 @@ import {
     startSpinner, 
     stopSpinner, 
     togglePopupMode,
-    adjustCellValue,
     resetToOriginal
-} from './popup.js?v=2026.37';
-import { initPinchZoom, updateViewportLayout } from './gestures.js?v=2026.37';
-import { toggleGraph, updateGraph } from './graph.js?v=2026.37';
-import { monitor } from './monitor.js?v=2026.37';
+} from './popup.js';
+import { initPinchZoom, updateViewportLayout } from './gestures.js';
+import { toggleGraph, updateGraph } from './graph.js';
+import { monitor } from './monitor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initial Data & UI
@@ -50,35 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable();
     initPinchZoom();
 
-    // 2. Toolbar Event Listeners
-    setupToolbar();
-
-    // 3. Navigation Event Listeners
+    // 2. Navigation Event Listeners
     setupNavigation();
 
-    // 4. Popup Event Listeners
+    // 3. Popup Event Listeners
     setupPopup();
 
-    // 5. Drawer & Information Listeners (v2026.37)
+    // 4. Drawer & Information Listeners (v2026.38)
     initInfoBarDrag();
 
-    // 6. File View & Settings Listeners
+    // 5. File View & Settings Listeners
     setupFileView();
     setupFileItems();
 
-    // 7. Monitor View Listeners
+    // 6. Monitor View Listeners
     setupMonitorView();
 
-    // 8. Graph View Listeners
+    // 7. Graph View Listeners
     setupGraphView();
 
-    // 9. Initial Label Update (Fix "Loading..." persistent text)
+    // 8. Initial Label Update (Fix "Loading..." persistent text)
     const labelFileName = document.getElementById('info-filename');
     if (labelFileName) {
-        labelFileName.innerText = state.currentFileName || 'New_Map.csv';
+        labelFileName.innerText = state.currentFileName || '入力待ち...';
     }
 
-    // 10. Global State Sync
+    // 9. Global State Sync
     window.addEventListener('resize', () => {
         updateViewportLayout();
         updatePopupPosition();
@@ -97,64 +88,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function setupToolbar() {
-    const actions = {
-        'open': () => document.getElementById('file-input').click(),
-        'base-open': () => document.getElementById('base-file-input').click(),
-        'save': () => saveFileToCSV(),
-        'undo': () => undo(),
-        'redo': () => redo(),
-        'ecu-connect': () => toggleECUConnection(),
-        'write': () => writeToECU(),
-        'read': () => readFromECU(),
-        'graph': () => toggleGraph(),
-        'settings': () => toggleSettings(),
-        'explorer': () => toggleExplorer()
-    };
-
-    document.querySelectorAll('.toolbar-btn').forEach(btn => {
-        const tooltip = btn.dataset.tooltip || '';
-        if (tooltip.includes('ファイルを開く')) btn.onclick = actions.open;
-        else if (tooltip.includes('基準ファイル')) btn.onclick = actions['base-open'];
-        else if (tooltip.includes('保存')) btn.onclick = actions.save;
-        else if (btn.id === 'btn-undo') btn.onclick = actions.undo;
-        else if (btn.id === 'btn-redo') btn.onclick = actions.redo;
-        else if (btn.id === 'btn-ecu-connect') btn.onclick = actions['ecu-connect'];
-        else if (btn.id === 'btn-write') btn.onclick = actions.write;
-        else if (btn.id === 'btn-read') btn.onclick = actions.read;
-        else if (btn.id === 'btn-graph') btn.onclick = actions.graph;
-        else if (btn.id === 'btn-settings') btn.onclick = actions.settings;
-    });
-
-    const hamburger = document.getElementById('hamburger-btn');
-    if (hamburger) hamburger.onclick = actions.explorer;
-}
-
 function setupNavigation() {
-    const navMapping = [
-        { selector: '#nav-file', tab: 'file' },
-        { selector: '#nav-editor', tab: 'editor' },
-        { selector: '#nav-graph', tab: 'graph' },
-        { selector: '#nav-monitor', tab: 'monitor' },
-        { selector: '#nav-menu', action: () => toggleSettings() }
+    const navItems = [
+        { id: 'nav-file', tab: 'file' },
+        { id: 'nav-editor', tab: 'editor' },
+        { id: 'nav-graph', tab: 'graph' },
+        { id: 'nav-monitor', tab: 'monitor' }
     ];
 
-    navMapping.forEach(item => {
-        document.querySelectorAll(item.selector).forEach(el => {
-            el.onclick = () => {
-                if (item.tab) switchTab(item.tab);
-                else if (item.action) item.action();
-            };
-        });
+    navItems.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) el.onclick = () => switchTab(item.tab);
     });
+
+    const btnMenu = document.getElementById('nav-menu');
+    if (btnMenu) btnMenu.onclick = () => toggleSettings();
+    
+    const settingsOverlay = document.getElementById('settings-overlay');
+    if (settingsOverlay) settingsOverlay.onclick = () => toggleSettings(false);
 }
 
 function setupPopup() {
     const popup = document.getElementById('edit-popup-v2');
     if (!popup) return;
-
-    const btnReset = popup.querySelector('.popup-btn:first-child');
-    if (btnReset) btnReset.onclick = () => resetToOriginal();
 
     const btnMinus = document.getElementById('btn-apply-minus');
     if (btnMinus) {
@@ -191,141 +147,66 @@ function setupPopup() {
         spinnerUp.ontouchstart = (e) => startSpinner(1, e);
         spinnerUp.ontouchend = stopSpinner;
     }
-
-    const btnMode = document.getElementById('btn-mode-toggle');
-    if (btnMode) btnMode.onclick = () => togglePopupMode();
-    
-    const settingsOverlay = document.getElementById('settings-overlay');
-    if (settingsOverlay) settingsOverlay.onclick = () => toggleSettings(false);
 }
 
 function setupFileView() {
-    const modeToggle = document.getElementById('mode-toggle');
-    if (modeToggle) {
-        modeToggle.onchange = () => {
-            document.body.classList.toggle('basic-mode', !modeToggle.checked);
-        };
-    }
-
     const fileInput = document.getElementById('file-input');
     if (fileInput) fileInput.onchange = (e) => importFromCSV(e.target);
 
     const baseInput = document.getElementById('base-file-input');
     if (baseInput) baseInput.onchange = (e) => importBaseFromCSV(e.target);
 
-    const btnExplorer = document.getElementById('btn-menu-explorer');
-    if (btnExplorer) btnExplorer.onclick = () => toggleExplorer();
-
-    const btnOpen = document.getElementById('btn-menu-open');
-    if (btnOpen) btnOpen.onclick = () => document.getElementById('file-input').click();
-
-    const btnBase = document.getElementById('btn-menu-open'); // Reusing ID for base open in explorer
-    if (btnBase && btnBase.innerText.includes('BASE')) btnBase.onclick = () => document.getElementById('base-file-input').click();
-
     const colorMode = document.getElementById('cell-color-mode');
     if (colorMode) colorMode.onchange = () => updateCellColorMode();
-
-    const btnFileRead = document.getElementById('btn-file-read');
-    if (btnFileRead) btnFileRead.onclick = () => readFromECU();
-
-    const btnFileWrite = document.getElementById('btn-file-write');
-    if (btnFileWrite) btnFileWrite.onclick = () => writeToECU();
-
-    const btnFileOpen = document.getElementById('btn-file-open');
-    if (btnFileOpen) btnFileOpen.onclick = () => document.getElementById('file-input').click();
-
-    const btnFileSave = document.getElementById('btn-file-save');
-    if (btnFileSave) btnFileSave.onclick = () => saveFileToCSV();
 }
 
 function setupFileItems() {
-    document.querySelectorAll('.file-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-            
-            const idMap = {
-                'file-item-fuel': 'fuel',
-                'file-item-map-sel': 'map_sel',
-                'file-item-fuel-idle': 'fuel_idle',
-                'file-item-start-inj': 'start_inj',
-                'file-item-async-inj': 'async_inj',
-                'file-item-accel': 'accel',
-                'file-item-rpm-corr': 'rpm_corr',
-                'file-item-oil-corr': 'oil_corr',
-                'file-item-dwell': 'dwell',
-                'file-item-ign-map': 'ign'
-            };
-            
-            const mapKey = idMap[this.id];
-            if (mapKey) state.currentMap = mapKey;
-        });
-    });
-
+    // Map Slots
     document.querySelectorAll('.sub-btn[data-map]').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation();
+            document.querySelectorAll(`.sub-btn[data-map="${btn.dataset.map}"]`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             selectMapSlot(btn.dataset.map, parseInt(btn.dataset.slot));
         });
     });
 
+    // Priority Buttons
     document.querySelectorAll('.sub-btn[data-prio]').forEach(btn => {
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            selectPriorityMap(parseInt(btn.dataset.prio));
-        };
+        btn.onclick = (e) => selectPriorityMap(parseInt(btn.dataset.prio));
     });
 
+    // Next Map (If any)
     document.querySelectorAll('.sub-btn[data-next]').forEach(btn => {
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            selectNextMap(parseInt(btn.dataset.next));
-        };
+        btn.onclick = (e) => selectNextMap(parseInt(btn.dataset.next));
     });
 }
 
 function setupMonitorView() {
     const btnRecord = document.getElementById('btn-record-all');
-    if (btnRecord) btnRecord.onclick = () => monitor.toggleRecording();
+    if (btnRecord) {
+        btnRecord.onclick = () => {
+            const active = monitor.toggleRecording();
+            btnRecord.innerText = active ? "⏹️ ログ記録停止" : "⏺️ ログ記録開始";
+            btnRecord.style.background = active ? "#ff4444" : "transparent";
+        };
+    }
 
     const btnSave = document.getElementById('btn-save-all');
     if (btnSave) btnSave.onclick = () => monitor.saveLog();
-
-    const btnConnects = document.querySelectorAll('.btn-connect');
-    btnConnects.forEach(btn => {
-        btn.onclick = () => monitor.toggleConnection();
-    });
 }
 
 function setupGraphView() {
     const graphType = document.getElementById('graph-type');
     if (graphType) graphType.onchange = () => updateGraph();
-
-    const graphClose = document.getElementById('graph-close');
-    if (graphClose) graphClose.onclick = () => toggleGraph();
 }
 
-// ECU Communication Stubs (to be implemented)
-function toggleECUConnection() { alert("ECU接続機能: 未実装"); }
-function writeToECU() { alert("ECU書き込み機能: 未実装"); }
-function readFromECU() { alert("ECU読み取り機能: 未実装"); }
-
-// Global Exports
-window.openFile = () => document.getElementById('file-input').click();
-window.openBaseFile = () => document.getElementById('base-file-input').click();
-window.saveFile = saveFileToCSV;
+// Global Exports for HTML inline compatibility where needed
+window.saveFileToCSV = saveFileToCSV;
 window.undo = undo;
 window.redo = redo;
-window.toggleECUConnection = toggleECUConnection;
-window.writeToECU = writeToECU;
-window.readFromECU = readFromECU;
-window.toggleGraph = toggleGraph;
 window.toggleSettings = toggleSettings;
 window.toggleExplorer = toggleExplorer;
 window.switchTab = switchTab;
 window.resetToOriginal = resetToOriginal;
 window.togglePopupMode = togglePopupMode;
 window.updateCellColorMode = updateCellColorMode;
-window.selectMapSlot = selectMapSlot;
-window.selectPriorityMap = selectPriorityMap;
-window.selectNextMap = selectNextMap;

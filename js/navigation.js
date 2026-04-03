@@ -1,4 +1,5 @@
 import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { renderTable } from './editor.js';
 
 // Global references for absolute reliability
 window.drawerTimeout = null;
@@ -11,7 +12,7 @@ export function closeDrawer() {
     const drawer = document.getElementById('file-info-drawer');
     if (drawer) {
         drawer.classList.remove('open');
-        console.log("Drawer HARD CLOSED (v2026.35)");
+        console.log("Drawer HARD CLOSED (v2026.38)");
     }
     if (window.drawerTimeout) {
         clearTimeout(window.drawerTimeout);
@@ -25,10 +26,10 @@ export function openDrawer() {
     if (!drawer) return;
     
     drawer.classList.add('open');
-    console.log("Drawer HARD OPENED (v2026.35)");
+    console.log("Drawer HARD OPENED (v2026.38)");
 
     const elName = document.getElementById('drawer-filename');
-    if (elName) elName.innerText = state.currentFileName || 'Unnamed_Map.csv';
+    if (elName) elName.innerText = state.currentFileName || '新規マップ.csv';
     
     // Auto-close after 5 seconds
     if (window.drawerTimeout) clearTimeout(window.drawerTimeout);
@@ -61,7 +62,6 @@ export function initInfoBarDrag() {
     }, { passive: true });
 
     // Global "Touch Anywhere to Close" (Capture Phase)
-    // This catches touches BEFORE they reach other elements that might call preventDefault()
     window.addEventListener('touchstart', (e) => {
         const drawerEl = document.getElementById('file-info-drawer');
         if (drawerEl && drawerEl.classList.contains('open')) {
@@ -93,12 +93,20 @@ export function toggleSettings(forceState) {
     let targetState = (typeof forceState !== 'undefined') ? forceState : !isActive;
 
     if (targetState) {
+        menu.style.display = 'block';
         menu.classList.add('active');
-        if (overlay) overlay.classList.add('active');
+        if (overlay) {
+            overlay.style.display = 'block';
+            overlay.classList.add('active');
+        }
         if (navBtn) navBtn.classList.add('active');
     } else {
+        menu.style.display = 'none';
         menu.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
+        if (overlay) {
+            overlay.style.display = 'none';
+            overlay.classList.remove('active');
+        }
         if (navBtn) navBtn.classList.remove('active');
     }
 }
@@ -110,77 +118,73 @@ export function toggleExplorer() {
 }
 window.toggleExplorer = toggleExplorer;
 
+/**
+ * Tab Switching Logic (v2026.38)
+ * Handles full view transitions including Graph and Monitor.
+ */
 export function switchTab(tabId) {
     state.currentTabId = tabId;
 
+    // Reset all views
     document.querySelectorAll('.view-section').forEach(el => {
         el.style.display = 'none';
         el.classList.remove('active');
     });
-    document.body.classList.remove('overlay-active');
-
-    let targetId = tabId;
-    if (!document.getElementById(targetId)) {
-        if (document.getElementById(tabId + '-view')) {
-            targetId = tabId + '-view';
-        }
-    }
-
-    const target = document.getElementById(targetId);
-    if (target) {
-        const isFlex = (targetId === 'file-view' || targetId === 'monitor-view');
-        target.style.display = isFlex ? 'flex' : 'block';
-        setTimeout(() => target.classList.add('active'), 10);
-    }
 
     const graphOverlay = document.getElementById('graph-overlay');
+    if (graphOverlay) {
+        graphOverlay.style.display = 'none';
+        graphOverlay.classList.remove('active');
+    }
+
+    // Activate target
+    let targetId = tabId + '-view';
     if (tabId === 'graph') {
         if (graphOverlay) {
+            graphOverlay.style.display = 'flex';
             graphOverlay.classList.add('active');
-            const typeSel = document.getElementById('graph-type');
-            if (typeSel && !typeSel.value) typeSel.value = '3d';
-
             setTimeout(() => {
                 if (window.updateGraph) window.updateGraph();
                 window.dispatchEvent(new Event('resize'));
             }, 50);
         }
     } else {
-        if (graphOverlay) graphOverlay.classList.remove('active');
+        const target = document.getElementById(targetId);
+        if (target) {
+            target.style.display = 'flex';
+            target.classList.add('active');
+            if (tabId === 'editor') {
+                renderTable();
+            }
+        }
     }
 
-    document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.remove('active');
-    });
+    // Update Nav
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     const navBtn = document.getElementById('nav-' + tabId);
     if (navBtn) navBtn.classList.add('active');
 
+    // Handle Edit Popup
     const popup = document.getElementById('edit-popup-v2');
     if (popup) {
-        if (tabId === 'editor') {
-            if (window.updatePopupPosition && state.selectedCells.size > 0) {
-                setTimeout(() => {
-                    window.updatePopupPosition();
-                }, 50);
-            }
+        if (tabId === 'editor' && state.selectedCells.size > 0) {
+            popup.style.display = 'flex';
+            popup.classList.add('active');
         } else {
             popup.style.display = 'none';
             popup.classList.remove('active');
         }
     }
 
-    toggleSettings(false);
-    
-    // Update main info display
+    // Update Information Label
     const labelFileName = document.getElementById('info-filename');
-    if (labelFileName) labelFileName.innerText = state.currentFileName || 'Unnamed';
+    if (labelFileName) labelFileName.innerText = state.currentFileName || '入力待ち...';
 }
 window.switchTab = switchTab;
 
 export function selectMapSlot(type, index) {
     if (type === 'fuel') state.currentFuelMapIndex = index;
     if (type === 'ign') state.currentIgnMapIndex = index;
-    // ...
 }
 window.selectMapSlot = selectMapSlot;
 
@@ -213,6 +217,6 @@ export function updateNextMapUI() {
 export function updateCellColorMode() {
     const el = document.getElementById('cell-color-mode');
     if (el) state.cellColorMode = el.value;
-    // renderTable is usually called via events
+    renderTable();
 }
 window.updateCellColorMode = updateCellColorMode;

@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.37">
+    <link rel="stylesheet" href="css/style.css?v=2026.38">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -25,11 +25,10 @@
 
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
         
-        /* v2026.37: Drawer as Overlay */
         #file-info-drawer {
             display: none; border-bottom: 1px solid #333; background: #111;
             position: absolute; top: 32px; left: 0; width: 100%;
-            z-index: 10000; /* Above table, below popup */
+            z-index: 10000;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             border-bottom: 1.5px solid var(--accent);
         }
@@ -39,7 +38,20 @@
         .drawer-content { padding: 15px; font-size: 12px; color: #ccc; line-height: 1.6; }
         .drawer-content b { color: var(--accent); }
 
-        #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        #main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
+        
+        #explorer {
+            width: 240px; background: #1a1a1a; border-right: 1px solid #333;
+            display: flex; flex-direction: column; flex-shrink: 0;
+            transition: transform 0.3s ease;
+            position: absolute; top: 0; left: 0; height: 100%; z-index: 20000;
+            transform: translateX(-100%);
+        }
+        #explorer.active { transform: translateX(0); }
+
+        .view-section { flex: 1; display: none; flex-direction: column; overflow: hidden; height: 100%; }
+        .view-section.active { display: flex !important; }
+
         #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 95px; }
         #table-wrapper { position: relative; display: block; width: max-content; }
 
@@ -69,41 +81,6 @@
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        .popup-controls { 
-            display: flex; width: 100%; gap: 6px; padding: 0 10px; 
-            align-items: center; height: 100%; justify-content: center;
-            padding-bottom: 6px; 
-        }
-        
-        .popup-btn { 
-            background: #333; border: 1px solid #444; color: #ccc; height: 42px; border-radius: 8px; font-weight: bold;
-            outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .popup-btn:active { background: #555 !important; color: #fff !important; }
-        .popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
-        .popup-btn:active svg { fill: #fff; }
-
-        #btn-reset { width: 52px; margin-left: 15px !important; } 
-        #btn-apply-minus { width: 52px; font-size: 24px; }
-        #btn-apply-plus { width: 52px; font-size: 24px; }
-        #btn-mode-toggle { width: 52px; margin-right: 15px !important; font-size: 15px; color: var(--accent); }
-
-        .delta-ui { 
-            flex: 1.2; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
-            display: flex; align-items: center; overflow: hidden; min-width: 100px;
-        }
-        
-        .spinner-btn { 
-            width: 34px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; cursor: pointer; outline: none !important; 
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .spinner-btn:active { background: #333 !important; color: #fff !important; }
-        #popup-delta { 
-            flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; 
-            height: 100%; text-align: center; outline: none !important; min-width: 0; padding: 0; pointer-events: none;
-        }
-
         #bottom-nav {
             height: 56px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom); z-index: 500000;
@@ -112,28 +89,62 @@
         .nav-item.active { color: var(--accent); }
         .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
+        /* File View Styles */
+        .file-grid { padding: 15px; display: grid; grid-template-columns: 1fr; gap: 15px; overflow-y: auto; }
+        .file-group { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; }
+        .file-group h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--accent); text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .slot-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .sub-btn { flex: 1; min-width: 60px; background: #333; border: 1px solid #444; color: #fff; padding: 12px 5px; border-radius: 6px; font-size: 12px; }
+        .sub-btn.active { background: var(--accent); border-color: #0099ff; }
+
+        /* Monitor View Styles */
+        .monitor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; overflow-y: auto; }
+        .monitor-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .monitor-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .monitor-value { font-size: 24px; font-weight: bold; color: var(--accent); }
+        .monitor-unit { font-size: 10px; color: #666; margin-top: 2px; }
+
+        /* Graph Overlay Styles */
+        #graph-overlay { position: fixed; top: 32px; left: 0; width: 100%; height: calc(100% - 32px - 56px); background: #000; z-index: 50000; display: none; flex-direction: column; }
+        #graph-overlay.active { display: flex; }
+        .graph-header { background: #111; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        #chart-container { flex: 1; min-height: 0; position: relative; }
+
+        #settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999998; display: none; }
+        #settings-overlay.active { display: block; }
+
         #debug-tag { color: var(--accent); font-weight: bold; margin-right: 5px; }
     </style>
 </head>
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.37</span> <span id="info-filename">Loading...</span></span>
-        <span id="info-values">C:- / O:-</span>
+        <span><span id="debug-tag">FINAL_v2026.38</span> <span id="info-filename">読み込み中...</span></span>
+        <span id="info-values">現在:- / 元:-</span>
     </div>
 
-    <!-- RESTORED: File Info Drawer (v2026.37: Header Selection Restore) -->
+    <!-- 情報ドロワー (オーバーレイ) -->
     <div id="file-info-drawer">
         <div class="drawer-content">
-            <p><b>ACTIVE FILE:</b> <span id="drawer-filename">No file loaded</span></p>
-            <p><b>ENGINE TYPE:</b> 4-Cylinder Turbo (Project-S)</p>
-            <p><b>STUDIO VER:</b> 2026.37 (Selection Fix)</p>
-            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Single tap on headers now selects rows/cols again.</p>
+            <p><b>実行ファイル:</b> <span id="drawer-filename">ファイルが読み込まれていません</span></p>
+            <p><b>エンジン形式:</b> 4気筒ターボ (Project-S)</p>
+            <p><b>システムVer:</b> 2026.38 (完全復旧版)</p>
+            <p style="font-size:10px; color:#666; margin-top:10px;">ヒント: インフォバーを下にスライドすると開きます。</p>
         </div>
     </div>
 
-    <!-- 2. Main -->
+    <!-- サイドバー (エクスプローラー) -->
+    <div id="explorer">
+        <div style="padding: 15px; border-bottom: 1px solid #333; font-weight: bold; color: var(--accent);">エクスプローラー</div>
+        <div class="explorer-list" style="padding:10px;">
+            <div class="tree-item active" onclick="switchTab('editor')">📁 メインマップ</div>
+            <div class="tree-item" onclick="switchTab('monitor')">📈 リアルタイム計測</div>
+            <div class="tree-item" onclick="switchTab('file')">⚙️ プロファイル設定</div>
+        </div>
+    </div>
+
     <div id="main-container">
+        <!-- マップエディタ画面 -->
         <div id="editor-view" class="view-section active">
             <div id="map-section">
                 <div id="table-wrapper">
@@ -142,54 +153,124 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="edit-popup-v2">
-        <div class="popup-controls">
-            <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
-                <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-            </button>
-            <button class="popup-btn" id="btn-apply-minus" 
-                    onmousedown="startApply(-1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
-                    ontouchstart="startApply(-1, event)" ontouchend="stopApply()">-</button>
-            <div class="delta-ui">
-                <button class="spinner-btn" id="btn-spin-down"
-                        onmousedown="startSpinner(-1, event)" onmouseup="stopSpinner()" onmouseleave="stopSpinner()" 
-                        ontouchstart="startSpinner(-1, event)" ontouchend="stopSpinner()">▽</button>
-                <input type="number" id="popup-delta" value="10" readonly>
-                <button class="spinner-btn" id="btn-spin-up"
-                        onmousedown="startSpinner(1, event)" onmouseup="stopSpinner()" onmouseleave="stopSpinner()" 
-                        ontouchstart="startSpinner(1, event)" ontouchend="stopSpinner()">△</button>
+        <!-- ファイル/設定画面 -->
+        <div id="file-view" class="view-section">
+            <div class="file-grid">
+                <div class="file-group">
+                    <h3>燃料マップ スロット</h3>
+                    <div class="slot-row" id="file-item-fuel">
+                        <button class="sub-btn active" data-map="fuel" data-slot="1">1</button>
+                        <button class="sub-btn" data-map="fuel" data-slot="2">2</button>
+                        <button class="sub-btn" data-map="fuel" data-slot="3">3</button>
+                        <button class="sub-btn" data-map="fuel" data-slot="4">4</button>
+                    </div>
+                </div>
+                <div class="file-group">
+                    <h3>点火マップ スロット</h3>
+                    <div class="slot-row" id="file-item-ign-map">
+                        <button class="sub-btn active" data-map="ign" data-slot="1">1</button>
+                        <button class="sub-btn" data-map="ign" data-slot="2">2</button>
+                        <button class="sub-btn" data-map="ign" data-slot="3">3</button>
+                        <button class="sub-btn" data-map="ign" data-slot="4">4</button>
+                    </div>
+                </div>
+                <div class="file-group">
+                    <h3>優先設定 (Priority)</h3>
+                    <div class="slot-row">
+                        <button class="sub-btn active" id="btn-prio-1" data-prio="1">P1</button>
+                        <button class="sub-btn" id="btn-prio-2" data-prio="2">P2</button>
+                        <button class="sub-btn" id="btn-prio-3" data-prio="3">P3</button>
+                        <button class="sub-btn" id="btn-prio-4" data-prio="4">P4</button>
+                    </div>
+                </div>
+                <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+                    <button class="sub-btn" style="background:var(--accent);" onclick="document.getElementById('file-input').click()">📁 ファイルを開く (.csv)</button>
+                    <button class="sub-btn" style="background:#444;" onclick="document.getElementById('base-file-input').click()">📊 比較ファイルを読み込む</button>
+                    <button class="sub-btn" style="background:#228b22;" onclick="saveFileToCSV()">💾 保存する</button>
+                </div>
             </div>
-            <button class="popup-btn" id="btn-apply-plus" 
-                    onmousedown="startApply(1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
-                    ontouchstart="startApply(1, event)" ontouchend="stopApply()">+</button>
-            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()">ABS</button>
+        </div>
+
+        <!-- モニター画面 -->
+        <div id="monitor-view" class="view-section">
+            <div class="monitor-grid">
+                <div class="monitor-card"><span class="monitor-label">回転数</span><span id="mon-rpm" class="monitor-value">0</span><span class="monitor-unit">RPM</span></div>
+                <div class="monitor-card"><span class="monitor-label">負荷 (TPS)</span><span id="mon-tps" class="monitor-value">0.0</span><span class="monitor-unit">%</span></div>
+                <div class="monitor-card"><span class="monitor-label">空燃比 (AFR)</span><span id="mon-afr" class="monitor-value">14.7</span><span class="monitor-unit">ratio</span></div>
+                <div class="monitor-card"><span class="monitor-label">点火時期</span><span id="mon-ign" class="monitor-value">15.0</span><span class="monitor-unit">deg</span></div>
+            </div>
+            <div style="padding:15px; display:flex; gap:10px;">
+                <button id="btn-record-all" class="sub-btn" style="flex:1;">⏺️ ログ記録開始</button>
+                <button id="btn-save-all" class="sub-btn" style="flex:1;">💾 ログ保存</button>
+            </div>
         </div>
     </div>
 
+    <!-- グラフ・オーバーレイ -->
+    <div id="graph-overlay">
+        <div class="graph-header">
+            <select id="graph-type" style="background:#333; color:white; border:none; padding:5px; border-radius:4px;">
+                <option value="3d">3Dマップ表示</option>
+                <option value="2d">2D推移表示</option>
+            </select>
+            <button id="graph-close" onclick="switchTab('editor')" style="background:transparent; border:none; color:white; font-size:24px;">×</button>
+        </div>
+        <div id="chart-container"></div>
+    </div>
+
+    <!-- 編集ポップアップ (v2026.37) -->
+    <div id="edit-popup-v2">
+        <div class="popup-controls" style="display:flex; align-items:center; height:100%; gap:8px;">
+            <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
+                <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:#ccc;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            </button>
+            <button class="popup-btn" id="btn-apply-minus" style="width:52px; font-size:24px;">-</button>
+            <div class="delta-ui" style="flex:1; height:42px; background:#000; border-radius:8px; border:1px solid #555; display:flex; align-items:center;">
+                <button class="spinner-btn" id="btn-spin-down" style="width:34px; height:100%; background:transparent; border:none; color:#888; font-size:18px;">▽</button>
+                <input type="number" id="popup-delta" value="10" readonly style="flex:1; background:transparent; border:none; color:#fff; text-align:center; font-size:18px;">
+                <button class="spinner-btn" id="btn-spin-up" style="width:34px; height:100%; background:transparent; border:none; color:#888; font-size:18px;">△</button>
+            </div>
+            <button class="popup-btn" id="btn-apply-plus" style="width:52px; font-size:24px;">+</button>
+            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()" style="width:52px; font-size:15px; color:var(--accent);">ABS</button>
+        </div>
+    </div>
+
+    <!-- ボトムナビゲーション -->
     <div id="bottom-nav">
-        <button class="nav-item" onclick="switchTab('file')"><span class="nav-icon">📁</span><span>ファイル</span></button>
-        <button class="nav-item active" onclick="switchTab('editor')"><span class="nav-icon">📝</span><span>編集</span></button>
-        <button class="nav-item" onclick="switchTab('graph')"><span class="nav-icon">📊</span><span>グラフ</span></button>
-        <button class="nav-item" onclick="switchTab('monitor')"><span class="nav-icon">⏱️</span><span>モニター</span></button>
-        <button class="nav-item" onclick="toggleSettings()"><span class="nav-icon">☰</span><span>設定</span></button>
+        <button class="nav-item" id="nav-file"><span class="nav-icon">📁</span><span>ファイル</span></button>
+        <button class="nav-item active" id="nav-editor"><span class="nav-icon">📝</span><span>編集</span></button>
+        <button class="nav-item" id="nav-graph"><span class="nav-icon">📊</span><span>グラフ</span></button>
+        <button class="nav-item" id="nav-monitor"><span class="nav-icon">⏱️</span><span>モニター</span></button>
+        <button class="nav-item" id="nav-menu"><span class="nav-icon">☰</span><span>設定</span></button>
     </div>
 
+    <div id="settings-overlay"></div>
     <div id="settings-menu" style="display:none; position:fixed; top:0; right:0; width:300px; height:100%; background:#111; z-index:9999999; padding:20px; border-left:1px solid #444;">
-        <h3 style="margin-top:0;">Settings <button style="float:right;" onclick="toggleSettings(false)">×</button></h3>
-        <button style="width:100%; padding:15px; margin-bottom:10px; background:var(--accent); border:none; color:white; border-radius:8px;" onclick="location.reload(true)">🔄 FULL RELOAD (CACHE CLEAR)</button>
-        <p style="margin-top:20px; font-size:12px; color:#aaa;">File Actions:</p>
-        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="document.getElementById('file-input').click()">📂 Open CSV</button>
-        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="saveFileToCSV()">💾 Save CSV</button>
-        <div style="margin-top:20px; display:flex; gap:10px;">
-            <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
-            <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
+        <h3 style="margin-top:0; color:var(--accent);">設定 <button style="float:right; background:transparent; border:none; color:white;" onclick="toggleSettings(false)">×</button></h3>
+        <button style="width:100%; padding:15px; margin-bottom:15px; background:var(--accent); border:none; color:white; border-radius:8px; font-weight:bold;" onclick="location.reload(true)">🔄 強制リロード (キャッシュクリア)</button>
+        
+        <p style="margin-top:20px; font-size:12px; color:#aaa;">表示設定:</p>
+        <div style="margin-bottom:15px;">
+            <label style="font-size:12px; color:#ccc;">色の変化モード:</label>
+            <select id="cell-color-mode" style="width:100%; background:#333; color:white; border:1px solid #444; padding:8px; border-radius:4px; margin-top:5px;">
+                <option value="diff">元ファイルとの差分</option>
+                <option value="heat">ヒートマップ表示</option>
+                <option value="none">色付けなし</option>
+            </select>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.37_SELECTION_RESTORE</p>
+
+        <p style="margin-top:20px; font-size:12px; color:#aaa;">ファイル操作:</p>
+        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="document.getElementById('file-input').click()">📂 ファイルを開く</button>
+        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="saveFileToCSV()">💾 現在の状態で保存</button>
+        
+        <div style="margin-top:40px; text-align:center; font-size:10px; color:#444;">
+            Version: 2026.38_RESTORE_JP
+        </div>
     </div>
 
-    <script src="js/app.js?v=2026.37" type="module"></script>
+    <script src="js/app.js?v=2026.38" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
+    <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 </body>
 </html>
