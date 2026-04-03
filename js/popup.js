@@ -114,13 +114,20 @@ export function adjustDelta(direction) {
 
     if (isNaN(current)) current = (state.popupMode === 'abs') ? 10 : 1.0;
 
+    let multiplier = 1;
+    if (spinnerTicks > 50) multiplier = 100;
+    else if (spinnerTicks > 25) multiplier = 10;
+    else if (spinnerTicks > 10) multiplier = 5;
+
     if (state.popupMode === 'abs') {
-        current = direction > 0 ? current + 1 : Math.max(1, current - 1);
+        const step = 1 * multiplier;
+        current = direction > 0 ? current + step : Math.max(1, current - step);
         current = Math.min(1000, current);
         state.popupDeltaAbs = current;
         input.value = current;
     } else {
-        current = parseFloat((current + (direction * 0.1)).toFixed(1));
+        const step = 0.1 * multiplier;
+        current = parseFloat((current + (direction * step)).toFixed(1));
         current = Math.max(0.1, Math.min(50, current));
         state.popupDeltaPct = current;
         input.value = current.toFixed(1);

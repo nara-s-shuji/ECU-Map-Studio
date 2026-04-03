@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.27">
+    <link rel="stylesheet" href="css/style.css?v=2026.28">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -23,8 +23,16 @@
         }
         body { display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
 
-        #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; }
+        #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
         
+        /* RESTORED DRAWER STYLES */
+        #file-info-drawer {
+            height: 0; overflow: hidden; background: #111; border-bottom: 1px solid #333;
+            transition: height 0.3s ease-out; position: relative; z-index: 9999;
+        }
+        .drawer-content { padding: 15px; font-size: 12px; color: #ccc; line-height: 1.6; }
+        .drawer-content b { color: var(--accent); }
+
         #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 95px; }
         #table-wrapper { position: relative; display: block; width: max-content; }
@@ -44,7 +52,7 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* MONOCHROME REFINED POPUP (v2026.27) */
+        /* POPUP CONSTANTS (v2026.28) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
@@ -72,12 +80,8 @@
         .popup-btn:active svg { fill: #fff; }
 
         #btn-reset { width: 52px; margin-left: 15px !important; } 
-        
-        /* Unified Color with Reset Icon (White/Gray) */
         #btn-apply-minus { width: 52px; font-size: 24px; }
         #btn-apply-plus { width: 52px; font-size: 24px; }
-        
-        /* Mode toggle maintains Accent color for state visibility */
         #btn-mode-toggle { width: 52px; margin-right: 15px !important; font-size: 15px; color: var(--accent); }
 
         .delta-ui { 
@@ -108,9 +112,20 @@
 </head>
 
 <body>
+    <!-- 1. Info Bar (Slide baseline) -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.27</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.28</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
+    </div>
+
+    <!-- RESTORED: File Info Drawer -->
+    <div id="file-info-drawer">
+        <div class="drawer-content">
+            <p><b>ACTIVE FILE:</b> <span id="drawer-filename">No file loaded</span></p>
+            <p><b>ENGINE TYPE:</b> 4-Cylinder Turbo (Project-S)</p>
+            <p><b>STUDIO VER:</b> 2026.28 (Accelerating Multiplier)</p>
+            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Slide up to close or wait for auto-close.</p>
+        </div>
     </div>
 
     <!-- 2. Main -->
@@ -125,7 +140,7 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup (v2026.27: Unified White Typography) -->
+    <!-- 3. Edit Popup -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
@@ -169,10 +184,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.27_UNIFIED_WHITE_TEXT</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.28_ACCEL_DRAWER</p>
     </div>
 
-    <script src="js/app.js?v=2026.27" type="module"></script>
+    <script src="js/app.js?v=2026.28" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
