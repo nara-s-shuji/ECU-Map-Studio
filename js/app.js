@@ -328,4 +328,5 @@ window.togglePopupMode = togglePopupMode;
 window.updateCellColorMode = updateCellColorMode;
 window.selectMapSlot = selectMapSlot;
 window.selectPriorityMap = selectPriorityMap;
+window.saveFileToCSV = saveFileToCSV;
 window.selectNextMap = selectNextMap;

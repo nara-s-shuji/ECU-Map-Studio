@@ -142,6 +142,70 @@
                 </div>
             </div>
         </div>
+
+        <!-- 安全なファイルメニュー (v2026.43) -->
+        <div id="file-view" class="view-section">
+            <div class="sf-grid">
+                <div class="sf-item">
+                    <span class="sf-header">燃料マップ スロット</span>
+                    <div class="sf-sub">
+                        <button class="sf-sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
+                    </div>
+                </div>
+                <div class="sf-item">
+                    <span class="sf-header">点火マップ スロット</span>
+                    <div class="sf-sub">
+                        <button class="sf-sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 3)">3</button>
+                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 4)">4</button>
+                    </div>
+                </div>
+                <div class="sf-item">
+                    <span class="sf-header">優先設定 (PRIORITY)</span>
+                    <div class="sf-sub">
+                        <button class="sf-sub-btn active" id="btn-prio-1" onclick="selectPriorityMap(1)">P1</button>
+                        <button class="sf-sub-btn" id="btn-prio-2" onclick="selectPriorityMap(2)">P2</button>
+                        <button class="sf-sub-btn" id="btn-prio-3" onclick="selectPriorityMap(3)">P3</button>
+                        <button class="sf-sub-btn" id="btn-prio-4" onclick="selectPriorityMap(4)">P4</button>
+                    </div>
+                </div>
+                <div class="sf-actions">
+                    <button class="sf-action-btn" onclick="document.getElementById('file-input').click()">📁 CSVを開く</button>
+                    <button class="sf-action-btn" onclick="document.getElementById('base-file-input').click()">📊 比較読込</button>
+                    <button class="sf-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">💾 保存する</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 安全なモニターメニュー (v2026.43) -->
+        <div id="monitor-view" class="view-section">
+            <div class="sm-grid">
+                <div class="sm-card"><span class="sm-label">回転数</span><span id="mon-rpm" class="sm-value">0</span></div>
+                <div class="sm-card"><span class="sm-label">負荷(TPS)</span><span id="mon-tps" class="sm-value">0.0</span></div>
+                <div class="sm-card"><span class="sm-label">空燃比(AFR)</span><span id="mon-afr" class="sm-value">14.7</span></div>
+                <div class="sm-card"><span class="sm-label">点火時期</span><span id="mon-ign" class="sm-value">15.0</span></div>
+            </div>
+            <div style="padding:15px; display:flex; gap:10px;">
+                <button id="btn-record-all" class="sf-action-btn" style="flex:1;">⏺️ 記録開始</button>
+                <button id="btn-save-all" class="sf-action-btn" style="flex:1;">💾 ログ保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 安全なグラフオーバーレイ (v2026.43) -->
+    <div id="graph-overlay" class="sg-overlay">
+        <div class="sg-header">
+            <select id="graph-type" class="sg-select" onchange="if(window.updateGraph) window.updateGraph();">
+                <option value="3d">3Dマップ</option>
+                <option value="2d">2D推移</option>
+            </select>
+            <button class="sg-close" onclick="switchTab('editor')">×</button>
+        </div>
+        <div id="chart-container" style="flex:1; width:100%;"></div>
     </div>
 
     <div id="edit-popup-v2">
