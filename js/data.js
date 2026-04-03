@@ -15,18 +15,7 @@ export function initData() {
         }
     }
     saveHistory();
-    updateFileInfoUI();
-}
-
-/**
- * Update UI labels with the current file name.
- */
-function updateFileInfoUI() {
-    const label = document.getElementById('info-filename');
-    if (label) label.innerText = state.currentFileName || '入力待ち...';
-    
-    const drawerLabel = document.getElementById('drawer-filename');
-    if (drawerLabel) drawerLabel.innerText = state.currentFileName || 'ファイルが読み込まれていません';
+    if (window.updateFileInfo) window.updateFileInfo();
 }
 
 export function saveHistory() {
@@ -58,8 +47,7 @@ export function redo() {
     }
 }
 
-export function importFromCSV(input) {
-    const file = input.files[0];
+export function importFromCSV(file) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -77,7 +65,6 @@ export function importFromCSV(input) {
         state.originalFuelMap = state.fuelMap.map(row => row.slice());
         state.currentFileName = file.name;
         
-        updateFileInfoUI();
         saveHistory();
         renderTable();
         if (window.updateGraph) window.updateGraph();
@@ -85,8 +72,7 @@ export function importFromCSV(input) {
     reader.readAsText(file);
 }
 
-export function importBaseFromCSV(input) {
-    const file = input.files[0];
+export function importBaseFromCSV(file) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -107,8 +93,7 @@ export function importBaseFromCSV(input) {
     reader.readAsText(file);
 }
 
-export function saveFileToCSV() {
-    const fileName = state.currentFileName || 'Exported_Map.csv';
+export function saveFileToCSV(fileName) {
     let csv = "TPS\\RPM," + RPM_AXIS.join(",") + "\n";
     state.fuelMap.forEach((row, i) => {
         csv += TPS_AXIS[i] + "," + row.join(",") + "\n";
