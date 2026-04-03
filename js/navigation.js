@@ -94,13 +94,31 @@ export function switchTab(tabId) {
     if (valDisplay) valDisplay.innerText = `Orig: - / Curr: -`;
 }
 
+let drawerTimeout = null;
+
 export function initInfoBarDrag() {
     const bar = document.getElementById('mobile-info-bar');
     const drawer = document.getElementById('file-info-drawer');
+    const mapSection = document.getElementById('map-section');
     if (!bar || !drawer) return;
 
     let startY = 0;
     let isDragging = false;
+
+    const openDrawer = () => {
+        drawer.style.height = '140px';
+        const elName = document.getElementById('drawer-filename');
+        if (elName) elName.innerText = state.currentFileName;
+        
+        // Auto-close after 5 seconds
+        clearTimeout(drawerTimeout);
+        drawerTimeout = setTimeout(closeDrawer, 5000);
+    };
+
+    const closeDrawer = () => {
+        drawer.style.height = '0';
+        clearTimeout(drawerTimeout);
+    };
 
     bar.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
@@ -110,18 +128,16 @@ export function initInfoBarDrag() {
     bar.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
-
-        const endY = e.changedTouches[0].clientY;
-        const deltaY = endY - startY;
-
-        if (deltaY > 50) {
-            drawer.style.height = '140px';
-            const elName = document.getElementById('drawer-filename');
-            if (elName) elName.innerText = state.currentFileName;
-        } else if (deltaY < -20) {
-            drawer.style.height = '0';
-        }
+        const deltaY = e.changedTouches[0].clientY - startY;
+        if (deltaY > 50) openDrawer();
+        else if (deltaY < -20) closeDrawer();
     });
+
+    // Tap map to close drawer
+    if (mapSection) {
+        mapSection.addEventListener('touchstart', closeDrawer, { passive: true });
+        mapSection.addEventListener('mousedown', closeDrawer);
+    }
 
     drawer.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
@@ -129,9 +145,7 @@ export function initInfoBarDrag() {
 
     drawer.addEventListener('touchend', (e) => {
         const endY = e.changedTouches[0].clientY;
-        if (startY - endY > 30) {
-            drawer.style.height = '0';
-        }
+        if (startY - endY > 30) closeDrawer();
     });
 }
 

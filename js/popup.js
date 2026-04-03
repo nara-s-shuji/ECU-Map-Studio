@@ -115,11 +115,12 @@ export function adjustDelta(direction) {
 
     if (isNaN(current)) current = (state.popupMode === 'abs') ? 10 : 1.0;
 
-    // Acceleration Steps:
+    // More Aggressive Acceleration Steps:
     let multiplier = 1;
-    if (spinnerTicks > 50) multiplier = 100;
-    else if (spinnerTicks > 25) multiplier = 10;
-    else if (spinnerTicks > 10) multiplier = 5;
+    if (spinnerTicks > 60) multiplier = 500;       // Extreme: after ~6.5s (500ms + 6s)
+    else if (spinnerTicks > 40) multiplier = 100;  // Very Fast: after ~4.5s
+    else if (spinnerTicks > 20) multiplier = 20;   // Fast: after ~2.5s
+    else if (spinnerTicks > 10) multiplier = 5;    // Medium: after ~1.5s
 
     if (state.popupMode === 'abs') {
         const step = 1 * multiplier;
