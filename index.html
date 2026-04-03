@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.17">
+    <link rel="stylesheet" href="css/style.css?v=2026.18">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -26,7 +26,7 @@
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; }
         
         #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
+        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 120px; }
         #table-wrapper { position: relative; display: block; width: max-content; }
 
         .header-row, .grid-container {
@@ -44,48 +44,47 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* POPUP REFINED (v2026.17) */
+        /* SYMMETRICAL POPUP (v2026.18) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
-            width: 94%; max-width: 420px; height: 56px;
+            width: 92%; max-width: 400px; height: 60px;
             background: #111; border: 2.5px solid var(--accent);
             border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,1);
             z-index: 999999 !important; display: none; align-items: center; justify-content: center;
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        /* Increased inner padding to keep buttons away from borders */
-        .popup-controls { display: flex; width: 100%; gap: 10px; padding: 0 16px; align-items: center; height: 100%; }
+        /* Symmetrical Layout logic: (Left 1.7) + (Center 3) + (Right 1.7) = 6.4 total */
+        .popup-controls { display: flex; width: 100%; gap: 10px; padding: 0 25px; align-items: center; height: 100%; justify-content: center; }
         
-        /* Unified Button Style */
         .popup-btn { 
-            flex: 1; background: #333; border: 1px solid #444; color: #fff; height: 40px; border-radius: 8px; font-weight: bold;
+            background: #333; border: 1px solid #444; color: #fff; height: 42px; border-radius: 8px; font-weight: bold;
             outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
         }
         .popup-btn:active { background: #555 !important; }
-        
-        #btn-reset { flex: 0.5; font-size: 18px; } /* Now matches Plus/Minus in style */
+        .popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
+        .popup-btn:active svg { fill: #fff; }
 
-        #btn-apply-minus { flex: 0.8; color: var(--accent); font-size: 22px; }
-        #btn-apply-plus { flex: 0.8; color: var(--accent); font-size: 22px; }
-        #btn-mode-toggle { flex: 0.7; font-size: 11px; color: var(--accent); }
-        
+        #btn-reset { flex: 0.7; } 
+        #btn-apply-minus { flex: 1.0; color: var(--accent); font-size: 24px; }
         .delta-ui { 
-            flex: 2.3; height: 40px; background: #000; border-radius: 8px; border: 1px solid #555; 
+            flex: 3.0; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
             display: flex; align-items: center; overflow: hidden; 
         }
+        #btn-apply-plus { flex: 1.0; color: var(--accent); font-size: 24px; }
+        #btn-mode-toggle { flex: 0.7; font-size: 11px; color: var(--accent); }
+        
+        /* Spinner Spacing */
         .spinner-btn { 
-            width: 40px; height: 100%; background: transparent; border: none; color: #888; font-size: 18px; cursor: pointer; outline: none !important; 
+            width: 45px; height: 100%; background: transparent; border: none; color: #888; font-size: 20px; cursor: pointer; outline: none !important; 
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .spinner-btn:active { background: #333 !important; color: #fff !important; }
-        
         #popup-delta { 
             flex: 1; background: transparent; border: none; color: #fff !important; font-size: 18px; 
-            height: 100%; text-align: center; outline: none !important; min-width: 30px; padding: 0;
-            pointer-events: none;
+            height: 100%; text-align: center; outline: none !important; min-width: 0; padding: 0; pointer-events: none;
         }
 
         #bottom-nav {
@@ -101,13 +100,11 @@
 </head>
 
 <body>
-    <!-- 1. Info Bar -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.17</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.18</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
-    <!-- 2. Main -->
     <div id="main-container">
         <div id="editor-view" class="view-section active">
             <div id="map-section">
@@ -119,10 +116,13 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup (Final Layout) -->
+    <!-- 3. Edit Popup (Mathematical Symmetry & SVG Icon) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">🔄</button>
+            <!-- Reset with SVG for a professional, clean rotation arrow -->
+            <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
+                <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            </button>
             <button class="popup-btn" id="btn-apply-minus" 
                     onmousedown="startApply(-1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
                     ontouchstart="startApply(-1, event)" ontouchend="stopApply()">-</button>
@@ -142,7 +142,6 @@
         </div>
     </div>
 
-    <!-- 4. Navigation -->
     <div id="bottom-nav">
         <button class="nav-item" onclick="switchTab('file')"><span class="nav-icon">📁</span><span>ファイル</span></button>
         <button class="nav-item active" onclick="switchTab('editor')"><span class="nav-icon">📝</span><span>編集</span></button>
@@ -151,7 +150,6 @@
         <button class="nav-item" onclick="toggleSettings()"><span class="nav-icon">☰</span><span>設定</span></button>
     </div>
 
-    <!-- Settings Overlay -->
     <div id="settings-menu" style="display:none; position:fixed; top:0; right:0; width:300px; height:100%; background:#111; z-index:9999999; padding:20px; border-left:1px solid #444;">
         <h3 style="margin-top:0;">Settings <button style="float:right;" onclick="toggleSettings(false)">×</button></h3>
         <button style="width:100%; padding:15px; margin-bottom:10px; background:var(--accent); border:none; color:white; border-radius:8px;" onclick="location.reload(true)">🔄 FULL RELOAD (CACHE CLEAR)</button>
@@ -162,10 +160,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.17_UI_PERFECT</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.18_SYMMETRY_FINAL</p>
     </div>
 
-    <script src="js/app.js?v=2026.17" type="module"></script>
+    <script src="js/app.js?v=2026.18" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
