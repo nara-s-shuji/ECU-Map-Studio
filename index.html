@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.25">
+    <link rel="stylesheet" href="css/style.css?v=2026.26">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -27,8 +27,8 @@
         
         #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         
-        /* SCROLL RANGE FIX: Increased to 110px to let the last row clear the popup comfortably */
-        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 110px; }
+        /* SCROLL RANGE RE-ADJUSTED: Set to 95px to bring 100% row slightly closer to the popup without overlapping */
+        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 95px; }
         
         #table-wrapper { position: relative; display: block; width: max-content; }
 
@@ -47,7 +47,7 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* UNIFORM POPUP (v2026.25) */
+        /* FINAL VERTICAL CENTER POPUP (v2026.26) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
@@ -59,27 +59,26 @@
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
+        /* Increased padding-bottom to 6px to lift buttons to true visual center */
         .popup-controls { 
             display: flex; width: 100%; gap: 6px; padding: 0 10px; 
             align-items: center; height: 100%; justify-content: center;
-            padding-bottom: 2px; 
+            padding-bottom: 6px; 
         }
         
         .popup-btn { 
             background: #333; border: 1px solid #444; color: #fff; height: 42px; border-radius: 8px; font-weight: bold;
             outline: none !important; -webkit-appearance: none; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; /* Keep uniform size */
+            flex-shrink: 0;
         }
         .popup-btn:active { background: #555 !important; }
         .popup-btn svg { width: 22px; height: 22px; fill: #ccc; }
 
-        /* ALL 4 PRIMARY BUTTONS UNIFIED AT 52px WIDTH */
         #btn-reset { width: 52px; margin-left: 15px !important; } 
         #btn-apply-minus { width: 52px; color: var(--accent); font-size: 24px; }
         #btn-apply-plus { width: 52px; color: var(--accent); font-size: 24px; }
         #btn-mode-toggle { width: 52px; margin-right: 15px !important; font-size: 15px; color: var(--accent); }
 
-        /* Delta UI now flexibly weights whatever space remains centrally */
         .delta-ui { 
             flex: 1.2; height: 42px; background: #000; border-radius: 8px; border: 1px solid #555; 
             display: flex; align-items: center; overflow: hidden; min-width: 100px;
@@ -95,6 +94,7 @@
             height: 100%; text-align: center; outline: none !important; min-width: 0; padding: 0; pointer-events: none;
         }
 
+        /* BOTTOM NAV */
         #bottom-nav {
             height: 56px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom); z-index: 500000;
@@ -109,7 +109,7 @@
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.25</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.26</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup (Consolidated Uniform Buttons) -->
+    <!-- 3. Edit Popup (v2026.26: Final Fine-tuning) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
@@ -169,10 +169,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.25_UNIFORM_BUTTONS_SCROLL_PADDED</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.26_FINAL_CENTER_ADJUSTED</p>
     </div>
 
-    <script src="js/app.js?v=2026.25" type="module"></script>
+    <script src="js/app.js?v=2026.26" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
