@@ -10,116 +10,12 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.38">
-    <style>
-        :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
-
-        html, body {
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            background: var(--bg); overflow: hidden;
-            color: #fff; font-family: -apple-system, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none; -webkit-user-select: none;
-        }
-        body { display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
-
-        #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
-        
-        #file-info-drawer {
-            display: none; border-bottom: 1px solid #333; background: #111;
-            position: absolute; top: 32px; left: 0; width: 100%;
-            z-index: 10000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            border-bottom: 1.5px solid var(--accent);
-        }
-        #file-info-drawer.open {
-            display: block !important;
-        }
-        .drawer-content { padding: 15px; font-size: 12px; color: #ccc; line-height: 1.6; }
-        .drawer-content b { color: var(--accent); }
-
-        #main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
-        
-        #explorer {
-            width: 240px; background: #1a1a1a; border-right: 1px solid #333;
-            display: flex; flex-direction: column; flex-shrink: 0;
-            transition: transform 0.3s ease;
-            position: absolute; top: 0; left: 0; height: 100%; z-index: 20000;
-            transform: translateX(-100%);
-        }
-        #explorer.active { transform: translateX(0); }
-
-        .view-section { flex: 1; display: none; flex-direction: column; overflow: hidden; height: 100%; }
-        .view-section.active { display: flex !important; }
-
-        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 95px; }
-        #table-wrapper { position: relative; display: block; width: max-content; }
-
-        .header-row, .grid-container {
-            display: grid !important;
-            grid-template-columns: 80px repeat(27, 60px) !important;
-            gap: 1px !important;
-            background: #333 !important;
-            width: max-content !important;
-        }
-        .header-row { position: sticky; top: 0; z-index: 5000 !important; height: 32px; line-height: 32px; background: #222 !important; }
-        .grid-container { position: relative; z-index: 1; margin: 0 !important; }
-
-        .cell { height: 34px !important; background: #fff; color: #000; font-size: 14px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .label-cell, .header-cell { background: #222 !important; color: #fff !important; font-size: 11px; font-weight: bold; }
-        .label-cell { position: sticky; left: 0; z-index: 4000 !important; border-right: 2px solid #444; }
-        .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 6000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
-
-        #edit-popup-v2 {
-            position: fixed;
-            bottom: calc(75px + env(safe-area-inset-bottom));
-            left: 50%; transform: translateX(-50%);
-            width: 98%; max-width: 480px; height: 56px;
-            background: #111; border: 2.5px solid var(--accent);
-            border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,1);
-            z-index: 999999 !important; display: none; align-items: center; justify-content: center;
-        }
-        #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
-
-        #bottom-nav {
-            height: 56px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom); z-index: 500000;
-        }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 10px; border: none; background: transparent; outline: none; }
-        .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
-
-        /* File View Styles */
-        .file-grid { padding: 15px; display: grid; grid-template-columns: 1fr; gap: 15px; overflow-y: auto; }
-        .file-group { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; }
-        .file-group h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--accent); text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .slot-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .sub-btn { flex: 1; min-width: 60px; background: #333; border: 1px solid #444; color: #fff; padding: 12px 5px; border-radius: 6px; font-size: 12px; }
-        .sub-btn.active { background: var(--accent); border-color: #0099ff; }
-
-        /* Monitor View Styles */
-        .monitor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; overflow-y: auto; }
-        .monitor-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .monitor-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .monitor-value { font-size: 24px; font-weight: bold; color: var(--accent); }
-        .monitor-unit { font-size: 10px; color: #666; margin-top: 2px; }
-
-        /* Graph Overlay Styles */
-        #graph-overlay { position: fixed; top: 32px; left: 0; width: 100%; height: calc(100% - 32px - 56px); background: #000; z-index: 50000; display: none; flex-direction: column; }
-        #graph-overlay.active { display: flex; }
-        .graph-header { background: #111; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        #chart-container { flex: 1; min-height: 0; position: relative; }
-
-        #settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999998; display: none; }
-        #settings-overlay.active { display: block; }
-
-        #debug-tag { color: var(--accent); font-weight: bold; margin-right: 5px; }
-    </style>
+    <link rel="stylesheet" href="css/style.css?v=2026.39">
 </head>
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.38</span> <span id="info-filename">読み込み中...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.39</span> <span id="info-filename">読み込み中...</span></span>
         <span id="info-values">現在:- / 元:-</span>
     </div>
 
@@ -128,7 +24,7 @@
         <div class="drawer-content">
             <p><b>実行ファイル:</b> <span id="drawer-filename">ファイルが読み込まれていません</span></p>
             <p><b>エンジン形式:</b> 4気筒ターボ (Project-S)</p>
-            <p><b>システムVer:</b> 2026.38 (完全復旧版)</p>
+            <p><b>システムVer:</b> 2026.39 (レイアウト修正版)</p>
             <p style="font-size:10px; color:#666; margin-top:10px;">ヒント: インフォバーを下にスライドすると開きます。</p>
         </div>
     </div>
@@ -154,40 +50,49 @@
             </div>
         </div>
 
-        <!-- ファイル/設定画面 -->
+        <!-- ファイル/設定画面 (v2026.39: 安定した構造への復元) -->
         <div id="file-view" class="view-section">
             <div class="file-grid">
-                <div class="file-group">
-                    <h3>燃料マップ スロット</h3>
-                    <div class="slot-row" id="file-item-fuel">
+                <div class="file-item">
+                    <span class="file-item-header">燃料マップ スロット</span>
+                    <div class="file-item-sub">
                         <button class="sub-btn active" data-map="fuel" data-slot="1">1</button>
                         <button class="sub-btn" data-map="fuel" data-slot="2">2</button>
                         <button class="sub-btn" data-map="fuel" data-slot="3">3</button>
                         <button class="sub-btn" data-map="fuel" data-slot="4">4</button>
                     </div>
                 </div>
-                <div class="file-group">
-                    <h3>点火マップ スロット</h3>
-                    <div class="slot-row" id="file-item-ign-map">
+
+                <div class="file-item">
+                    <span class="file-item-header">点火マップ スロット</span>
+                    <div class="file-item-sub">
                         <button class="sub-btn active" data-map="ign" data-slot="1">1</button>
                         <button class="sub-btn" data-map="ign" data-slot="2">2</button>
                         <button class="sub-btn" data-map="ign" data-slot="3">3</button>
                         <button class="sub-btn" data-map="ign" data-slot="4">4</button>
                     </div>
                 </div>
-                <div class="file-group">
-                    <h3>優先設定 (Priority)</h3>
-                    <div class="slot-row">
+
+                <div class="file-item">
+                    <span class="file-item-header">優先設定 (PRIORITY)</span>
+                    <div class="file-item-sub">
                         <button class="sub-btn active" id="btn-prio-1" data-prio="1">P1</button>
                         <button class="sub-btn" id="btn-prio-2" data-prio="2">P2</button>
                         <button class="sub-btn" id="btn-prio-3" data-prio="3">P3</button>
                         <button class="sub-btn" id="btn-prio-4" data-prio="4">P4</button>
                     </div>
                 </div>
-                <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
-                    <button class="sub-btn" style="background:var(--accent);" onclick="document.getElementById('file-input').click()">📁 ファイルを開く (.csv)</button>
-                    <button class="sub-btn" style="background:#444;" onclick="document.getElementById('base-file-input').click()">📊 比較ファイルを読み込む</button>
-                    <button class="sub-btn" style="background:#228b22;" onclick="saveFileToCSV()">💾 保存する</button>
+
+                <div class="file-footer-actions">
+                    <button class="file-action-btn" onclick="document.getElementById('file-input').click()">
+                        📁 ファイルを開く (.csv)
+                    </button>
+                    <button class="file-action-btn" onclick="document.getElementById('base-file-input').click()">
+                        📊 比較ファイルを読み込む
+                    </button>
+                    <button class="file-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32;">
+                        💾 保存する
+                    </button>
                 </div>
             </div>
         </div>
@@ -195,14 +100,26 @@
         <!-- モニター画面 -->
         <div id="monitor-view" class="view-section">
             <div class="monitor-grid">
-                <div class="monitor-card"><span class="monitor-label">回転数</span><span id="mon-rpm" class="monitor-value">0</span><span class="monitor-unit">RPM</span></div>
-                <div class="monitor-card"><span class="monitor-label">負荷 (TPS)</span><span id="mon-tps" class="monitor-value">0.0</span><span class="monitor-unit">%</span></div>
-                <div class="monitor-card"><span class="monitor-label">空燃比 (AFR)</span><span id="mon-afr" class="monitor-value">14.7</span><span class="monitor-unit">ratio</span></div>
-                <div class="monitor-card"><span class="monitor-label">点火時期</span><span id="mon-ign" class="monitor-value">15.0</span><span class="monitor-unit">deg</span></div>
+                <div class="monitor-card">
+                    <span class="monitor-label">回転数</span>
+                    <span id="mon-rpm" class="monitor-value">0</span>
+                </div>
+                <div class="monitor-card">
+                    <span class="monitor-label">負荷 (TPS)</span>
+                    <span id="mon-tps" class="monitor-value">0.0</span>
+                </div>
+                <div class="monitor-card">
+                    <span class="monitor-label">空燃比 (AFR)</span>
+                    <span id="mon-afr" class="monitor-value">14.7</span>
+                </div>
+                <div class="monitor-card">
+                    <span class="monitor-label">点火時期</span>
+                    <span id="mon-ign" class="monitor-value">15.0</span>
+                </div>
             </div>
             <div style="padding:15px; display:flex; gap:10px;">
-                <button id="btn-record-all" class="sub-btn" style="flex:1;">⏺️ ログ記録開始</button>
-                <button id="btn-save-all" class="sub-btn" style="flex:1;">💾 ログ保存</button>
+                <button id="btn-record-all" class="file-action-btn" style="flex:1;">⏺️ ログ記録開始</button>
+                <button id="btn-save-all" class="file-action-btn" style="flex:1;">💾 ログ保存</button>
             </div>
         </div>
     </div>
@@ -214,35 +131,35 @@
                 <option value="3d">3Dマップ表示</option>
                 <option value="2d">2D推移表示</option>
             </select>
-            <button id="graph-close" onclick="switchTab('editor')" style="background:transparent; border:none; color:white; font-size:24px;">×</button>
+            <button onclick="switchTab('editor')" style="background:transparent; border:none; color:white; font-size:24px;">×</button>
         </div>
         <div id="chart-container"></div>
     </div>
 
-    <!-- 編集ポップアップ (v2026.37) -->
+    <!-- 編集ポップアップ (v2026.37 正確な復元) -->
     <div id="edit-popup-v2">
-        <div class="popup-controls" style="display:flex; align-items:center; height:100%; gap:8px;">
+        <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
                 <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:#ccc;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
             </button>
-            <button class="popup-btn" id="btn-apply-minus" style="width:52px; font-size:24px;">-</button>
-            <div class="delta-ui" style="flex:1; height:42px; background:#000; border-radius:8px; border:1px solid #555; display:flex; align-items:center;">
-                <button class="spinner-btn" id="btn-spin-down" style="width:34px; height:100%; background:transparent; border:none; color:#888; font-size:18px;">▽</button>
-                <input type="number" id="popup-delta" value="10" readonly style="flex:1; background:transparent; border:none; color:#fff; text-align:center; font-size:18px;">
-                <button class="spinner-btn" id="btn-spin-up" style="width:34px; height:100%; background:transparent; border:none; color:#888; font-size:18px;">△</button>
+            <button class="popup-btn" id="btn-apply-minus">-</button>
+            <div class="delta-ui">
+                <button class="spinner-btn" id="btn-spin-down">▽</button>
+                <input type="number" id="popup-delta" value="10" readonly>
+                <button class="spinner-btn" id="btn-spin-up">△</button>
             </div>
-            <button class="popup-btn" id="btn-apply-plus" style="width:52px; font-size:24px;">+</button>
-            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()" style="width:52px; font-size:15px; color:var(--accent);">ABS</button>
+            <button class="popup-btn" id="btn-apply-plus">+</button>
+            <button class="popup-btn" id="btn-mode-toggle" onclick="togglePopupMode()">ABS</button>
         </div>
     </div>
 
     <!-- ボトムナビゲーション -->
     <div id="bottom-nav">
-        <button class="nav-item" id="nav-file"><span class="nav-icon">📁</span><span>ファイル</span></button>
-        <button class="nav-item active" id="nav-editor"><span class="nav-icon">📝</span><span>編集</span></button>
-        <button class="nav-item" id="nav-graph"><span class="nav-icon">📊</span><span>グラフ</span></button>
-        <button class="nav-item" id="nav-monitor"><span class="nav-icon">⏱️</span><span>モニター</span></button>
-        <button class="nav-item" id="nav-menu"><span class="nav-icon">☰</span><span>設定</span></button>
+        <div class="nav-item" id="nav-file"><span class="nav-icon">📁</span><span>ファイル</span></div>
+        <div class="nav-item active" id="nav-editor"><span class="nav-icon">📝</span><span>編集</span></div>
+        <div class="nav-item" id="nav-graph"><span class="nav-icon">📊</span><span>グラフ</span></div>
+        <div class="nav-item" id="nav-monitor"><span class="nav-icon">⏱️</span><span>モニター</span></div>
+        <div class="nav-item" id="nav-menu"><span class="nav-icon">☰</span><span>設定</span></div>
     </div>
 
     <div id="settings-overlay"></div>
@@ -259,17 +176,13 @@
                 <option value="none">色付けなし</option>
             </select>
         </div>
-
-        <p style="margin-top:20px; font-size:12px; color:#aaa;">ファイル操作:</p>
-        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="document.getElementById('file-input').click()">📂 ファイルを開く</button>
-        <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="saveFileToCSV()">💾 現在の状態で保存</button>
         
         <div style="margin-top:40px; text-align:center; font-size:10px; color:#444;">
-            Version: 2026.38_RESTORE_JP
+            Version: 2026.39_LAYOUT_FIX
         </div>
     </div>
 
-    <script src="js/app.js?v=2026.38" type="module"></script>
+    <script src="js/app.js?v=2026.39" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
     <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 </body>
