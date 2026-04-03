@@ -10,34 +10,25 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.13">
+    <link rel="stylesheet" href="css/style.css?v=2026.14">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
-        /* 1. Global Layout (Zero Gaps) */
         html, body {
             margin: 0; padding: 0; height: 100%; width: 100%;
             background: var(--bg); overflow: hidden;
             color: #fff; font-family: -apple-system, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Remove touch highlight */
+            -webkit-tap-highlight-color: transparent;
         }
         body { display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
 
-        /* 2. Top Navigation */
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; }
-        .toolbar-btn { background: transparent; border: none; font-size: 18px; color: #ccc; cursor: pointer; padding: 8px; outline: none !important; }
-
-        /* 3. Map Viewport (Reduced excess scroll) */
-        #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        #map-section {
-            flex: 1; overflow: auto; background: #000;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 80px; /* Reduced from 150px to prevent excess bottom gap */
-        }
         
+        #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        #map-section { flex: 1; overflow: auto; background: #000; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
         #table-wrapper { position: relative; display: block; width: max-content; }
 
-        /* 4. GRID RECONSTRUCTION */
+        /* GRID */
         .header-row, .grid-container {
             display: grid !important;
             grid-template-columns: 80px repeat(27, 60px) !important;
@@ -45,18 +36,15 @@
             background: #333 !important;
             width: max-content !important;
         }
-        
         .header-row { position: sticky; top: 0; z-index: 10000 !important; height: 32px; line-height: 32px; background: #222 !important; }
         .grid-container { position: relative; z-index: 1; margin: 0 !important; }
 
         .cell { height: 34px !important; background: #fff; color: #000; font-size: 14px; display: flex; align-items: center; justify-content: center; position: relative; }
         .label-cell, .header-cell { background: #222 !important; color: #fff !important; font-size: 11px; font-weight: bold; }
-        
-        /* Sticky Corners & Axes */
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* 5. POPUP (Artifact Cleanup) */
+        /* POPUP FIX (v2026.14) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
@@ -69,19 +57,33 @@
         }
         #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
 
-        .popup-controls { display: flex; width: 100%; gap: 6px; padding: 0 10px; }
-        .popup-btn { 
-            flex: 1; background: #333; border: 1px solid #444; color: #fff; height: 44px; border-radius: 8px; font-size: 20px; font-weight: bold;
-            outline: none !important; -webkit-appearance: none; box-shadow: none !important; 
-        }
-        #btn-apply-minus, #btn-apply-plus { flex: 1.5; color: var(--accent); }
-        .delta-ui { flex: 2; height: 44px; background: #000; border-radius: 8px; border: 1px solid #555; display: flex; align-items: center; justify-content: space-around; overflow: hidden; }
-        #popup-delta { background: transparent; border: none; color: #fff; font-size: 18px; width: 40px; text-align: center; outline: none !important; }
+        .popup-controls { display: flex; width: 100%; gap: 8px; padding: 0 10px; align-items: center; }
         
-        /* Specific fix for "hida" artifact on triangle buttons */
-        .delta-ui .toolbar-btn { outline: none !important; box-shadow: none !important; -webkit-tap-highlight-color: transparent; }
+        .popup-btn { 
+            flex: 1; background: #333; border: 1px solid #444; color: #fff; height: 44px; border-radius: 8px; font-size: 18px; font-weight: bold;
+            outline: none !important; -webkit-appearance: none; 
+        }
+        .popup-btn:active { background: #555 !important; color: #fff !important; }
+        
+        #btn-apply-minus, #btn-apply-plus { flex: 1.2; color: var(--accent); font-size: 24px; }
+        
+        /* Delta UI Container Fix */
+        .delta-ui { 
+            flex: 2; height: 44px; background: #111; border-radius: 8px; border: 1px solid #444; 
+            display: flex; align-items: center; overflow: hidden; 
+        }
+        .spinner-btn { 
+            width: 40px; height: 100%; background: transparent; border: none; color: #888; 
+            font-size: 18px; cursor: pointer; outline: none !important; display: flex; align-items: center; justify-content: center;
+        }
+        .spinner-btn:active { background: #333 !important; color: #fff !important; }
+        
+        #popup-delta { 
+            flex: 1; background: #000; border: none; color: #fff; font-size: 18px; 
+            height: 100%; text-align: center; outline: none !important; width: 0; /* Let flex handle width */
+        }
 
-        /* 6. Navigation */
+        /* BOTTOM NAV */
         #bottom-nav {
             height: 56px; background: #1a1a1a; border-top: 1px solid #333;
             display: flex; justify-content: space-around; align-items: center;
@@ -99,7 +101,7 @@
 <body>
     <!-- 1. Info Bar -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.13</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.14</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -118,16 +120,16 @@
     <!-- 3. Edit Popup -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
-            <button class="popup-btn" style="flex:0.6; font-size:14px;" onclick="resetToOriginal()">Reset</button>
+            <button class="popup-btn" style="flex:0.6; font-size:13px;" onclick="resetToOriginal()">Reset</button>
             <button class="popup-btn" id="btn-apply-minus" 
                     onmousedown="startApply(-1, event)" onmouseup="stopApply()" onmouseleave="stopApply()" 
                     ontouchstart="startApply(-1, event)" ontouchend="stopApply()">-</button>
             <div class="delta-ui">
-                <button class="toolbar-btn" 
+                <button class="spinner-btn" id="btn-spin-down"
                         onmousedown="startSpinner(-1, event)" onmouseup="stopSpinner()" onmouseleave="stopSpinner()" 
                         ontouchstart="startSpinner(-1, event)" ontouchend="stopSpinner()">▽</button>
                 <input type="number" id="popup-delta" value="10" readonly>
-                <button class="toolbar-btn" 
+                <button class="spinner-btn" id="btn-spin-up"
                         onmousedown="startSpinner(1, event)" onmouseup="stopSpinner()" onmouseleave="stopSpinner()" 
                         ontouchstart="startSpinner(1, event)" ontouchend="stopSpinner()">△</button>
             </div>
@@ -151,19 +153,17 @@
     <div id="settings-menu" style="display:none; position:fixed; top:0; right:0; width:300px; height:100%; background:#111; z-index:9999999; padding:20px; border-left:1px solid #444;">
         <h3 style="margin-top:0;">Settings <button style="float:right;" onclick="toggleSettings(false)">×</button></h3>
         <button style="width:100%; padding:15px; margin-bottom:10px; background:var(--accent); border:none; color:white; border-radius:8px;" onclick="location.reload(true)">🔄 FULL RELOAD (CACHE CLEAR)</button>
-        
         <p style="margin-top:20px; font-size:12px; color:#aaa;">File Actions:</p>
         <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="document.getElementById('file-input').click()">📂 Open CSV</button>
         <button style="width:100%; padding:10px; margin-bottom:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="saveFileToCSV()">💾 Save CSV</button>
-
         <div style="margin-top:20px; display:flex; gap:10px;">
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.13_CLEANUP_FINAL</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.14_POPUP_LAYOUT_FIX</p>
     </div>
 
-    <script src="js/app.js?v=2026.13" type="module"></script>
+    <script src="js/app.js?v=2026.14" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
