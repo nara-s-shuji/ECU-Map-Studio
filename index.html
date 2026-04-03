@@ -10,12 +10,65 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.40">
+    <link rel="stylesheet" href="css/style.css?v=2026.41">
+    
+    <!-- FORCED UI RESTORATION (v2026.41: Based on stable v2026.37) -->
+    <style id="forced-ui-styles">
+        #edit-popup-v2 {
+            position: fixed;
+            bottom: calc(75px + env(safe-area-inset-bottom));
+            left: 50%; transform: translateX(-50%);
+            width: 98% !important; max-width: 480px !important; height: 56px !important;
+            background: #111 !important; border: 2.5px solid var(--accent) !important;
+            border-radius: 14px !important; box-shadow: 0 10px 40px rgba(0,0,0,1) !important;
+            z-index: 999999 !important; display: none; align-items: center; justify-content: center;
+        }
+        #edit-popup-v2.active { display: flex !important; visibility: visible !important; }
+
+        .popup-controls { 
+            display: flex !important; width: 100% !important; gap: 6px !important; padding: 0 10px !important; 
+            align-items: center !important; height: 100% !important; justify-content: center !important;
+            padding-bottom: 6px !important; 
+        }
+        
+        .popup-btn { 
+            background: #333 !important; border: 1px solid #444 !important; color: #ccc !important; 
+            height: 42px !important; border-radius: 8px !important; font-weight: bold !important;
+            outline: none !important; -webkit-appearance: none !important; 
+            display: flex !important; align-items: center !important; justify-content: center !important;
+            flex-shrink: 0 !important; margin: 0 !important;
+        }
+        .popup-btn:active { background: #555 !important; color: #fff !important; }
+        .popup-btn svg { width: 22px !important; height: 22px !important; fill: #ccc !important; }
+        .popup-btn:active svg { fill: #fff !important; }
+
+        #btn-reset { width: 52px !important; margin-left: 15px !important; } 
+        #btn-apply-minus { width: 52px !important; font-size: 24px !important; }
+        #btn-apply-plus { width: 52px !important; font-size: 24px !important; }
+        #btn-mode-toggle { width: 52px !important; margin-right: 15px !important; font-size: 15px !important; color: var(--accent) !important; }
+
+        .delta-ui { 
+            flex: 1.2 !important; height: 42px !important; background: #000 !important; 
+            border-radius: 8px !important; border: 1px solid #555 !important; 
+            display: flex !important; align-items: center !important; overflow: hidden !important; min-width: 100px !important;
+        }
+        
+        .spinner-btn { 
+            width: 34px !important; height: 100% !important; background: transparent !important; border: none !important; 
+            color: #888 !important; font-size: 18px !important; cursor: pointer !important; outline: none !important; 
+            display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;
+        }
+        .spinner-btn:active { background: #333 !important; color: #fff !important; }
+        #popup-delta { 
+            flex: 1 !important; background: transparent !important; border: none !important; color: #fff !important; font-size: 18px !important; 
+            height: 100% !important; text-align: center !important; outline: none !important; min-width: 0 !important; padding: 0 !important; pointer-events: none !important;
+        }
+    </style>
 </head>
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.40</span> <span id="info-filename">読み込み中...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.41</span> <span id="info-filename">読み込み中...</span></span>
         <span id="info-values">現在:- / 元:-</span>
     </div>
 
@@ -24,8 +77,8 @@
         <div class="drawer-content">
             <p><b>実行ファイル:</b> <span id="drawer-filename">ファイルが読み込まれていません</span></p>
             <p><b>エンジン形式:</b> 4気筒ターボ (Project-S)</p>
-            <p><b>システムVer:</b> 2026.40 (完全復元版サポート)</p>
-            <p style="font-size:10px; color:#666; margin-top:10px;">ヒント: インフォバーを下にスライドすると開きます。</p>
+            <p><b>システムVer:</b> 2026.41 (UI復旧メンテナンス版)</p>
+            <p style="font-size:10px; color:#666; margin-top:10px;">ヒント: インフォバーを下向きにスライドすると開きます。</p>
         </div>
     </div>
 
@@ -50,7 +103,7 @@
             </div>
         </div>
 
-        <!-- ファイル/設定画面 (v2026.40: 2カラム配置復元) -->
+        <!-- ファイル/設定画面 (v2026.41: 黄金期の2列配置復元) -->
         <div id="file-view" class="view-section">
             <div class="file-grid">
                 <div class="file-item">
@@ -83,12 +136,13 @@
                     </div>
                 </div>
 
+                <!-- 黄金期の2カラムアクションボタン -->
                 <div class="file-footer-actions">
                     <button class="file-action-btn" onclick="document.getElementById('file-input').click()">
-                        📁 ファイルを開く
+                        📂 開く (.csv)
                     </button>
                     <button class="file-action-btn" onclick="document.getElementById('base-file-input').click()">
-                        📊 比較読み込み
+                        📊 比較読込
                     </button>
                     <button class="file-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">
                         💾 ファイルを保存する
@@ -124,7 +178,7 @@
         <div id="chart-container"></div>
     </div>
 
-    <!-- 編集ポップアップ (v2026.37 EXACT RESTORE) -->
+    <!-- 編集ポップアップ (v2026.37 EXACT BODY STRUCTURE) -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
@@ -165,11 +219,11 @@
             </select>
         </div>
         <div style="margin-top:40px; text-align:center; font-size:10px; color:#444;">
-            Version: 2026.40_TOTAL_RESTORE
+            Version: 2026.41_MAINTENANCE
         </div>
     </div>
 
-    <script src="js/app.js?v=2026.40" type="module"></script>
+    <script src="js/app.js?v=2026.41" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
     <input type="file" id="base-file-input" style="display:none;" accept=".csv">
 </body>
