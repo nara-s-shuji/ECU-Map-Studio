@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.36">
+    <link rel="stylesheet" href="css/style.css?v=2026.37">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -25,7 +25,7 @@
 
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
         
-        /* v2026.36: Drawer as Overlay */
+        /* v2026.37: Drawer as Overlay */
         #file-info-drawer {
             display: none; border-bottom: 1px solid #333; background: #111;
             position: absolute; top: 32px; left: 0; width: 100%;
@@ -118,17 +118,17 @@
 
 <body>
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.36</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.37</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
-    <!-- RESTORED: File Info Drawer (v2026.36: Overlay Mode) -->
+    <!-- RESTORED: File Info Drawer (v2026.37: Header Selection Restore) -->
     <div id="file-info-drawer">
         <div class="drawer-content">
             <p><b>ACTIVE FILE:</b> <span id="drawer-filename">No file loaded</span></p>
             <p><b>ENGINE TYPE:</b> 4-Cylinder Turbo (Project-S)</p>
-            <p><b>STUDIO VER:</b> 2026.36 (Overlay Fix)</p>
-            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Drawer now overlays without moving the map.</p>
+            <p><b>STUDIO VER:</b> 2026.37 (Selection Fix)</p>
+            <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Single tap on headers now selects rows/cols again.</p>
         </div>
     </div>
 
@@ -186,10 +186,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.36_OVERLAY</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.37_SELECTION_RESTORE</p>
     </div>
 
-    <script src="js/app.js?v=2026.36" type="module"></script>
+    <script src="js/app.js?v=2026.37" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>

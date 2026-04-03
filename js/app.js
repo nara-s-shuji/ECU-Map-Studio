@@ -1,4 +1,4 @@
-import { state, RPM_AXIS, TPS_AXIS } from './state.js';
+import { state, RPM_AXIS, TPS_AXIS } from './state.js?v=2026.37';
 import { 
     initData, 
     undo, 
@@ -7,8 +7,8 @@ import {
     importBaseFromCSV, 
     saveFileToCSV, 
     saveHistory 
-} from './data.js';
-import { renderTable, updateData } from './editor.js';
+} from './data.js?v=2026.37';
+import { renderTable, updateData } from './editor.js?v=2026.37';
 import { 
     switchTab, 
     toggleSettings, 
@@ -18,7 +18,7 @@ import {
     selectPriorityMap,
     selectNextMap,
     initInfoBarDrag
-} from './navigation.js';
+} from './navigation.js?v=2026.37';
 import { 
     updateUISelection, 
     handleCellMouseDown, 
@@ -29,7 +29,7 @@ import {
     selectRow, 
     isColumnSelected, 
     isRowSelected 
-} from './selection.js';
+} from './selection.js?v=2026.37';
 import { 
     updatePopupPosition, 
     startApply, 
@@ -39,10 +39,10 @@ import {
     togglePopupMode,
     adjustCellValue,
     resetToOriginal
-} from './popup.js';
-import { initPinchZoom, updateViewportLayout } from './gestures.js';
-import { toggleGraph, updateGraph } from './graph.js';
-import { monitor } from './monitor.js';
+} from './popup.js?v=2026.37';
+import { initPinchZoom, updateViewportLayout } from './gestures.js?v=2026.37';
+import { toggleGraph, updateGraph } from './graph.js?v=2026.37';
+import { monitor } from './monitor.js?v=2026.37';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initial Data & UI
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Popup Event Listeners
     setupPopup();
 
-    // 5. Drawer & Information Listeners (v2026.36)
+    // 5. Drawer & Information Listeners (v2026.37)
     initInfoBarDrag();
 
     // 6. File View & Settings Listeners
@@ -219,8 +219,8 @@ function setupFileView() {
     const btnOpen = document.getElementById('btn-menu-open');
     if (btnOpen) btnOpen.onclick = () => document.getElementById('file-input').click();
 
-    const btnBase = document.getElementById('btn-menu-base');
-    if (btnBase) btnBase.onclick = () => document.getElementById('base-file-input').click();
+    const btnBase = document.getElementById('btn-menu-open'); // Reusing ID for base open in explorer
+    if (btnBase && btnBase.innerText.includes('BASE')) btnBase.onclick = () => document.getElementById('base-file-input').click();
 
     const colorMode = document.getElementById('cell-color-mode');
     if (colorMode) colorMode.onchange = () => updateCellColorMode();

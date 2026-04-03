@@ -42,16 +42,12 @@ export function updateUISelection() {
     const labels = document.querySelectorAll('.label-cell');
     if (labels[state.selT]) labels[state.selT].classList.add('selected-label');
 
-    const currentValue = state.fuelMap[state.selT][state.selR];
-    const originalValue = state.originalFuelMap[state.selT][state.selR];
+    const currentValue = (state.fuelMap[state.selT] && state.fuelMap[state.selT][state.selR] !== undefined) 
+        ? state.fuelMap[state.selT][state.selR] : '-';
+    const originalValue = (state.originalFuelMap[state.selT] && state.originalFuelMap[state.selT][state.selR] !== undefined) 
+        ? state.originalFuelMap[state.selT][state.selR] : '-';
 
     const cellCount = state.selectedCells.size;
-    const elCell = document.getElementById('info-cell');
-    if (elCell) {
-        if (cellCount > 1) elCell.innerText = `${cellCount} cells selected (Main: TPS ${TPS_AXIS[state.selT]}%, RPM ${RPM_AXIS[state.selR]})`;
-        else elCell.innerText = `TPS: ${TPS_AXIS[state.selT]}%, RPM: ${RPM_AXIS[state.selR]}`;
-    }
-
     const valDisplay = document.getElementById('info-values');
     if (valDisplay) valDisplay.innerText = `Curr:${currentValue} / Orig:${originalValue}`;
 
@@ -121,26 +117,38 @@ export function isRowSelected(t) {
 }
 window.isRowSelected = isRowSelected;
 
+/**
+ * Handle Touch Start for Cells and Headers.
+ * v2026.37: Restore immediate selection for headers (row/col) on tap.
+ */
 export function handleTouchStart(e, type, index1, index2) {
     if (state.currentTabId !== 'editor') return;
+
+    // v2026.37: Immediate selection for headers on Tap
+    if (type === 'col') {
+        const c = parseInt(index1);
+        selectColumn(c);
+        state.selectionStartCell = c;
+        state.selectionType = 'col';
+    } else if (type === 'row') {
+        const r = parseInt(index1);
+        selectRow(r);
+        state.selectionStartCell = r;
+        state.selectionType = 'row';
+    } else if (type === 'cell') {
+        const t = parseInt(index1);
+        const r = parseInt(index2);
+        // Start selection but don't clear yet for potential long press?
+        // Actually, just tap a cell should select it
+        startSelection(t, r);
+        state.selectionStartCell = { t, r };
+        state.selectionType = 'cell';
+    }
+
+    // Long press logic remains for range selection
     state.longPressTimer = setTimeout(() => {
         state.isLongPressMode = true;
-        state.selectionType = type;
         if (navigator.vibrate) navigator.vibrate(50);
-        if (type === 'cell') {
-            const t = parseInt(index1);
-            const r = parseInt(index2);
-            state.selectionStartCell = { t, r };
-            startSelection(t, r);
-        } else if (type === 'col') {
-            const c = parseInt(index1);
-            state.selectionStartCell = c;
-            selectColumn(c);
-        } else if (type === 'row') {
-            const rowIdx = parseInt(index1);
-            state.selectionStartCell = rowIdx;
-            selectRow(rowIdx);
-        }
     }, 500);
 }
 window.handleTouchStart = handleTouchStart;
@@ -186,6 +194,7 @@ export function handleTouchEnd() {
     clearTimeout(state.longPressTimer);
     state.isLongPressMode = false;
     state.selectionType = null;
+    state.selectionStartCell = null;
 }
 window.handleTouchEnd = handleTouchEnd;
 
