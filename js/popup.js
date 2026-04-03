@@ -5,6 +5,7 @@ import { saveHistory } from './data.js';
 
 let applyInterval, applyTimeout;
 let spinnerInterval, spinnerTimeout;
+let spinnerTicks = 0; // State for acceleration
 let lastTouchTime = 0;
 
 export function updatePopupPosition() {
@@ -114,6 +115,7 @@ export function adjustDelta(direction) {
 
     if (isNaN(current)) current = (state.popupMode === 'abs') ? 10 : 1.0;
 
+    // Acceleration Steps:
     let multiplier = 1;
     if (spinnerTicks > 50) multiplier = 100;
     else if (spinnerTicks > 25) multiplier = 10;
@@ -209,16 +211,22 @@ export function stopApply() {
 
 export function startSpinner(direction, e) {
     if (e && !handleTouchDebounce(e)) return;
+    spinnerTicks = 0; // Reset
     adjustDelta(direction);
+    
     clearTimeout(spinnerTimeout); clearInterval(spinnerInterval);
     spinnerTimeout = setTimeout(() => {
-        spinnerInterval = setInterval(() => adjustDelta(direction), 100);
+        spinnerInterval = setInterval(() => {
+            spinnerTicks++; // Accelerate
+            adjustDelta(direction);
+        }, 100);
     }, 500);
 }
 
 export function stopSpinner() {
     clearTimeout(spinnerTimeout);
     clearInterval(spinnerInterval);
+    spinnerTicks = 0; // Reset
 }
 
 export function resetToOriginal() {
@@ -242,7 +250,7 @@ export function togglePopupMode() {
     switchPopupMode(state.popupMode === 'abs' ? 'pct' : 'abs');
 }
 
-// Global exposure for backwards compatibility if needed
+// Global exposure
 window.updatePopupPosition = updatePopupPosition;
 window.startApply = startApply;
 window.stopApply = stopApply;

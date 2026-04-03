@@ -10,7 +10,7 @@
     <title>ECU Map Studio 2026</title>
     <!-- Aggressive Cache Busting -->
     <script src="lib/plotly.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=2026.28">
+    <link rel="stylesheet" href="css/style.css?v=2026.29">
     <style>
         :root { --accent: #0078d4; --bg: #000; --panel: #1e1e1e; }
 
@@ -25,7 +25,6 @@
 
         #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
         
-        /* RESTORED DRAWER STYLES */
         #file-info-drawer {
             height: 0; overflow: hidden; background: #111; border-bottom: 1px solid #333;
             transition: height 0.3s ease-out; position: relative; z-index: 9999;
@@ -52,7 +51,6 @@
         .label-cell { position: sticky; left: 0; z-index: 5000 !important; border-right: 2px solid #444; }
         .corner-cell { position: sticky !important; left: 0 !important; top: 0 !important; z-index: 15000 !important; background: #333 !important; border-right: 2px solid #666; border-bottom: 2px solid #666; }
 
-        /* POPUP CONSTANTS (v2026.28) */
         #edit-popup-v2 {
             position: fixed;
             bottom: calc(75px + env(safe-area-inset-bottom));
@@ -112,9 +110,8 @@
 </head>
 
 <body>
-    <!-- 1. Info Bar (Slide baseline) -->
     <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.28</span> <span id="info-filename">Loading...</span></span>
+        <span><span id="debug-tag">FINAL_v2026.29</span> <span id="info-filename">Loading...</span></span>
         <span id="info-values">C:- / O:-</span>
     </div>
 
@@ -123,7 +120,7 @@
         <div class="drawer-content">
             <p><b>ACTIVE FILE:</b> <span id="drawer-filename">No file loaded</span></p>
             <p><b>ENGINE TYPE:</b> 4-Cylinder Turbo (Project-S)</p>
-            <p><b>STUDIO VER:</b> 2026.28 (Accelerating Multiplier)</p>
+            <p><b>STUDIO VER:</b> 2026.29 (Bug Fixed Acceleration)</p>
             <p style="font-size:10px; color:#666; margin-top:10px;">TIP: Slide up to close or wait for auto-close.</p>
         </div>
     </div>
@@ -140,7 +137,6 @@
         </div>
     </div>
 
-    <!-- 3. Edit Popup -->
     <div id="edit-popup-v2">
         <div class="popup-controls">
             <button class="popup-btn" id="btn-reset" onclick="resetToOriginal()">
@@ -173,7 +169,6 @@
         <button class="nav-item" onclick="toggleSettings()"><span class="nav-icon">☰</span><span>設定</span></button>
     </div>
 
-    <!-- Settings Overlay -->
     <div id="settings-menu" style="display:none; position:fixed; top:0; right:0; width:300px; height:100%; background:#111; z-index:9999999; padding:20px; border-left:1px solid #444;">
         <h3 style="margin-top:0;">Settings <button style="float:right;" onclick="toggleSettings(false)">×</button></h3>
         <button style="width:100%; padding:15px; margin-bottom:10px; background:var(--accent); border:none; color:white; border-radius:8px;" onclick="location.reload(true)">🔄 FULL RELOAD (CACHE CLEAR)</button>
@@ -184,10 +179,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ Undo</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ Redo</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.28_ACCEL_DRAWER</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.29_FIXED_ALL</p>
     </div>
 
-    <script src="js/app.js?v=2026.28" type="module"></script>
+    <script src="js/app.js?v=2026.29" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>

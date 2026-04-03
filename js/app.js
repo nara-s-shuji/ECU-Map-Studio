@@ -16,7 +16,8 @@ import {
     updateCellColorMode,
     selectMapSlot,
     selectPriorityMap,
-    selectNextMap
+    selectNextMap,
+    initInfoBarDrag
 } from './navigation.js';
 import { 
     updateUISelection, 
@@ -58,7 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Popup Event Listeners
     setupPopup();
 
-    // 5. File View & Settings Listeners
+    // 5. Drawer & Information Listeners (RESTORED)
+    initInfoBarDrag();
+
+    // 6. File View & Settings Listeners
     setupFileView();
     setupFileItems();
 
@@ -164,7 +168,7 @@ function setupPopup() {
         btnPlus.ontouchend = stopApply;
     }
 
-    const spinnerDown = popup.querySelector('.spinner-adjust-btn:first-child');
+    const spinnerDown = document.getElementById('btn-spin-down');
     if (spinnerDown) {
         spinnerDown.onmousedown = (e) => startSpinner(-1, e);
         spinnerDown.onmouseup = stopSpinner;
@@ -173,7 +177,7 @@ function setupPopup() {
         spinnerDown.ontouchend = stopSpinner;
     }
 
-    const spinnerUp = popup.querySelector('.spinner-adjust-btn:last-child');
+    const spinnerUp = document.getElementById('btn-spin-up');
     if (spinnerUp) {
         spinnerUp.onmousedown = (e) => startSpinner(1, e);
         spinnerUp.onmouseup = stopSpinner;
