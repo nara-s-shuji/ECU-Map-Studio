@@ -117,10 +117,7 @@
 </head>
 
 <body>
-    <div id="mobile-info-bar">
-        <span><span id="debug-tag">FINAL_v2026.37</span> <span id="info-filename">Loading...</span></span>
-        <span id="info-values">C:- / O:-</span>
-    </div>
+
 
     <!-- RESTORED: File Info Drawer (v2026.37: Header Selection Restore) -->
     <div id="file-info-drawer">
@@ -135,6 +132,13 @@
     <!-- 2. Main -->
     <div id="main-container">
         <div id="editor-view" class="view-section active">
+            <!-- 復活: エディタ時のみ表示されるインフォバー -->
+            <div id="mobile-info-bar"
+                style="display: flex !important; align-items: center; justify-content: space-between; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0; padding: 0 10px; font-size: 11px;">
+                <span id="info-filename" style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv</span>
+                <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr: -</span>
+            </div>
+
             <div id="map-section">
                 <div id="table-wrapper">
                     <div id="headerRow" class="header-row"></div>
@@ -145,38 +149,64 @@
 
         <!-- 安全なファイルメニュー (v2026.43) -->
         <div id="file-view" class="view-section">
-            <div class="sf-grid">
-                <div class="sf-item">
-                    <span class="sf-header">燃料マップ スロット</span>
-                    <div class="sf-sub">
-                        <button class="sf-sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
-                    </div>
+            <!-- 追加: リファクタリング前と同等のヘッダー部 -->
+            <div class="sf-list-header" style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 10px; border-bottom: 1px solid #3c3c3c; background: #2d2d30; flex-shrink: 0;">
+                <!-- Top Row: Title + Connect -->
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div class="sf-view-title" style="font-weight: bold; color: #ccc; font-size: 16px;">設定項目</div>
+                    <button onclick="if(window.monitor) window.monitor.toggleConnection()" class="btn-connect"
+                        style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">未接続</button>
                 </div>
-                <div class="sf-item">
-                    <span class="sf-header">点火マップ スロット</span>
-                    <div class="sf-sub">
-                        <button class="sf-sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 3)">3</button>
-                        <button class="sf-sub-btn" onclick="selectMapSlot('ign', 4)">4</button>
-                    </div>
+                <!-- Bottom Row: Toggles (Right Aligned) -->
+                <div class="sf-toggle-container"
+                    style="width: 100%; display: flex; justify-content: flex-end; align-items: center; padding-top: 5px;">
+                    <span style="font-size: 11px; color: #888; margin-right: 5px;">BASIC</span>
+                    <label class="switch" style="position: relative; display: inline-block; width: 34px; height: 20px;">
+                        <input type="checkbox" id="mode-toggle" onchange="if(window.toggleFileMode) window.toggleFileMode()" style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
+                    </label>
+                    <span style="font-size: 11px; color: #888; margin-left: 5px; white-space: nowrap;">ADVANCE</span>
+                    <style>
+                        .switch input:checked + .slider { background-color: #0078d4; }
+                        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+                        .switch input:checked + .slider:before { transform: translateX(14px); }
+                    </style>
                 </div>
-                <div class="sf-item">
-                    <span class="sf-header">優先設定 (PRIORITY)</span>
-                    <div class="sf-sub">
-                        <button class="sf-sub-btn active" id="btn-prio-1" onclick="selectPriorityMap(1)">P1</button>
-                        <button class="sf-sub-btn" id="btn-prio-2" onclick="selectPriorityMap(2)">P2</button>
-                        <button class="sf-sub-btn" id="btn-prio-3" onclick="selectPriorityMap(3)">P3</button>
-                        <button class="sf-sub-btn" id="btn-prio-4" onclick="selectPriorityMap(4)">P4</button>
+            </div>
+            <div style="flex: 1; overflow-y: auto;">
+                <div class="sf-grid">
+                    <div class="sf-item">
+                        <span class="sf-header">燃料マップ スロット</span>
+                        <div class="sf-sub">
+                            <button class="sf-sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
+                        </div>
                     </div>
-                </div>
-                <div class="sf-actions">
-                    <button class="sf-action-btn" onclick="document.getElementById('file-input').click()">📁 CSVを開く</button>
-                    <button class="sf-action-btn" onclick="document.getElementById('base-file-input').click()">📊 比較読込</button>
-                    <button class="sf-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">💾 保存する</button>
+                    <div class="sf-item">
+                        <span class="sf-header">点火マップ スロット</span>
+                        <div class="sf-sub">
+                            <button class="sf-sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 3)">3</button>
+                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 4)">4</button>
+                        </div>
+                    </div>
+                    <div class="sf-item">
+                        <span class="sf-header">優先設定 (PRIORITY)</span>
+                        <div class="sf-sub">
+                            <button class="sf-sub-btn active" id="btn-prio-1" onclick="selectPriorityMap(1)">P1</button>
+                            <button class="sf-sub-btn" id="btn-prio-2" onclick="selectPriorityMap(2)">P2</button>
+                            <button class="sf-sub-btn" id="btn-prio-3" onclick="selectPriorityMap(3)">P3</button>
+                            <button class="sf-sub-btn" id="btn-prio-4" onclick="selectPriorityMap(4)">P4</button>
+                        </div>
+                    </div>
+                    <div class="sf-actions">
+                        <button class="sf-action-btn" onclick="document.getElementById('file-input').click()">📁 CSVを開く</button>
+                        <button class="sf-action-btn" onclick="document.getElementById('base-file-input').click()">📊 比較読込</button>
+                        <button class="sf-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">💾 保存する</button>
+                    </div>
                 </div>
             </div>
         </div>
