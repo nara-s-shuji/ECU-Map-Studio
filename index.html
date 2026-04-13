@@ -135,7 +135,7 @@
             <!-- 復活: エディタ時のみ表示されるインフォバー -->
             <div id="mobile-info-bar"
                 style="display: flex !important; align-items: center; justify-content: space-between; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0; padding: 0 10px; font-size: 11px;">
-                <span id="info-filename" style="max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">New_Map.csv</span>
+                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.45</span> <span id="info-filename">New_Map.csv</span></span>
                 <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr: -</span>
             </div>
 
@@ -173,40 +173,85 @@
                     </style>
                 </div>
             </div>
-            <div style="flex: 1; overflow-y: auto;">
-                <div class="sf-grid">
-                    <div class="sf-item">
-                        <span class="sf-header">燃料マップ スロット</span>
-                        <div class="sf-sub">
-                            <button class="sf-sub-btn active" onclick="selectMapSlot('fuel', 1)">1</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 2)">2</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 3)">3</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('fuel', 4)">4</button>
+            
+            <div class="file-list" style="flex: 1; overflow-y: auto; padding: 10px; padding-bottom: 80px;">
+                <!-- BASIC: 燃料マップ -->
+                <div class="file-item active" onclick="selectFileItem(this, 'fuel')" id="file-item-fuel">
+                    <div class="file-item-header">
+                        <span>燃料マップ</span>
+                        <div class="file-item-actions">
+                            <span class="badge status-edited">編集中</span>
                         </div>
                     </div>
-                    <div class="sf-item">
-                        <span class="sf-header">点火マップ スロット</span>
-                        <div class="sf-sub">
-                            <button class="sf-sub-btn active" onclick="selectMapSlot('ign', 1)">1</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 2)">2</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 3)">3</button>
-                            <button class="sf-sub-btn" onclick="selectMapSlot('ign', 4)">4</button>
+                    <div class="file-item-sub">
+                        <button class="sub-btn active" onclick="event.stopPropagation(); selectMapSlot('fuel', 1)">1</button>
+                        <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('fuel', 2)">2</button>
+                        <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('fuel', 3)">3</button>
+                        <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('fuel', 4)">4</button>
+                    </div>
+                </div>
+
+                <!-- BASIC: マップ選択 -->
+                <div class="file-item" onclick="selectFileItem(this, 'map_sel')">
+                    <div class="file-item-header">
+                        <span>マップ選択</span>
+                        <div class="file-item-actions">
+                            <span class="badge status-edited">編集中</span>
                         </div>
                     </div>
-                    <div class="sf-item">
-                        <span class="sf-header">優先設定 (PRIORITY)</span>
-                        <div class="sf-sub">
-                            <button class="sf-sub-btn active" id="btn-prio-1" onclick="selectPriorityMap(1)">P1</button>
-                            <button class="sf-sub-btn" id="btn-prio-2" onclick="selectPriorityMap(2)">P2</button>
-                            <button class="sf-sub-btn" id="btn-prio-3" onclick="selectPriorityMap(3)">P3</button>
-                            <button class="sf-sub-btn" id="btn-prio-4" onclick="selectPriorityMap(4)">P4</button>
+                    <div class="file-item-sub" style="display:flex; flex-direction:column; gap:5px; padding-bottom:5px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:10px; color:#888; width:30px;">優先</span>
+                            <div style="flex:1; display:flex; gap:2px;">
+                                <button id="btn-prio-1" class="sub-btn active" onclick="event.stopPropagation(); selectPriorityMap(1)">1</button>
+                                <button id="btn-prio-2" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(2)">2</button>
+                                <button id="btn-prio-3" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(3)">3</button>
+                                <button id="btn-prio-4" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(4)">4</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="sf-actions">
-                        <button class="sf-action-btn" onclick="document.getElementById('file-input').click()">📁 CSVを開く</button>
-                        <button class="sf-action-btn" onclick="document.getElementById('base-file-input').click()">📊 比較読込</button>
-                        <button class="sf-action-btn" onclick="saveFileToCSV()" style="background:#228b22; border-color:#2e7d32; grid-column: span 2;">💾 保存する</button>
+                </div>
+
+                <!-- ADVANCE Group -->
+                <div class="adv-only-wrapper">
+                    <div class="file-item" onclick="selectFileItem(this, 'fuel_idle')">
+                        <div class="file-item-header"><span>アイドリング時燃料マップ</span></div>
                     </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'start_inj')">
+                        <div class="file-item-header"><span>始動時噴射</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'async_inj')">
+                        <div class="file-item-header"><span>非同期噴射</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'accel')">
+                        <div class="file-item-header"><span>加速増量</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'rpm_corr')">
+                        <div class="file-item-header"><span>回転数補正</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'oil_corr')">
+                        <div class="file-item-header"><span>油温補正</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'dwell')">
+                        <div class="file-item-header"><span>ドエル時間</span></div>
+                    </div>
+                    <div class="file-item" onclick="selectFileItem(this, 'ign_map')">
+                        <div class="file-item-header"><span>点火マップ</span></div>
+                        <div class="file-item-sub">
+                            <button class="sub-btn active" onclick="event.stopPropagation(); selectMapSlot('ign', 1)">1</button>
+                            <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('ign', 2)">2</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 固定フッターボタン (リファクタリング前と同等) -->
+            <div style="position: fixed; bottom: calc(60px + env(safe-area-inset-bottom)); left: 0; width: 100%; z-index: 10005; background: #2d2d30; border-top: 1px solid #3c3c3c;">
+                <div class="file-footer-actions" style="display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px; gap: 8px;">
+                    <button class="file-action-btn" onclick="if(window.readFromECU) window.readFromECU()">Read</button>
+                    <button class="file-action-btn" onclick="if(window.writeToECU) window.writeToECU()">Write</button>
+                    <button class="file-action-btn" onclick="if(window.openFile) window.openFile()">Open</button>
+                    <button class="file-action-btn" onclick="if(window.saveFile) window.saveFile()">Save</button>
                 </div>
             </div>
         </div>
