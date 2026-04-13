@@ -1311,10 +1311,13 @@ window.resetCellToOriginal = function () {
 // --- File Menu Logic ---
 window.toggleFileMode = function () {
     const toggle = document.getElementById('mode-toggle');
+    const labelAdv = document.getElementById('label-advance');
     if (toggle && toggle.checked) {
         document.body.classList.remove('basic-mode');
+        if (labelAdv) labelAdv.classList.add('active-blue');
     } else {
         document.body.classList.add('basic-mode');
+        if (labelAdv) labelAdv.classList.remove('active-blue');
     }
 };
 
