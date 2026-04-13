@@ -132,10 +132,9 @@
     <!-- 2. Main -->
     <div id="main-container">
         <div id="editor-view" class="view-section active">
-            <!-- 復活: エディタ時のみ表示されるインフォバー -->
             <div id="mobile-info-bar"
                 style="display: flex !important; align-items: center; justify-content: space-between; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0; padding: 0 10px; font-size: 11px;">
-                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.45</span> <span id="info-filename">New_Map.csv</span></span>
+                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.48</span> <span id="info-filename">New_Map.csv</span></span>
                 <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr: -</span>
             </div>
 
@@ -171,7 +170,7 @@
                         .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
                         .switch input:checked + .slider:before { transform: translateX(14px); }
                         #label-advance { transition: color 0.3s, font-weight 0.3s; }
-                        #label-advance.active-blue { color: #0078d4 !important; font-weight: bold; }
+                        body:not(.basic-mode) #label-advance { color: #0078d4 !important; font-weight: bold; }
                     </style>
                 </div>
             </div>
@@ -203,11 +202,10 @@
                             <span class="badge status-synced">転送済</span>
                         </div>
                     </div>
-                    <!-- マップ選択サブ項目 (優先・次点の重なり防止) -->
-                    <div class="file-item-sub" style="display: flex !important; flex-direction: column !important; gap: 12px !important; margin-top: 10px; padding: 5px 0;">
+                    <div class="file-item-sub" style="display:flex; flex-direction:column; gap:8px; padding-bottom:5px;">
                         <!-- 優先 -->
-                        <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
-                            <span style="font-size: 11px; color: #aaa; width: 35px; flex-shrink: 0;">優先</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:10px; color:#888; width:30px;">優先</span>
                             <div style="display: flex; gap: 4px;">
                                 <button id="btn-prio-1" class="sub-btn active" onclick="event.stopPropagation(); selectPriorityMap(1)">1</button>
                                 <button id="btn-prio-2" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(2)">2</button>
@@ -341,10 +339,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ 戻る</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ 進む</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.42 (v2026.37 REVERTED)</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.48 (v2026.37 REVERTED)</p>
     </div>
 
-    <script src="js/app.js?v=2026.42" type="module"></script>
+    <script src="js/app.js?v=2026.48" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>

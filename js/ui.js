@@ -1312,12 +1312,28 @@ window.resetCellToOriginal = function () {
 window.toggleFileMode = function () {
     const toggle = document.getElementById('mode-toggle');
     const labelAdv = document.getElementById('label-advance');
+    const labelBasic = document.querySelector('.sf-toggle-container span:first-child');
+    
     if (toggle && toggle.checked) {
         document.body.classList.remove('basic-mode');
-        if (labelAdv) labelAdv.classList.add('active-blue');
+        if (labelAdv) {
+            labelAdv.style.color = "#0078d4";
+            labelAdv.style.fontWeight = "bold";
+        }
+        if (labelBasic) {
+            labelBasic.style.color = "#888";
+            labelBasic.style.fontWeight = "normal";
+        }
     } else {
         document.body.classList.add('basic-mode');
-        if (labelAdv) labelAdv.classList.remove('active-blue');
+        if (labelAdv) {
+            labelAdv.style.color = "#888";
+            labelAdv.style.fontWeight = "normal";
+        }
+        if (labelBasic) {
+            labelBasic.style.color = "#aaa";
+            labelBasic.style.fontWeight = "bold";
+        }
     }
 };
 

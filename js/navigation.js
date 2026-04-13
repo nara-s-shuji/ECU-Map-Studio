@@ -186,12 +186,22 @@ window.selectMapSlot = selectMapSlot;
 
 export function selectPriorityMap(index) {
     state.currentPriorityMap = index;
+    // 重複回避: 優先と次点が同じにならないようにする
+    if (state.currentPriorityMap === state.currentNextMap) {
+        state.currentNextMap = (state.currentPriorityMap % 4) + 1;
+        updateNextMapUI();
+    }
     updatePriorityMapUI();
 }
 window.selectPriorityMap = selectPriorityMap;
 
 export function selectNextMap(index) {
     state.currentNextMap = index;
+    // 重複回避: 優先と次点が同じにならないようにする
+    if (state.currentNextMap === state.currentPriorityMap) {
+        state.currentPriorityMap = (state.currentNextMap % 4) + 1;
+        updatePriorityMapUI();
+    }
     updateNextMapUI();
 }
 window.selectNextMap = selectNextMap;
