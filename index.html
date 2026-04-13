@@ -23,7 +23,7 @@
         }
         body { display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
 
-        #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; }
+        #mobile-info-bar { height: 32px; display: flex; align-items: center; justify-content: space-between; background: #111; padding: 0 15px; font-size: 11px; flex-shrink: 0; border-bottom: 1px solid #222; z-index: 10000; position: relative; touch-action: none; }
         
         /* v2026.37: Drawer as Overlay */
         #file-info-drawer {
@@ -113,7 +113,24 @@
         .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
         #debug-tag { color: var(--accent); font-weight: bold; margin-right: 5px; }
+        
+        /* Disable callout/selection globally for PWA feel */
+        * { -webkit-touch-callout: none; }
     </style>
+    <script>
+        // Prevent pinch zoom via JS (most reliable for iOS/Android)
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
+        
+        // Prevent double-tap to zoom
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+        }, false);
+    </script>
 </head>
 
 <body class="basic-mode">
@@ -134,7 +151,7 @@
         <div id="editor-view" class="view-section active">
             <div id="mobile-info-bar"
                 style="display: flex !important; align-items: center; justify-content: space-between; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0; padding: 0 10px; font-size: 11px;">
-                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.50</span> <span id="info-filename">New_Map.csv</span></span>
+                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.51</span> <span id="info-filename">New_Map.csv</span></span>
                 <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr: -</span>
             </div>
 
@@ -147,7 +164,7 @@
         </div>
 
         <!-- 安全なファイルメニュー (v2026.43) -->
-        <div id="file-view" class="view-section">
+        <div id="file-view" class="view-section" style="background: #000 !important;">
             <!-- 追加: リファクタリング前と同等のヘッダー部 -->
             <div class="sf-list-header" style="display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 10px; border-bottom: 1px solid #3c3c3c; background: #2d2d30; flex-shrink: 0;">
                 <!-- Top Row: Title + Connect -->
@@ -307,7 +324,7 @@
             </div>
 
             <!-- 固定フッターボタン (リファクタリング前と同等) -->
-            <div style="position: fixed; bottom: calc(60px + env(safe-area-inset-bottom)); left: 0; width: 100%; z-index: 10005; background: #2d2d30; border-top: 1px solid #3c3c3c;">
+            <div style="position: fixed; bottom: calc(60px + env(safe-area-inset-bottom)); left: 0; width: 100%; z-index: 10005; background: #000; border-top: 1px solid #111;">
                 <div class="file-footer-actions" style="display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px; gap: 8px;">
                     <button class="file-action-btn" onclick="if(window.readFromECU) window.readFromECU()">Read</button>
                     <button class="file-action-btn" onclick="if(window.writeToECU) window.writeToECU()">Write</button>
@@ -386,10 +403,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ 戻る</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ 進む</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.50 (v2026.37 REVERTED)</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.51 (v2026.37 REVERTED)</p>
     </div>
 
-    <script src="js/app.js?v=2026.50" type="module"></script>
+    <script src="js/app.js?v=2026.51" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
