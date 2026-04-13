@@ -180,9 +180,20 @@ window.switchTab = switchTab;
 export function selectMapSlot(type, index) {
     if (type === 'fuel') state.currentFuelMapIndex = index;
     if (type === 'ign') state.currentIgnMapIndex = index;
-    // ...
+    updateMapSlotUI(type);
 }
 window.selectMapSlot = selectMapSlot;
+
+export function updateMapSlotUI(type) {
+    // 燃料マップと点火マップのスロットボタンを更新
+    const btns = document.querySelectorAll(type === 'fuel' ? '#file-item-fuel .sub-btn' : '#file-item-ign .sub-btn');
+    
+    btns.forEach((btn) => {
+        const val = parseInt(btn.innerText);
+        const current = (type === 'fuel' ? state.currentFuelMapIndex : state.currentIgnMapIndex);
+        btn.classList.toggle('active', val === current);
+    });
+}
 
 export function selectPriorityMap(index) {
     state.currentPriorityMap = index;
