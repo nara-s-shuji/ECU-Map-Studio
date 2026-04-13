@@ -1130,6 +1130,21 @@ input:checked + .slider:before {
     width: 100%;
 }
 
+/* Stabilize text in file-item */
+.file-item-header span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal !important; /* Prevent movement on weight change */
+}
+
+.file-item-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
 .file-item-sub {
     display: flex;
     gap: 5px;

@@ -134,7 +134,7 @@
         <div id="editor-view" class="view-section active">
             <div id="mobile-info-bar"
                 style="display: flex !important; align-items: center; justify-content: space-between; background: #2d2d30 !important; color: #ccc !important; width: 100%; height: 30px; z-index: 99999; border-bottom: 1px solid #3c3c3c; box-sizing: border-box; flex-shrink: 0; padding: 0 10px; font-size: 11px;">
-                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.49</span> <span id="info-filename">New_Map.csv</span></span>
+                <span><span style="color:var(--accent); font-weight:bold; margin-right:5px;">v2026.50</span> <span id="info-filename">New_Map.csv</span></span>
                 <span id="info-values" style="font-family: 'Consolas', monospace; font-size: 11px;">Orig: - / Curr: -</span>
             </div>
 
@@ -166,11 +166,10 @@
                     </label>
                     <span style="font-size: 11px; color: #888; margin-left: 5px; white-space: nowrap;" id="label-advance">ADVANCE</span>
                     <style>
-                        .switch input:checked + .slider { background-color: #0078d4; }
+                        .switch input:checked + .slider { background-color: #0078d4 !important; }
                         .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
                         .switch input:checked + .slider:before { transform: translateX(14px); }
-                        #label-advance { transition: color 0.3s, font-weight 0.3s; }
-                        body:not(.basic-mode) #label-advance { color: #0078d4 !important; font-weight: bold; }
+                        #label-advance, .sf-toggle-container span { color: #888; font-weight: normal; transition: none; }
                     </style>
                 </div>
             </div>
@@ -293,8 +292,8 @@
                     </div>
                     <div class="file-item" onclick="selectFileItem(this, 'ign_map')" id="file-item-ign">
                         <div class="file-item-header">
-                            <span>点火マップ</span>
-                            <div class="file-item-actions">
+                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">点火マップ</span>
+                            <div class="file-item-actions" style="flex-shrink: 0;">
                                 <span class="badge status-edited">編集中</span>
                                 <span class="badge status-synced">転送済</span>
                             </div>
@@ -302,8 +301,6 @@
                         <div class="file-item-sub">
                             <button class="sub-btn active" onclick="event.stopPropagation(); selectMapSlot('ign', 1)">1</button>
                             <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('ign', 2)">2</button>
-                            <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('ign', 3)">3</button>
-                            <button class="sub-btn" onclick="event.stopPropagation(); selectMapSlot('ign', 4)">4</button>
                         </div>
                     </div>
                 </div>
@@ -389,10 +386,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ 戻る</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ 進む</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.49 (v2026.37 REVERTED)</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.50 (v2026.37 REVERTED)</p>
     </div>
 
-    <script src="js/app.js?v=2026.49" type="module"></script>
+    <script src="js/app.js?v=2026.50" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
