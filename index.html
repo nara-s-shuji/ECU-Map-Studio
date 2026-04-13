@@ -170,6 +170,7 @@
                         .switch input:checked + .slider { background-color: #0078d4; }
                         .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
                         .switch input:checked + .slider:before { transform: translateX(14px); }
+                        #label-advance { transition: color 0.3s, font-weight 0.3s; }
                         #label-advance.active-blue { color: #0078d4 !important; font-weight: bold; }
                     </style>
                 </div>
@@ -202,11 +203,12 @@
                             <span class="badge status-synced">転送済</span>
                         </div>
                     </div>
-                    <div class="file-item-sub" style="display:flex; flex-direction:column; gap:8px; padding-bottom:5px;">
+                    <!-- マップ選択サブ項目 (優先・次点の重なり防止) -->
+                    <div class="file-item-sub" style="display: flex !important; flex-direction: column !important; gap: 12px !important; margin-top: 10px; padding: 5px 0;">
                         <!-- 優先 -->
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:10px; color:#888; width:30px;">優先</span>
-                            <div style="flex:1; display:flex; gap:2px;">
+                        <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+                            <span style="font-size: 11px; color: #aaa; width: 35px; flex-shrink: 0;">優先</span>
+                            <div style="display: flex; gap: 4px;">
                                 <button id="btn-prio-1" class="sub-btn active" onclick="event.stopPropagation(); selectPriorityMap(1)">1</button>
                                 <button id="btn-prio-2" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(2)">2</button>
                                 <button id="btn-prio-3" class="sub-btn" onclick="event.stopPropagation(); selectPriorityMap(3)">3</button>
@@ -214,9 +216,9 @@
                             </div>
                         </div>
                         <!-- 次点 -->
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:10px; color:#888; width:30px;">次点</span>
-                            <div style="flex:1; display:flex; gap:2px;">
+                        <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+                            <span style="font-size: 11px; color: #aaa; width: 35px; flex-shrink: 0;">次点</span>
+                            <div style="display: flex; gap: 4px;">
                                 <button id="btn-next-1" class="sub-btn" onclick="event.stopPropagation(); selectNextMap(1)">1</button>
                                 <button id="btn-next-2" class="sub-btn active" onclick="event.stopPropagation(); selectNextMap(2)">2</button>
                                 <button id="btn-next-3" class="sub-btn" onclick="event.stopPropagation(); selectNextMap(3)">3</button>
