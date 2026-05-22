@@ -334,61 +334,85 @@
             </div>
         </div>
 
-        <!-- モニターメニュー (リファクタリング前と同等) -->
-        <div id="monitor-view" class="view-section" style="flex-direction: column; height: 100%; background: #000;">
-            <div class="monitor-header"
-                style="padding: 10px; background: #000; border-bottom: 1px solid #111; display: flex; gap: 10px; align-items: center;">
-                <input type="text" id="ws-url" value="ws://192.168.4.1/ws"
-                    style="flex: 1; background: #222; color: white; border: 1px solid #444; padding: 5px; border-radius: 4px;">
-                <button onclick="if(window.monitor) window.monitor.toggleConnection()" id="btn-monitor-connect"
-                    style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">接続</button>
-                <div id="connection-status"
-                    style="width: 12px; height: 12px; border-radius: 50%; background: #666; margin-left: 5px;">
+        <!-- モニターメニュー (画像のデザインに完全一致) -->
+        <div id="monitor-view" class="view-section" style="flex-direction: column; height: 100%; background: #1e1e1e;">
+            <!-- ヘッダー -->
+            <div class="sf-list-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #3c3c3c; background: #1e1e1e; flex-shrink: 0;">
+                <div class="sf-view-title" style="font-weight: bold; color: #ccc; font-size: 16px;">モニター</div>
+                <button onclick="if(window.monitor) window.monitor.toggleConnection()" class="btn-connect"
+                    style="background: #0078d4; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">未接続</button>
+            </div>
+
+            <div class="monitor-content" style="padding: 15px; overflow-y: auto; background: #1e1e1e; display: flex; flex-direction: column;">
+                <div class="monitor-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <!-- 通常カード (RPM) -->
+                    <div class="monitor-card" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <div class="monitor-label" style="font-size: 12px; color: #888;">RPM</div>
+                            <input type="checkbox" class="monitor-toggle" data-key="rpm" checked>
+                        </div>
+                        <div class="monitor-value" id="val-rpm" style="font-size: 24px; font-weight: bold; color: #fff; margin-top: 5px;">---</div>
+                        <div class="monitor-unit" style="font-size: 10px; color: #666;">rev/min</div>
+                    </div>
+                    <!-- 通常カード (TPS) -->
+                    <div class="monitor-card" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <div class="monitor-label" style="font-size: 12px; color: #888;">TPS</div>
+                            <input type="checkbox" class="monitor-toggle" data-key="tp" checked>
+                        </div>
+                        <div class="monitor-value" id="val-tp" style="font-size: 24px; font-weight: bold; color: #fff; margin-top: 5px;">---</div>
+                        <div class="monitor-unit" style="font-size: 10px; color: #666;">%</div>
+                    </div>
+
+                    <!-- コンパクトカード -->
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">MAP 0</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="map0">
+                    </div>
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">MAP 1</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="map1">
+                    </div>
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">IAT</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="iat">
+                    </div>
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">EOT</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="eot">
+                    </div>
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">VOLT</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="vol">
+                    </div>
+                    <div class="monitor-card compact" style="background: #252526; border: 1px solid #3c3c3c; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="monitor-label" style="font-size: 12px; color: #888;">ATM</div>
+                        <input type="checkbox" class="monitor-toggle" data-key="ap">
+                    </div>
                 </div>
             </div>
 
-            <div class="monitor-content" style="flex: 1; padding: 10px; overflow-y: auto;">
-                <div class="monitor-grid">
-                    <div class="monitor-card">
-                        <div class="monitor-label">RPM</div>
-                        <div class="monitor-value" id="val-rpm">---</div>
-                        <div class="monitor-unit">rev/min</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">TPS</div>
-                        <div class="monitor-value" id="val-tp">---</div>
-                        <div class="monitor-unit">%</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">MAP 0</div>
-                        <div class="monitor-value" id="val-map0">---</div>
-                        <div class="monitor-unit">kPa</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">MAP 1</div>
-                        <div class="monitor-value" id="val-map1">---</div>
-                        <div class="monitor-unit">kPa</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">IAT</div>
-                        <div class="monitor-value" id="val-iat">---</div>
-                        <div class="monitor-unit">°C</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">EOT</div>
-                        <div class="monitor-value" id="val-eot">---</div>
-                        <div class="monitor-unit">°C</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">VOLT</div>
-                        <div class="monitor-value" id="val-vol">---</div>
-                        <div class="monitor-unit">V</div>
-                    </div>
-                    <div class="monitor-card">
-                        <div class="monitor-label">ATM</div>
-                        <div class="monitor-value" id="val-ap">---</div>
-                        <div class="monitor-unit">hPa</div>
-                    </div>
+            <!-- Data Log 領域 -->
+            <div id="monitor-log-wrapper" style="flex: 1; min-height: 120px; display: flex; flex-direction: column; background: #1e1e1e; border-top: 1px solid #3c3c3c; padding: 10px;">
+                <div style="font-size: 11px; color: #666; margin-bottom: 5px;">Data Log</div>
+                <div id="monitor-log-display" style="flex: 1; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 12px; color: #0f0; white-space: pre; line-height: 1.2;">
+                </div>
+            </div>
+
+            <!-- フッターアクション -->
+            <div style="padding: 15px; display: flex; flex-direction: column; gap: 15px; border-top: 1px solid #3c3c3c; background: #2d2d30;">
+                <div id="recording-timer" style="text-align: center; font-family: 'Consolas', monospace; font-size: 24px; color: #888; font-weight: bold;">
+                    00:00.0 <span style="font-size: 12px; font-weight: normal; color: #666;">(Max 3 min)</span>
+                </div>
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <button id="btn-record-all" class="btn-monitor-global" onclick="if(window.monitor) window.monitor.toggleRecording()"
+                        style="flex: 1; display: flex; gap: 8px; justify-content: center; align-items: center; font-weight: bold; background: #333; border: 1px solid #555; color: #ccc; border-radius: 6px; height: 44px; font-size: 14px;">
+                        <span style="color: #90CAF9; font-size: 18px;">⏺</span> <span>記録</span>
+                    </button>
+                    <button id="btn-save-all" class="btn-monitor-global" onclick="if(window.monitor) window.monitor.saveLog()"
+                        style="flex: 1; display: flex; gap: 8px; justify-content: center; align-items: center; font-weight: bold; background: #333; border: 1px solid #555; color: #ccc; border-radius: 6px; height: 44px; font-size: 14px;">
+                        <span style="font-size: 18px;">💾</span> <span>保存</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -447,10 +471,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ 戻る</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ 進む</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.58 (v2026.37 REVERTED)</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.59 (v2026.37 REVERTED)</p>
     </div>
 
-    <script src="js/app.js?v=2026.58" type="module"></script>
+    <script src="js/app.js?v=2026.59" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
