@@ -313,23 +313,15 @@ body {
 
 #graph-overlay {
     position: fixed;
-    top: 69px;
-    right: 20px;
-    width: 400px;
-    height: 300px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    top: 32px; /* info-barの下から */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 32px - 56px); /* info-bar と bottom-nav の高さを引く */
+    background: var(--bg); /* または #000 */
+    border: none;
+    z-index: 5000;
     display: none;
     flex-direction: column;
-    resize: both;
-    overflow: auto;
-    min-width: 300px;
-    min-height: 200px;
-    z-index: 5000;
-    /* Resizing for PC */
-    resize: both;
     overflow: hidden;
 }
 
