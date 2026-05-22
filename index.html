@@ -334,17 +334,62 @@
             </div>
         </div>
 
-        <!-- 安全なモニターメニュー (v2026.43) -->
-        <div id="monitor-view" class="view-section">
-            <div class="sm-grid">
-                <div class="sm-card"><span class="sm-label">回転数</span><span id="mon-rpm" class="sm-value">0</span></div>
-                <div class="sm-card"><span class="sm-label">負荷(TPS)</span><span id="mon-tps" class="sm-value">0.0</span></div>
-                <div class="sm-card"><span class="sm-label">空燃比(AFR)</span><span id="mon-afr" class="sm-value">14.7</span></div>
-                <div class="sm-card"><span class="sm-label">点火時期</span><span id="mon-ign" class="sm-value">15.0</span></div>
+        <!-- モニターメニュー (リファクタリング前と同等) -->
+        <div id="monitor-view" class="view-section" style="flex-direction: column; height: 100%; background: #000;">
+            <div class="monitor-header"
+                style="padding: 10px; background: #000; border-bottom: 1px solid #111; display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="ws-url" value="ws://192.168.4.1/ws"
+                    style="flex: 1; background: #222; color: white; border: 1px solid #444; padding: 5px; border-radius: 4px;">
+                <button onclick="if(window.monitor) window.monitor.toggleConnection()" id="btn-monitor-connect"
+                    style="background: #0078d4; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer;">接続</button>
+                <div id="connection-status"
+                    style="width: 12px; height: 12px; border-radius: 50%; background: #666; margin-left: 5px;">
+                </div>
             </div>
-            <div style="padding:15px; display:flex; gap:10px;">
-                <button id="btn-record-all" class="sf-action-btn" style="flex:1;">⏺️ 記録開始</button>
-                <button id="btn-save-all" class="sf-action-btn" style="flex:1;">💾 ログ保存</button>
+
+            <div class="monitor-content" style="flex: 1; padding: 10px; overflow-y: auto;">
+                <div class="monitor-grid">
+                    <div class="monitor-card">
+                        <div class="monitor-label">RPM</div>
+                        <div class="monitor-value" id="val-rpm">---</div>
+                        <div class="monitor-unit">rev/min</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">TPS</div>
+                        <div class="monitor-value" id="val-tp">---</div>
+                        <div class="monitor-unit">%</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">MAP 0</div>
+                        <div class="monitor-value" id="val-map0">---</div>
+                        <div class="monitor-unit">kPa</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">MAP 1</div>
+                        <div class="monitor-value" id="val-map1">---</div>
+                        <div class="monitor-unit">kPa</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">IAT</div>
+                        <div class="monitor-value" id="val-iat">---</div>
+                        <div class="monitor-unit">°C</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">EOT</div>
+                        <div class="monitor-value" id="val-eot">---</div>
+                        <div class="monitor-unit">°C</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">VOLT</div>
+                        <div class="monitor-value" id="val-vol">---</div>
+                        <div class="monitor-unit">V</div>
+                    </div>
+                    <div class="monitor-card">
+                        <div class="monitor-label">ATM</div>
+                        <div class="monitor-value" id="val-ap">---</div>
+                        <div class="monitor-unit">hPa</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -402,10 +447,10 @@
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="undo()">↶ 戻る</button>
             <button style="flex:1; padding:10px; background:#333; border:1px solid #555; color:white; border-radius:4px;" onclick="redo()">↷ 進む</button>
         </div>
-        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.57 (v2026.37 REVERTED)</p>
+        <p style="margin-top:30px; font-size:10px; color:#666;">Version: 2026.58 (v2026.37 REVERTED)</p>
     </div>
 
-    <script src="js/app.js?v=2026.57" type="module"></script>
+    <script src="js/app.js?v=2026.58" type="module"></script>
     <input type="file" id="file-input" style="display:none;" accept=".csv">
 </body>
 </html>
